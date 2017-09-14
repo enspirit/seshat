@@ -1,0 +1,25 @@
+{
+  "name": "seshat",
+  "version": "0.0.1",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/enspirit/seshat.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/enspirit/seshat/issues"
+  },
+  "homepage": "https://github.com/enspirit/seshat#readme",
+  "dependencies": {
+    "asyncawait": "^1.0.6",
+    "bluebird": "^3.5.0",
+    "busboy": "^0.2.14",
+    "cors": "^2.8.4",
+    "express": "^4.15.4",
+    "express-winston": "^2.4.0",
+    "lodash": "^4.17.4",
+    "mime-types": "^2.1.17",
+    "winston": "^2.3.1"
+  }
+}
