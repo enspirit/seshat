@@ -3,7 +3,7 @@ name: |-
   File upload
 
 url: |-
-  /simplest/
+  /simplest/{suffix}
 
 services:
 - method: |-
@@ -12,11 +12,17 @@ services:
   description: |-
     Allows saving a file
 
-  postconditions: |-
+  preconditions:
+    - The url must correspond to a bucket with the simplest possible configuration,
+      i.e. no sub folder allowed, no secret key generation or whatever
+
+  postconditions:
     - Following the Location header on response allows downloading the file
 
   input_schema: |-
-    .
+    {
+      suffix: String   # fake input parameter, not intended to be used server-side
+    }
 
   output_schema: |-
     .
@@ -28,7 +34,8 @@ services:
 
     - description: |-
         when requested with a pure body
-      params: {}
+      params:
+        suffix: ""
       headers:
         Content-Type: text/csv;charset=UTF-8
       body: |-
@@ -38,4 +45,13 @@ services:
         content_type: ~
         status: 204
 
-  counterexamples: []
+  counterexamples:
+
+    - description: |-
+        when trying to push into a subfolder, it fails
+      params:
+        suffix: sub
+      body: |-
+      expected:
+        content_type: text/html
+        status: 404

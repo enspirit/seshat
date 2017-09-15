@@ -1,0 +1,68 @@
+---
+name: |-
+  File upload
+
+url: |-
+  /subfolders/{folder}
+
+services:
+- method: |-
+    POST
+
+  description: |-
+    Allows saving a file inside a subfolder
+
+  postconditions: |-
+    - Following the Location header on response allows downloading the file
+
+  input_schema: |-
+    .
+
+  output_schema: |-
+    .
+
+  error_schema: |-
+    Error
+
+  examples:
+
+    - description: |-
+        when requested with a pure body
+      params:
+        folder: sub1
+      headers:
+        Content-Type: text/csv;charset=UTF-8
+      body: |-
+        identifier,name
+        1,blambeau
+      expected:
+        content_type: ~
+        status: 204
+
+    - description: |-
+        when requested with a pure body
+      params:
+        folder: sub1
+      headers:
+        Content-Type: text/csv;charset=UTF-8
+      body: |-
+        identifier,name
+        1,blambeau
+      expected:
+        content_type: ~
+        status: 204
+
+  counterexamples:
+
+    - description: |-
+        when trying to cheat on folder names
+      params:
+        folder: ../simplest
+      headers:
+        Content-Type: text/csv;charset=UTF-8
+      body: |-
+        identifier,name
+        1,blambeau
+      expected:
+        content_type: text/plain
+        status: 400
