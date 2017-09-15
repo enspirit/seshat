@@ -1,9 +1,12 @@
 'use strict';
 
-const mime = require('mime-types');
+const ContentType = require('content-type');
 
-module.exports =  (storage) => (req, res, next) => {
-  if (req.files && req.files.length){
+module.exports =  (req, res, next) => {
+  // TODO: find better logic than this, we should
+  // detect that no other middleware have processed the body
+  let contentType = req.headers['content-type'] || '';
+  if (contentType.indexOf('multipart/form-data') >= 0){
     return next();
   }
 
@@ -17,13 +20,19 @@ module.exports =  (storage) => (req, res, next) => {
     }
   }
 
-  if (!filename){
-    filename = 'frombody.' + mime.extension(req.headers['content-type']);
+  let mimetype, charset;
+  if (contentType) {
+    let parsed = ContentType.parse(contentType);
+    mimetype = parsed.type;
+    charset = parsed.parameters.charset;
   }
 
-  storage.save(req, filename)
-  .then(() => {
-    req.files = [filename];
-    next();
+  let p = req.pipeline.process({
+    filename: filename,
+    mimetype: mimetype,
+    charset: charset,
+    stream: req
   });
+
+  p.then(() => next());
 };

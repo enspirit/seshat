@@ -1,5 +1,6 @@
 'use strict';
 
+const _ = require('lodash');
 const express = require('express');
 const logger = require('./lib/logger');
 const expressWinston = require('express-winston');
@@ -25,10 +26,15 @@ app.use(expressWinston.logger({
 
 // static files
 const bucket = require('./routers/bucket');
-const LocalStorage = require('./lib/storage/local');
 
-const tmpStorage = new LocalStorage('./tmp');
-app.use('/', bucket(tmpStorage));
+// Mount the buckets
+_.each(config.get('buckets'), (config, path) => {
+  if (path[path.length - 1] != '/') {
+    path += '/';
+  }
+  config.path = path;
+  app.use(path, bucket(config));
+});
 
 //
 app.disable('x-powered-by');
