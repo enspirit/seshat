@@ -4,7 +4,7 @@ const express = require('express');
 const {FileNotFoundError} = require('../../lib/robust/errors');
 const mime = require('mime-types');
 
-module.exports = (storage) => {
+module.exports = ({storage, ...config}) => {
   const router = express.Router();
 
   router.get('/:filename', (req, res, next) => {
