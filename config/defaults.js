@@ -15,7 +15,7 @@ module.exports = {
     cors: '*'
   },
   buckets: {
-    '/': {
+    '/simplest': {
       typology: new Typology()
         .add(Typology.renameSecure())
         .add(Typology.storage(tmpStorage)),
