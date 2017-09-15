@@ -28,7 +28,11 @@ const bucket = require('./routers/bucket');
 const LocalStorage = require('./lib/storage/local');
 
 const tmpStorage = new LocalStorage('./tmp');
+<<<<<<< HEAD
 app.use('/', bucket(tmpStorage));
+=======
+app.use('/test', bucket(tmpStorage));
+>>>>>>> 1581267bc05b4435f9997548e09d97a2da1c907c
 
 //
 app.disable('x-powered-by');
