@@ -1,5 +1,21 @@
 version: '2'
 services:
+
+  hack:
+    build:
+      context: ./
+      dockerfile: Dockerfile.hack
+    volumes:
+      - ./bin:/home/app/webapp/bin
+      - ./config:/home/app/webapp/config
+      - ./lib:/home/app/webapp/lib
+      - ./routers:/home/app/webapp/routers
+      - ./tmp:/usr/src/app/tmp
+      - ./webspicy:/usr/src/app/webspicy
+      - ./app.js:/usr/src/app/app.js
+    ports:
+      - "3000:80"
+
   seshat:
     build: .
     volumes:
