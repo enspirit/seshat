@@ -12,7 +12,7 @@ class ValidLocationHeader
     raise "Location should have been set" unless location
 
     api = invocation.client.api
-    response = api.get(location)
+    response = api.get(invocation.client.config.host + location)
     raise "Failed to successfully reach the location" unless response.status == 200
 
     ct = response.headers['Content-Type']
