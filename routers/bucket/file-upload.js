@@ -14,7 +14,7 @@ module.exports = (storage) => {
   ];
 
   router.post('/', handlers, (req, res) => {
-    let reqUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+    let reqUrl = req.originalUrl;
     if (reqUrl[reqUrl.length - 1] != '/'){
       reqUrl += '/';
     }
