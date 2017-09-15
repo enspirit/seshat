@@ -24,15 +24,11 @@ app.use(expressWinston.logger({
 }));
 
 // static files
-app.use(express.static('public'));
-
-const fileUpload = require('./routers/file-upload');
-const fileRetrieve = require('./routers/file-retrieve');
+const bucket = require('./routers/bucket');
 const LocalStorage = require('./lib/storage/local');
 
 const tmpStorage = new LocalStorage('./tmp');
-app.use('/', fileUpload(tmpStorage));
-app.use('/', fileRetrieve(tmpStorage));
+app.use('/', bucket(tmpStorage));
 
 //
 app.disable('x-powered-by');
