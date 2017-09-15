@@ -6,6 +6,9 @@
     "type": "git",
     "url": "git+https://github.com/enspirit/seshat.git"
   },
+  "engines" : {
+    "node" : ">=8.0"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/enspirit/seshat/issues"
@@ -21,5 +24,22 @@
     "lodash": "^4.17.4",
     "mime-types": "^2.1.17",
     "winston": "^2.3.1"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "gulp": "^3.9.1",
+    "gulp-env": "^0.4.0",
+    "gulp-express": "^0.3.5",
+    "gulp-istanbul": "^1.1.2",
+    "gulp-jscs": "^4.0.0",
+    "gulp-jshint": "^2.0.4",
+    "gulp-mocha": "^4.3.1",
+    "jshint": "^2.9.5",
+    "mocha": "^3.5.3",
+    "nock": "^9.0.14",
+    "proxyquire": "^1.8.0",
+    "sinon": "^3.2.1",
+    "sinon-chai": "^2.13.0"
   }
 }
