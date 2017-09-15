@@ -7,7 +7,7 @@ const path = require('path');
 
 let config = require('./defaults');
 
-if (fs.existsSync(path.join('.', `${env}.js`))){
+if (fs.existsSync(path.join(__dirname, `${env}.js`))){
   config = _.merge(config, require(`./${env}.js`));
 }
 
