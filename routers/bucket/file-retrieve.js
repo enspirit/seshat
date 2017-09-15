@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require('express');
-const {FileNotFoundError} = require('../lib/robust/errors');
+const {FileNotFoundError} = require('../../lib/robust/errors');
 const mime = require('mime-types');
 
 module.exports = (storage) => {
