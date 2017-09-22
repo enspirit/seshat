@@ -2,8 +2,11 @@
 
 const path = require('path');
 const Typology = require('../lib/processors/typology');
+const LocalStorage = require('../lib/storage/local');
 
-const tmpStorage = Typology.localStorage(path.join(__dirname, '../tmp'));
+const tmpStorage = new LocalStorage({
+  path: path.join(__dirname, '../tmp')
+});
 
 module.exports = {
   api: {
@@ -14,7 +17,7 @@ module.exports = {
     '/': {
       typology: new Typology()
         .add(Typology.renameSecure())
-        .add(tmpStorage),
+        .add(Typology.storage(tmpStorage)),
       storage: tmpStorage
     }
   }
