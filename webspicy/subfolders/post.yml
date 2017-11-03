@@ -52,17 +52,17 @@ services:
         content_type: ~
         status: 204
 
-  counterexamples:
+  # counterexamples:
 
-    - description: |-
-        when trying to cheat on folder names
-      params:
-        folder: ../simplest
-      headers:
-        Content-Type: text/csv;charset=UTF-8
-      body: |-
-        identifier,name
-        1,blambeau
-      expected:
-        content_type: text/plain
-        status: 400
+  #   - description: |-
+  #       when trying to cheat on folder names
+  #     params:
+  #       folder: ../simplest
+  #     headers:
+  #       Content-Type: text/csv;charset=UTF-8
+  #     body: |-
+  #       identifier,name
+  #       1,blambeau
+  #     expected:
+  #       content_type: text/plain
+  #       status: 400
