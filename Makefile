@@ -3,7 +3,7 @@ install:
 	npm install
 
 server:
-	./bin/www & echo "$$!" > "tmp/server.PID"
+	NODE_ENV=test ./bin/www & echo "$$!" > "tmp/server.PID"
 
 test: server
 	gulp test

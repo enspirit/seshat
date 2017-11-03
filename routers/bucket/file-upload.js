@@ -4,15 +4,25 @@ const Promise = require('bluebird');
 const express = require('express');
 const multipartHandler = require('./mime-handlers/multipart-form-data');
 const defaultHandler = require('./mime-handlers/default');
+const {FileNotFoundError, UnsecurePathError}
+  = require('../../lib/robust/errors');
+
 
 let initPipeline = (typology, path) => (req, res, next) => {
   req.pipeline = typology.getPipeline();
 
-  req.pipeline.on('error', (error) => {
-    res
-      .header('Content-Type', 'text/plain')
-      .status(500)
-      .send(error.message);
+  req.pipeline.on('error', (err) => {
+    res.header('Content-Type', 'text/html');
+
+    if (err instanceof FileNotFoundError) {
+      res.status(404);
+    } else if (err instanceof UnsecurePathError) {
+      res.status(400);
+    } else {
+      res.status(500);
+    }
+
+    res.send();
   });
 
   req.pipeline.on('success', (files) => {

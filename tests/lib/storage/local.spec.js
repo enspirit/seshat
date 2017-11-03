@@ -7,7 +7,7 @@ const expect = require('chai').expect;
 const stream = require('stream');
 const devnull = require('dev-null');
 const chaiAsPromised = require('chai-as-promised');
-const {FileNotFoundError, ArgumentError} =
+const {FileNotFoundError, ArgumentError, UnsecurePathError} =
   require('../../../lib/robust/errors');
 
 require('chai').use(chaiAsPromised);
@@ -63,7 +63,7 @@ describe('LocalStorage', () => {
       storage.save(fstream, '../../etc/hosts')
       .then(() => done(new Error('should have failed')))
       .catch((err) => {
-        expect(err).to.be.an.instanceof(ArgumentError);
+        expect(err).to.be.an.instanceof(UnsecurePathError);
         done();
       });
     });
@@ -73,7 +73,7 @@ describe('LocalStorage', () => {
       storage.save(fstream, 'foo/bar/test.jpg')
       .then(() => done(new Error('should have failed')))
       .catch((err) => {
-        expect(err).to.be.an.instanceof(ArgumentError);
+        expect(err).to.be.an.instanceof(FileNotFoundError);
         done();
       });
     });
