@@ -29,6 +29,7 @@ module.exports =  (req, res, next) => {
 
   let p = req.pipeline.process({
     filename: filename,
+    path: req.path,
     mimetype: mimetype,
     charset: charset,
     stream: req

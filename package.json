@@ -24,11 +24,13 @@
     "express-winston": "^2.4.0",
     "lodash": "^4.17.4",
     "mime-types": "^2.1.17",
+    "mkdirp-promise": "^5.0.1",
     "winston": "^2.3.1"
   },
   "devDependencies": {
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
+    "dev-null": "^0.1.1",
     "gulp": "^3.9.1",
     "gulp-env": "^0.4.0",
     "gulp-express": "^0.3.5",

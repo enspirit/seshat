@@ -5,6 +5,7 @@ const Typology = require('../lib/processors/typology');
 const LocalStorage = require('../lib/storage/local');
 
 const tmpStorage = new LocalStorage({
+  dynamicTree: true,
   path: path.join(__dirname, '../tmp')
 });
 

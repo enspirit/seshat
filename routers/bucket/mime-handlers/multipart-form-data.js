@@ -18,6 +18,7 @@ module.exports = (req, res, next) => {
     logger.info('File [' + fieldname + ']: filename: ' + filename + ', encoding: ' + encoding + ', mimetype: ' + mimetype);
     let p = req.pipeline.process({
       filename: filename,
+      path: req.path,
       encoding: encoding,
       mimetype: mimetype,
       stream: file

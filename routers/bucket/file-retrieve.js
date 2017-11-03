@@ -3,15 +3,18 @@
 const express = require('express');
 const {FileNotFoundError} = require('../../lib/robust/errors');
 const mime = require('mime-types');
+const path = require('path');
 
 module.exports = ({storage, ...config}) => {
   const router = express.Router();
 
-  router.get('/:filename', (req, res, next) => {
-    storage.get(req.params.filename)
+  router.get(/^(.*)$/, (req, res, next) => {
+    storage.get(req.path)
     .then((filestream) => {
-      let mimeType = mime.lookup(req.params.filename);
+      let mimeType = mime.lookup(req.path);
+      let filename = req.query.n || path.basename(req.path);
       res.setHeader('Content-Type', mimeType);
+      res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
       filestream.pipe(res);
     })
     .catch((err) => {
