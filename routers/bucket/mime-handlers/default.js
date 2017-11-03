@@ -1,6 +1,7 @@
 'use strict';
 
 const ContentType = require('content-type');
+const mime = require('mime');
 
 module.exports =  (req, res, next) => {
   // TODO: find better logic than this, we should
@@ -25,6 +26,12 @@ module.exports =  (req, res, next) => {
     let parsed = ContentType.parse(contentType);
     mimetype = parsed.type;
     charset = parsed.parameters.charset;
+  }
+
+  if (!filename){
+    let extension = mimetype ?
+      mime.extension(mimetype) : 'bin';
+    filename = `upload.${extension}`;
   }
 
   let p = req.pipeline.process({

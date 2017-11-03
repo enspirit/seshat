@@ -29,6 +29,9 @@ const bucket = require('./routers/bucket');
 
 // Mount the buckets
 _.each(config.get('buckets'), (config, path) => {
+  if (!config) {
+    return;
+  }
   if (path[path.length - 1] != '/') {
     path += '/';
   }

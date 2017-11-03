@@ -1,0 +1,41 @@
+---
+name: |-
+  File upload on dynamic bucket
+
+url: |-
+  /notsecure/dynamic/foo/bar
+
+services:
+- method: |-
+    POST
+
+  description: |-
+    Allows saving a file
+
+  postconditions: |-
+    - Following the Location header on response allows downloading the file
+
+  input_schema: |-
+    .
+
+  output_schema: |-
+    .
+
+  error_schema: |-
+    Error
+
+  examples:
+
+    - description: |-
+        when requested with a pure body
+      params: {}
+      headers:
+        Content-Type: text/csv;charset=UTF-8
+      body: |-
+        identifier,name
+        1,blambeau
+      expected:
+        content_type: ~
+        status: 204
+
+  counterexamples: []

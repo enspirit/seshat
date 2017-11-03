@@ -3,7 +3,7 @@ name: |-
   File upload
 
 url: |-
-  /
+  /notsecure/nondynamic
 
 services:
 - method: |-
