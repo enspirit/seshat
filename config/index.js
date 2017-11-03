@@ -10,7 +10,6 @@ let config = require('./defaults');
 if (fs.existsSync(path.join(__dirname, `${env}.js`))){
   config = _.merge(config, require(`./${env}.js`));
 }
-console.log(config);
 
 config.get = (path) => {
   return _.get(config, path);

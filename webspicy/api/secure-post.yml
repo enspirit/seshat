@@ -14,6 +14,7 @@ services:
 
   postconditions: |-
     - Following the Location header on response allows downloading the file
+    - The file should have been securely renamed
 
   input_schema: |-
     .
