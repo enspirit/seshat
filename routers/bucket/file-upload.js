@@ -4,6 +4,7 @@ const Promise = require('bluebird');
 const express = require('express');
 const multipartHandler = require('./mime-handlers/multipart-form-data');
 const defaultHandler = require('./mime-handlers/default');
+const logger = require('../../lib/logger');
 const {FileNotFoundError, UnsecurePathError}
   = require('../../lib/robust/errors');
 
@@ -35,7 +36,8 @@ let initPipeline = (typology, path) => (req, res, next) => {
       location = location + '?n=' + file.originalFilename;
     }
 
-    location = (path + location).replace('//', '/');
+    location = (path + location).replace(/\/\/+/g, '/');
+    logger.debug("Location set to `" + location + "`");
     res.location(location);
     res.sendStatus(204);
   });
