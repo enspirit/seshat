@@ -11,4 +11,4 @@ COPY . .
 
 # run
 EXPOSE 3000
-CMD ["make", "run"]
+CMD ["./bin/www"]

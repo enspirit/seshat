@@ -18,3 +18,6 @@ run:
 
 watch:
 	supervisor ./bin/www
+
+image:
+	docker build -t enspirit/seshat:latest .
