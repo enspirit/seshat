@@ -13,16 +13,15 @@ let initPipeline = (typology, path) => (req, res, next) => {
   req.pipeline = typology.getPipeline();
 
   req.pipeline.on('error', (err) => {
-    res.header('Content-Type', 'text/html');
-
+    res.header('Content-Type', 'text/plain');
     if (err instanceof FileNotFoundError) {
       res.status(404);
     } else if (err instanceof UnsecurePathError) {
-      res.status(400);
+      res.status(403);
+      res.send(err.message);
     } else {
       res.status(500);
     }
-
     res.send();
   });
 

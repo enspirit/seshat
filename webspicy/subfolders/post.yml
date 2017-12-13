@@ -27,7 +27,7 @@ services:
   examples:
 
     - description: |-
-        when requested with a pure body
+        when requested with a subfolder
       params:
         folder: sub1
       headers:
@@ -38,31 +38,18 @@ services:
       expected:
         content_type: ~
         status: 204
+
+  counterexamples:
 
     - description: |-
-        when requested with a pure body
+        when trying to cheat on folder names
       params:
-        folder: sub1
+        folder: ../simplest
       headers:
         Content-Type: text/csv;charset=UTF-8
       body: |-
         identifier,name
         1,blambeau
       expected:
-        content_type: ~
-        status: 204
-
-  # counterexamples:
-
-  #   - description: |-
-  #       when trying to cheat on folder names
-  #     params:
-  #       folder: ../simplest
-  #     headers:
-  #       Content-Type: text/csv;charset=UTF-8
-  #     body: |-
-  #       identifier,name
-  #       1,blambeau
-  #     expected:
-  #       content_type: text/plain
-  #       status: 400
+        content_type: text/plain
+        status: 403

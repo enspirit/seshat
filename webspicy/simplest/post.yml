@@ -53,5 +53,5 @@ services:
         suffix: sub
       body: |-
       expected:
-        content_type: text/html
+        content_type: text/plain
         status: 404
