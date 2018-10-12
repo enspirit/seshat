@@ -1,8 +1,11 @@
 version: '2'
 services:
   seshat:
+    image: enspirit/seshat:latest
     build: .
     volumes:
       - ./tmp:/usr/src/app/tmp
     ports:
       - "3000:3000"
+    environment:
+      NODE_ENV: test

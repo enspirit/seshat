@@ -2,22 +2,38 @@ install:
 	bundle install
 	npm install
 
-server:
-	NODE_ENV=test ./bin/www & echo "$$!" > "tmp/server.PID"
-
-test: server
-	mkdir -p tmp/simplest
-	mkdir -p tmp/subfolders
-	gulp test
-	bundle exec rake test
-	kill `cat tmp/server.PID`
+clean:
 	rm -rf tmp/*
 
+test-folders:
+	mkdir -p tmp/simplest
+	mkdir -p tmp/subfolders
+
+unit-test: test-folders
+	gulp test
+
+webspicy: test-folders
+	bundle exec rake test
+
+test: unit-test webspicy
+
 run:
-	./bin/www
+	NODE_ENV=test ./bin/www
 
 watch:
 	supervisor ./bin/www
 
 image:
 	docker build -t enspirit/seshat:latest .
+
+up: test-folders
+	docker-compose up -d seshat
+
+down:
+	docker-compose stop seshat
+
+restart:
+	docker-compose restart seshat
+
+bash:
+	docker-compose exec seshat bash
