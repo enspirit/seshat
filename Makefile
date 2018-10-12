@@ -26,6 +26,12 @@ watch:
 image:
 	docker build -t enspirit/seshat:latest .
 
+tag:
+	docker tag enspirit/seshat:latest enspirit/seshat:1.1.0
+
+push:
+	docker push enspirit/seshat:1.1.0
+
 up: test-folders
 	docker-compose up -d seshat
 
