@@ -12,7 +12,7 @@ module.exports = ({storage, ...config}) => {
     storage.get(req.path)
     .then((filestream) => {
       let mimeType = mime.lookup(req.path);
-      let filename = req.query.n || path.basename(req.path);
+      let filename = encodeURIComponent(req.query.n || path.basename(req.path));
       res.setHeader('Content-Type', mimeType);
       res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
       filestream.pipe(res);

@@ -1,0 +1,51 @@
+---
+name: |-
+  File upload
+
+url: |-
+  /simplest/
+
+services:
+- method: |-
+    POST
+
+  description: |-
+    Allows saving a file through a real file upload
+
+  preconditions:
+    - The url must correspond to a bucket with the simplest possible configuration,
+      i.e. no sub folder allowed, no secret key generation or whatever
+
+  postconditions:
+    - Following the Location header on response allows downloading the file
+
+  input_schema: |-
+    {}
+
+  output_schema: |-
+    .
+
+  error_schema: |-
+    Error
+
+  examples:
+
+    - description: |-
+        when requested with a .csv file
+      params: {}
+      file_upload:
+        path: ./test.csv
+        content_type: "text/csv"
+      expected:
+        content_type: ~
+        status: 204
+
+    - description: |-
+        when requested with file with special characters in name
+      params: {}
+      file_upload:
+        path: "./98's results.csv"
+        content_type: "text/csv"
+      expected:
+        content_type: ~
+        status: 204

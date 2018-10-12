@@ -29,10 +29,10 @@ let initPipeline = (typology, path) => (req, res, next) => {
     let file = files[0];
     let location = file.filename;
     if (file.path !== '/'){
-      location = file.path + '/' + file.filename;
+      location = file.path + '/' + encodeURIComponent(file.filename);
     }
     if (file.originalFilename){
-      location = location + '?n=' + file.originalFilename;
+      location = location + '?n=' + encodeURIComponent(file.originalFilename);
     }
 
     location = (path + location).replace(/\/\/+/g, '/');
