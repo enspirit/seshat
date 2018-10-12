@@ -4,7 +4,7 @@ services:
     image: enspirit/seshat:latest
     build: .
     volumes:
-      - ./tmp:/usr/src/app/tmp
+      - ./tmp:/home/app/webapp/tmp
     ports:
       - "3000:3000"
     environment:
