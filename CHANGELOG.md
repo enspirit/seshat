@@ -1,5 +1,9 @@
 ## 1.1.0
 
+* UPGRADE: npm dependencies, node version.
+
+## 1.1.0
+
 * BREAKING: The default docker image is now based on node:8.5, no longer
   on passenger. This changes the default container port to 3000 and may
   require specifying a 80 port in configuration to get backward compatible
