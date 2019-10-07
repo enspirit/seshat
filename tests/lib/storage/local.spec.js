@@ -68,7 +68,8 @@ describe('LocalStorage', () => {
       });
     });
 
-    it('complains if a subdir does not exist and dynamicTree is false', (done) => {
+    it('complains if a subdir does not exist and dynamicTree is false',
+    (done) => {
       mockFs.exists = sinon.stub().yields(false);
       storage.save(fstream, 'foo/bar/test.jpg')
       .then(() => done(new Error('should have failed')))
