@@ -24,7 +24,7 @@ GEM
     rack-robustness (1.1.0)
     rack-test (0.6.3)
       rack (>= 1.0)
-    rake (12.3.1)
+    rake (13.0.1)
     rspec (3.8.0)
       rspec-core (~> 3.8.0)
       rspec-expectations (~> 3.8.0)
@@ -53,8 +53,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  rake
+  rake (>= 12.3.3)
   webspicy (~> 0.12, >= 0.12.1)
 
 BUNDLED WITH
-   1.16.0
+   1.17.3
