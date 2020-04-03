@@ -5,6 +5,8 @@ const path = require('path');
 const express = require('express');
 const fileUpload = require('./bucket/file-upload');
 const fileRetrieve = require('./bucket/file-retrieve');
+const fileList = require('./bucket/file-list');
+const direntMiddleware = require('./bucket/dirent-mw');
 
 const DEFAULTS = {
   uploadPage: true
@@ -16,12 +18,9 @@ module.exports = (config) => {
   // Merge with defaults
   config = _.merge(DEFAULTS, config);
 
-  if (config.uploadPage) {
-    router.get('/', (req, res) => {
-      res.sendFile(path.join(__dirname, './bucket/index.html'));
-    });
-  }
+  router.use(direntMiddleware(config));
 
+  router.use('/', fileList(config));
   router.use('/', fileUpload(config));
   router.use('/', fileRetrieve(config));
 

@@ -39,6 +39,12 @@ _.each(config.get('buckets'), (config, path) => {
   app.use(path, bucket(config));
 });
 
+// Error handler
+app.use(function(err, req, res, next) {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
+
 //
 app.disable('x-powered-by');
 
