@@ -16,15 +16,15 @@
   },
   "homepage": "https://github.com/enspirit/seshat#readme",
   "dependencies": {
-    "asyncawait": "^1.0.8",
-    "bluebird": "^3.7.0",
+    "asyncawait": "^3.0.0",
+    "bluebird": "^3.7.2",
     "busboy": "^0.3.1",
     "content-type": "^1.0.4",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "express-winston": "^4.0.0",
+    "express-winston": "^4.0.3",
     "lodash": "^4.17.15",
-    "mime-types": "^2.1.24",
+    "mime-types": "^2.1.26",
     "mkdirp-promise": "^5.0.1",
     "winston": "^3.2.1"
   },
@@ -39,11 +39,11 @@
     "gulp-jscs": "^4.1.0",
     "gulp-jshint": "^2.1.0",
     "gulp-mocha": "^7.0.2",
-    "jshint": "^2.10.2",
-    "mocha": "^6.2.1",
-    "nock": "^11.3.6",
+    "jshint": "^2.11.0",
+    "mocha": "^7.1.1",
+    "nock": "^12.0.3",
     "proxyquire": "^2.1.3",
-    "sinon": "^7.5.0",
-    "sinon-chai": "^3.3.0"
+    "sinon": "^9.0.1",
+    "sinon-chai": "^3.5.0"
   }
 }
