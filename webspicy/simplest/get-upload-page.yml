@@ -1,0 +1,36 @@
+---
+  name: |-
+    Upload Page
+
+  url: |-
+    /simplest/
+
+  services:
+  - method: |-
+      GET
+
+    description: |-
+      Allows getting a webpage allowing us to upload files
+
+    preconditions:
+      - The url must correspond to a bucket
+
+    input_schema: |-
+      {
+      }
+
+    output_schema: |-
+      .
+
+    error_schema: |-
+      Error
+
+    examples:
+
+      - description: |-
+          when requested
+        headers:
+          Accept: text/html
+        expected:
+          content_type: text/html
+          status: 200

@@ -1,0 +1,36 @@
+---
+  name: |-
+    Directory listing
+
+  url: |-
+    /simplest/
+
+  services:
+  - method: |-
+      GET
+
+    description: |-
+      Allows getting a list of the bucket content
+
+    preconditions:
+      - The url must correspond to a bucket
+
+    input_schema: |-
+      {
+      }
+
+    output_schema: |-
+      FolderContent
+
+    error_schema: |-
+      Error
+
+    examples:
+
+      - description: |-
+          when requested
+        headers:
+          Accept: application/json
+        expected:
+          content_type: application/json
+          status: 200

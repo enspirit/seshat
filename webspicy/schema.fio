@@ -1,1 +1,17 @@
 Error = String
+
+MimeType = String
+
+File = {
+  name: String
+  isDirectory: False
+  type: MimeType
+}
+
+Directory = {
+  name: String
+  isDirectory: True
+  type: String( s | s === "directory")
+}
+
+FolderContent = [File|Directory]
