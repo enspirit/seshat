@@ -10,7 +10,7 @@ module.exports = ({storage, ...config}) => {
 
   router.delete(/^(.*)$/, (req, res, next) => {
     if (req.dirent.isDirectory()) {
-      return next(new Error(`DELETE on folders not supported`));
+      return res.status(405).send(`DELETE on folders not supported`);
     }
     storage.delete(req.dirent.name)
     .then(() => {
