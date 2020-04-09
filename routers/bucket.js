@@ -6,6 +6,7 @@ const express = require('express');
 const fileUpload = require('./bucket/file-upload');
 const fileRetrieve = require('./bucket/file-retrieve');
 const fileList = require('./bucket/file-list');
+const fileDelete = require('./bucket/file-delete');
 const direntMiddleware = require('./bucket/dirent-mw');
 
 const DEFAULTS = {
@@ -23,6 +24,7 @@ module.exports = (config) => {
   router.use('/', fileList(config));
   router.use('/', fileUpload(config));
   router.use('/', fileRetrieve(config));
+  router.use('/', fileDelete(config));
 
   return router;
 };
