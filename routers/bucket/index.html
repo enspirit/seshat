@@ -1,10 +1,47 @@
 <html>
   <head>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.1.0/mustache.min.js"></script>
+    <script type="x-tmpl-mustache" id="filetpl">
+      <div class="file">
+        <a href="{{ url }}">{{ name }}</a>
+      </div>
+    </script>
   </head>
   <body>
     <form id="UploadForm" method="POST" enctype="multipart/form-data">
       <input type="file" name="filefield">
       <input type="submit">
     </form>
+    <div class="content">
+    </div>
+    <script type="text/javascript">
+
+      const setContent = (files) => {
+        const tpl = $('#filetpl').html();
+        files.forEach((file) => {
+          const rendered = Mustache.render(tpl, file);
+          $('.content').append(rendered);
+        });
+      };
+
+      const refresh = () => {
+        $.ajax({
+          url: document.location,
+          dataType: 'json'
+        }).done((data) => {
+          const files = data.map((f) => {
+            return Object.assign({}, f, {
+              url: `${document.location}/${f.name}`,
+              name: f.isDirectory ? `${f.name}/` : f.name
+            });
+          })
+          setContent(files);
+        });
+      };
+
+      refresh();
+
+    </script>
   </body>
 </html>
