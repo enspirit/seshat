@@ -10,7 +10,9 @@ const direntMiddleware = require('./bucket/dirent-mw');
 
 const DEFAULTS = {
   uploadPage: true,
-  lastModified: true
+  lastModified: true,
+  etag: true,
+  cacheControl: 'public'
 };
 
 module.exports = (config) => {

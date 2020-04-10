@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require('express');
+const etag = require('etag');
 const {FileNotFoundError} = require('../../lib/robust/errors');
 const mime = require('mime-types');
 
@@ -15,6 +16,12 @@ module.exports = ({storage, ...config}) => {
       .then((filestream) => {
         if (config.lastModified) {
           res.setHeader('Last-Modified', req.dirent.mtime);
+        }
+        if (config.etag) {
+          res.setHeader('ETag', etag(req.dirent));
+        }
+        if (config.cacheControl) {
+          res.setHeader('Cache-Control', config.cacheControl);
         }
         let mimeType = mime.lookup(req.dirent.name);
         res.setHeader('Content-Type', mimeType);

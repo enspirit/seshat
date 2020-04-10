@@ -1,13 +1,13 @@
 require 'uri'
 require 'cgi'
 
-class FileSecurelyRenamed
+class FileNotRenamed
 
   MATCH = /The file should not have been renamed/
 
   def self.match(service, descr)
     return nil unless descr =~ MATCH
-    FileSecurelyRenamed.new
+    FileNotRenamed.new
   end
 
   def check(invocation)
