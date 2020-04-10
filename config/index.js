@@ -9,10 +9,10 @@ const logger = require('../lib/logger');
 let config = require('./defaults');
 
 if (fs.existsSync(path.join(__dirname, `${env}.js`))){
-  logger.info(`Loading configuration from ${env}.js`)
+  logger.info(`Loading configuration from ${env}.js`);
   config = _.merge(config, require(`./${env}.js`));
 } else {
-  logger.info(`No specific configuration for ${env}`)
+  logger.info(`No specific configuration for ${env}`);
 }
 
 config.get = (path) => {

@@ -1,8 +1,6 @@
 'use strict';
 
 const express = require('express');
-const {FileNotFoundError} = require('../../lib/robust/errors');
-const mime = require('mime-types');
 const path = require('path');
 
 module.exports = ({storage, ...config}) => {
@@ -26,7 +24,7 @@ module.exports = ({storage, ...config}) => {
       default: () => {
         return res.status(406).send('Format not supported');
       }
-    })
+    });
   });
 
   return router;

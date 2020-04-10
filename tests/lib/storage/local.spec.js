@@ -43,41 +43,41 @@ describe('LocalStorage', () => {
 
     it('raises an error if the file is not a ReadableStream', (done) => {
       storage.save('test')
-      .then(() => done(new Error('should have failed')))
-      .catch((err) => {
-        expect(err).to.be.an.instanceof(TypeError);
-        done();
-      });
+        .then(() => done(new Error('should have failed')))
+        .catch((err) => {
+          expect(err).to.be.an.instanceof(TypeError);
+          done();
+        });
     });
 
     it('raises an error if no filename are provided', (done) => {
       storage.save(fstream)
-      .then(() => done(new Error('should have failed')))
-      .catch((err) => {
-        expect(err).to.be.an.instanceof(ArgumentError);
-        done();
-      });
+        .then(() => done(new Error('should have failed')))
+        .catch((err) => {
+          expect(err).to.be.an.instanceof(ArgumentError);
+          done();
+        });
     });
 
     it('raises an error if the path provided is not secure', (done) => {
       storage.save(fstream, '../../etc/hosts')
-      .then(() => done(new Error('should have failed')))
-      .catch((err) => {
-        expect(err).to.be.an.instanceof(UnsecurePathError);
-        done();
-      });
+        .then(() => done(new Error('should have failed')))
+        .catch((err) => {
+          expect(err).to.be.an.instanceof(UnsecurePathError);
+          done();
+        });
     });
 
     it('complains if a subdir does not exist and dynamicTree is false',
-    (done) => {
-      mockFs.exists = sinon.stub().yields(false);
-      storage.save(fstream, 'foo/bar/test.jpg')
-      .then(() => done(new Error('should have failed')))
-      .catch((err) => {
-        expect(err).to.be.an.instanceof(FileNotFoundError);
-        done();
+      (done) => {
+        mockFs.exists = sinon.stub().yields(false);
+        storage.save(fstream, 'foo/bar/test.jpg')
+          .then(() => done(new Error('should have failed')))
+          .catch((err) => {
+            expect(err).to.be.an.instanceof(FileNotFoundError);
+            done();
+          });
       });
-    });
 
     /*it('creates the subdir if it does not exist and dynamicTree is false', (done) => {
       storage = new LocalStorage({path: '/tmp', dynamicTree: true});

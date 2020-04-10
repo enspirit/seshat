@@ -3,9 +3,8 @@
 const express = require('express');
 const {FileNotFoundError} = require('../../lib/robust/errors');
 const mime = require('mime-types');
-const path = require('path');
 
-module.exports = ({storage, ...config}) => {
+module.exports = ({storage}) => {
   const router = express.Router();
 
   router.get(/^(.*)$/, (req, res, next) => {
@@ -13,22 +12,22 @@ module.exports = ({storage, ...config}) => {
       return next();
     }
     storage.get(req.dirent.name)
-    .then((filestream) => {
-      let mimeType = mime.lookup(req.dirent.name);
-      res.setHeader('Content-Type', mimeType);
-      if (req.query.n) {
-        let filename = encodeURIComponent(req.query.n);
-        res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
-      }
-      filestream.pipe(res);
-    })
-    .catch((err) => {
-      if (err instanceof FileNotFoundError){
-        res.sendStatus(404);
-      } else {
-        next(err);
-      }
-    });
+      .then((filestream) => {
+        let mimeType = mime.lookup(req.dirent.name);
+        res.setHeader('Content-Type', mimeType);
+        if (req.query.n) {
+          let filename = encodeURIComponent(req.query.n);
+          res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
+        }
+        filestream.pipe(res);
+      })
+      .catch((err) => {
+        if (err instanceof FileNotFoundError){
+          res.sendStatus(404);
+        } else {
+          next(err);
+        }
+      });
   });
 
   return router;

@@ -1,7 +1,6 @@
 'use strict';
 
 const _ = require('lodash');
-const path = require('path');
 const express = require('express');
 const fileUpload = require('./bucket/file-upload');
 const fileRetrieve = require('./bucket/file-retrieve');

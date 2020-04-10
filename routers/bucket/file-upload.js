@@ -1,6 +1,5 @@
 'use strict';
 
-const Promise = require('bluebird');
 const express = require('express');
 const multipartHandler = require('./mime-handlers/multipart-form-data');
 const defaultHandler = require('./mime-handlers/default');
@@ -24,7 +23,7 @@ let initPipeline = (typology, path) => (req, res, next) => {
     }
 
     location = (path + location).replace(/\/\/+/g, '/');
-    logger.debug("Location set to `" + location + "`");
+    logger.debug('Location set to `' + location + '`');
     res.location(location);
     res.sendStatus(204);
   });
@@ -32,7 +31,7 @@ let initPipeline = (typology, path) => (req, res, next) => {
   next();
 };
 
-module.exports = ({typology, path, ...config}) => {
+module.exports = ({typology, path}) => {
 
   const router = express.Router();
 
@@ -43,7 +42,7 @@ module.exports = ({typology, path, ...config}) => {
   ];
 
   //
-  router.post(/^(.*)$/, handlers, (req, res) => {
+  router.post(/^(.*)$/, handlers, (req) => {
     req.pipeline.close();
   });
 
