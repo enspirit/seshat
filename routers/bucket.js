@@ -9,7 +9,8 @@ const fileDelete = require('./bucket/file-delete');
 const direntMiddleware = require('./bucket/dirent-mw');
 
 const DEFAULTS = {
-  uploadPage: true
+  uploadPage: true,
+  lastModified: true
 };
 
 module.exports = (config) => {
@@ -19,6 +20,8 @@ module.exports = (config) => {
   config = _.merge(DEFAULTS, config);
 
   router.use(direntMiddleware(config));
+
+  const mw = config.middlewares ? [].concat(config.middlewares) : [];
 
   router.use('/', fileList(config));
   router.use('/', fileUpload(config));

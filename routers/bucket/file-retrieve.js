@@ -4,7 +4,7 @@ const express = require('express');
 const {FileNotFoundError} = require('../../lib/robust/errors');
 const mime = require('mime-types');
 
-module.exports = ({storage}) => {
+module.exports = ({storage, ...config}) => {
   const router = express.Router();
 
   router.get(/^(.*)$/, (req, res, next) => {
@@ -13,6 +13,9 @@ module.exports = ({storage}) => {
     }
     storage.get(req.dirent.name)
       .then((filestream) => {
+        if (config.lastModified) {
+          res.setHeader('Last-Modified', req.dirent.mtime);
+        }
         let mimeType = mime.lookup(req.dirent.name);
         res.setHeader('Content-Type', mimeType);
         if (req.query.n) {
