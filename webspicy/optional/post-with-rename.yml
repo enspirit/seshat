@@ -1,0 +1,39 @@
+---
+  name: |-
+    File upload
+
+  url: |-
+    /optional/
+
+  services:
+  - method: |-
+      POST
+
+    description: |-
+      Allows saving a file with optional secure rename
+
+    postconditions: |-
+      - Following the Location header on response allows downloading the file
+      - The file should have been securely renamed
+
+    input_schema: |-
+      .
+
+    output_schema: |-
+      .
+
+    error_schema: |-
+      Error
+
+    examples:
+
+      - description: |-
+          when requested with renaming
+        params:
+          rename: true
+        file_upload:
+          path: ./test.csv
+          content_type: "text/csv"
+        expected:
+          content_type: ~
+          status: 204

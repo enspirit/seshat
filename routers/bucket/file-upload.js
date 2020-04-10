@@ -7,7 +7,7 @@ const defaultHandler = require('./mime-handlers/default');
 const logger = require('../../lib/logger');
 
 let initPipeline = (typology, path) => (req, res, next) => {
-  req.pipeline = typology.getPipeline();
+  req.pipeline = typology.getPipeline(req);
 
   req.pipeline.on('error', (err) => {
     next(err);

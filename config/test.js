@@ -14,6 +14,10 @@ const tmpDynamic = new LocalStorage({
   path: path.join(__dirname, '../tmp/subfolders')
 });
 
+const withOptionalProc = new LocalStorage({
+  path: path.join(__dirname, '../tmp/optional')
+});
+
 module.exports = {
   api: {
     port: 3000,
@@ -31,6 +35,12 @@ module.exports = {
         .add(Typology.renameSecure())
         .add(Typology.storage(tmpDynamic)),
       storage: tmpDynamic
+    },
+    '/optional': {
+      typology: new Typology()
+        .add((req) => req.query.rename, Typology.renameSecure())
+        .add(Typology.storage(withOptionalProc)),
+      storage: withOptionalProc
     }
   }
 };
