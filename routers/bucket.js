@@ -21,10 +21,12 @@ module.exports = (config) => {
   // Merge with defaults
   config = _.merge(DEFAULTS, config);
 
+  if (config.middlewares) {
+    const mw = config.middlewares ? [].concat(config.middlewares) : [];
+    router.use(mw);
+  }
+
   router.use(direntMiddleware(config));
-
-  const mw = config.middlewares ? [].concat(config.middlewares) : [];
-
   router.use('/', fileList(config));
   router.use('/', fileUpload(config));
   router.use('/', fileRetrieve(config));
