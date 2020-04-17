@@ -40,7 +40,7 @@ module.exports =  (req, res, next) => {
     mimetype: mimetype,
     charset: charset,
     stream: req
-  });
+  }, req.query);
 
   p.then(() => next());
 };

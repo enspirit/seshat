@@ -22,7 +22,7 @@ module.exports = (req, res, next) => {
       encoding: encoding,
       mimetype: mimetype,
       stream: file
-    });
+    }, req.query);
     promises.push(p);
   });
 

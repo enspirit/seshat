@@ -28,8 +28,9 @@
     examples:
 
       - description: |-
-          when requested with renaming
-        params: {}
+          when requested without renaming
+        params:
+          force: true
         file_upload:
           path: ./test.csv
           content_type: "text/csv"

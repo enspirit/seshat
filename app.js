@@ -40,7 +40,7 @@ _.each(config.get('buckets'), (config, path) => {
 });
 
 // Error handler
-app.use(function(err, req, res) {
+app.use(function(err, req, res, next) {
   console.error(err.stack);
   res.status(500).send('Something broke!');
 });

@@ -20,7 +20,9 @@ services:
     - Following the Location header on response allows downloading the file
 
   input_schema: |-
-    {}
+    {
+      force :? Boolean
+    }
 
   output_schema: |-
     .
@@ -32,7 +34,8 @@ services:
 
     - description: |-
         when requested with a .csv file
-      params: {}
+      params:
+        force: true
       file_upload:
         path: ./test.csv
         content_type: "text/csv"
@@ -42,7 +45,8 @@ services:
 
     - description: |-
         when requested with file with special characters in name
-      params: {}
+      params:
+        force: true
       file_upload:
         path: "./98's results.csv"
         content_type: "text/csv"

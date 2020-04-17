@@ -31,6 +31,7 @@
           when requested with renaming
         params:
           rename: true
+          force: true
         file_upload:
           path: ./test.csv
           content_type: "text/csv"
