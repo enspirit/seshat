@@ -15,8 +15,7 @@ module.exports = ({storage}) => {
           return res.status(403).send(err.message);
         }
         if (err.code === 'ENOENT') {
-          res.header('Content-Type', 'text/plain');
-          return res.sendStatus(404);
+          return next();
         }
         next(err);
       });

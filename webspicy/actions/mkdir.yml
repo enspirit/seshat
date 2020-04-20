@@ -1,0 +1,47 @@
+---
+  name: |-
+    Actions: mkdir
+
+  url: |-
+    /simplest/
+
+  services:
+  - method: |-
+      POST
+
+    description: |-
+      Allows creating a new directory
+
+    preconditions: |-
+      - The directory simplest/test must not exist
+
+    postconditions: |-
+      - The directory simplest/test should exist
+
+    input_schema: |-
+      {
+        action: String
+        params: {
+          name: String
+        }
+      }
+
+    output_schema: |-
+      .
+
+    error_schema: |-
+      Error
+
+    examples:
+
+      - description: |-
+          when requested properly
+        headers:
+          Content-Type: application/vnd.seshat-action+json
+        params:
+          action: mkdir
+          params:
+            name: test
+        expected:
+          content_type: ~
+          status: 204

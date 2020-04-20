@@ -7,12 +7,14 @@ const fileRetrieve = require('./bucket/file-retrieve');
 const fileList = require('./bucket/file-list');
 const fileDelete = require('./bucket/file-delete');
 const direntMiddleware = require('./bucket/dirent-mw');
+const seshatActions = require('./bucket/actions');
 
 const DEFAULTS = {
   uploadPage: true,
   lastModified: true,
   etag: true,
-  cacheControl: 'public'
+  cacheControl: 'public',
+  actions: require('./bucket/actions').DEFAULTS
 };
 
 module.exports = (config) => {
@@ -27,6 +29,7 @@ module.exports = (config) => {
   }
 
   router.use(direntMiddleware(config));
+  router.use('/', seshatActions(config));
   router.use('/', fileList(config));
   router.use('/', fileUpload(config));
   router.use('/', fileRetrieve(config));

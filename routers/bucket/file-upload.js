@@ -4,11 +4,15 @@ const express = require('express');
 const multipartHandler = require('./mime-handlers/multipart-form-data');
 const defaultHandler = require('./mime-handlers/default');
 const logger = require('../../lib/logger');
+const { FileNotFoundError } = require('../../lib/robust/errors');
 
 let initPipeline = (typology, path) => (req, res, next) => {
   req.pipeline = typology.getPipeline(req);
 
   req.pipeline.on('error', (err) => {
+    if (err instanceof FileNotFoundError) {
+      return res.sendStatus(404);
+    }
     next(err);
   });
 
@@ -32,7 +36,6 @@ let initPipeline = (typology, path) => (req, res, next) => {
 };
 
 module.exports = ({typology, path}) => {
-
   const router = express.Router();
 
   let handlers = [

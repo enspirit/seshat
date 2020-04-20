@@ -6,8 +6,7 @@ const logger = require('./lib/logger');
 const expressWinston = require('express-winston');
 const cors = require('cors');
 const config = require('./config');
-
-let app = express();
+const app = express();
 
 const env = process.env.NODE_ENV || 'development';
 app.locals.ENV = env;
