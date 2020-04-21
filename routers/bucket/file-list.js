@@ -7,7 +7,7 @@ module.exports = ({storage, ...config}) => {
   const router = express.Router();
 
   router.get(/^(.*)$/, (req, res, next) => {
-    if (!req.dirent.isDirectory()) {
+    if (!req.dirent || !req.dirent.isDirectory()) {
       return next();
     }
     res.format({

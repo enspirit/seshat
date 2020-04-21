@@ -9,7 +9,7 @@ module.exports = ({storage, ...config}) => {
   const router = express.Router();
 
   router.get(/^(.*)$/, (req, res, next) => {
-    if (!req.dirent.isFile()) {
+    if (!req.dirent || !req.dirent.isFile()) {
       return next();
     }
     storage.get(req.dirent.name)

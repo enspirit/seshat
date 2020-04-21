@@ -3,7 +3,7 @@
     Directory listing
 
   url: |-
-    /simplest/
+    /{bucket}/
 
   services:
   - method: |-
@@ -17,6 +17,7 @@
 
     input_schema: |-
       {
+        bucket: String
       }
 
     output_schema: |-
@@ -29,8 +30,30 @@
 
       - description: |-
           when requested
+        params:
+          bucket: simplest
         headers:
           Accept: application/json
         expected:
           content_type: application/json
           status: 200
+
+    counterexamples:
+
+      - description: |-
+          when trying to list an unexisting bucket, it fails
+        params:
+          bucket: foobar
+        body: |-
+        expected:
+          content_type: text/html
+          status: 404
+
+      - description: |-
+          when trying to get an unexisting subitem, it fails
+        params:
+          bucket: simplest/foobar
+        body: |-
+        expected:
+          content_type: text/html
+          status: 404
