@@ -27,10 +27,10 @@ image:
 	docker build -t enspirit/seshat:latest .
 
 tag:
-	docker tag enspirit/seshat:latest enspirit/seshat:1.1.1
+	docker tag enspirit/seshat:latest enspirit/seshat:1.2.0
 
 push:
-	docker push enspirit/seshat:1.1.1
+	docker push enspirit/seshat:1.2.0
 
 up: test-folders
 	docker-compose up -d seshat
