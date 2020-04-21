@@ -14,7 +14,7 @@
 
     postconditions: |-
       - Following the Location header on response allows downloading the file
-      - The file should not have been renamed
+      - The file should be named test.csv
 
     input_schema: |-
       .
