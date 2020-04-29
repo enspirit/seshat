@@ -35,6 +35,9 @@ module.exports = ({actions, storage, ...config}) => {
     if (req.header('Content-Type') != SESHAT_CONTENT_TYPE) {
       return next();
     }
+    if (!req.dirent) {
+      return res.status(404).send('Not found');
+    }
     // If we are not on a directoy, we do not accept actions
     // Todo, accept a scope per action (directoy/file)
     // So that "mkdir" can only be used on directory
