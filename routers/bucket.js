@@ -13,7 +13,7 @@ const DEFAULTS = {
   uploadPage: true,
   lastModified: true,
   etag: true,
-  cacheControl: 'public',
+  cacheControl: 'private',
   actions: require('./bucket/actions').DEFAULTS
 };
 
