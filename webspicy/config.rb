@@ -8,6 +8,6 @@ Webspicy::Configuration.new(Path.dir) do |c|
   c.postcondition DirectoyExists
   c.precondition DirectoyNotExist
 
-  c.host = 'http://localhost:3000'
+  c.host = ENV['API_BASE'] || "http://127.0.0.1:3000"
 
 end

@@ -1,11 +1,32 @@
-version: '2'
+version: '3.6'
+
 services:
+
   seshat:
-    image: enspirit/seshat:latest
-    build: .
-    volumes:
-      - ./tmp:/home/app/webapp/tmp
+    image: seshat
+    command: npm run dev
     ports:
-      - "3000:3000"
-    environment:
-      NODE_ENV: test
+      - 3000:3000
+    env_file:
+      ./seshat/env/devel.env
+    volumes:
+      - ./seshat/src:/home/app/src
+      - ./seshat/tests:/home/app/tests
+      - ./seshat/config:/home/app/config
+      - ./seshat/babel.config.json:/home/app/babel.config.json
+      - ./seshat/.eslintrc.js:/home/app/.eslintrc.js
+      - ./seshat/package.json:/home/app/package.json
+
+  webspicy:
+    image: webspicy
+    # Keep it on to speed up consecutive tests run
+    command:
+      tail -f /dev/null
+    depends_on:
+      - seshat
+    env_file:
+      ./webspicy/env/devel.env
+    volumes:
+      - ./webspicy/Rakefile:/home/app/Rakefile
+      - ./webspicy/formaldoc:/home/app/formaldoc
+      - ./webspicy/domain:/home/app/domain

@@ -1,6 +1,4 @@
-coverage
-node_modules
+Dockerfile*.pushed
+Dockerfile*.log
+Dockerfile*.built
 .DS_Store
-config/*
-tmp/*
-/Dockerfile.log

@@ -1,0 +1,47 @@
+import Promise from 'bluebird';
+import { PipelineClosedError } from '../robust/errors';
+import { EventEmitter } from 'events';
+
+export default class Pipeline extends EventEmitter {
+
+  constructor(processors) {
+    super();
+    this.processors = processors;
+    this.closed = false;
+    this.failed = false;
+
+    this.processes = [];
+  }
+
+  process(file, args) {
+    if (this.closed) {
+      return Promise.reject(new PipelineClosedError(
+        'The pipeline has been closed'));
+    }
+
+    let promise = Promise.reduce(this.processors, (file, proc) => {
+      return proc.process(file, args);
+    }, file);
+
+    promise = promise.catch((err) => {
+      this.failed = true;
+      this.emit('error', err);
+    });
+    this.processes.push(promise);
+
+    return promise;
+  }
+
+  close() {
+    this.closed = true;
+
+    Promise.all(this.processes)
+      .then((res) => {
+        if (!this.failed) {
+          this.emit('success', res);
+        }
+        this.emit('finished', res);
+      });
+  }
+
+}

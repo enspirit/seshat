@@ -1,0 +1,43 @@
+{
+  "name": "nodejs-babel-skeleton",
+  "version": "0.0.1",
+  "description": "Skeleton of a nodejs + babel + mocha + eslint project.",
+  "main": "index.js",
+  "scripts": {
+    "start": "babel-node src/index.js",
+    "dev": "nodemon --ignore tmp --exec npm start",
+    "test": "mocha --reporter=mocha-junit-reporter --require @babel/register --recursive --reporter-options mochaFile=tests/test-results.xml tests",
+    "test:coverage": "nyc --reporter=cobertura mocha --require @babel/register --recursive tests",
+    "test:watch": "mocha --require @babel/register --recursive --watch tests"
+  },
+  "author": "Louis Lambeau <llambeau@quadrabee.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.12.3",
+    "@babel/node": "^7.12.6",
+    "@babel/preset-env": "^7.12.1",
+    "@babel/register": "^7.12.1",
+    "@enspirit/eslint-config-node": "0.0.6",
+    "chai": "^4.2.0",
+    "eslint": "^7.13.0",
+    "mocha": "^8.2.1",
+    "mocha-junit-reporter": "^2.0.0",
+    "nodemon": "^2.0.6",
+    "nyc": "^15.1.0"
+  },
+  "dependencies": {
+    "bluebird": "^3.7.2",
+    "body-parser": "^1.19.0",
+    "busboy": "^0.3.1",
+    "content-type": "^1.0.4",
+    "cors": "^2.8.5",
+    "etag": "^1.8.1",
+    "express": "^4.17.1",
+    "express-winston": "^4.0.3",
+    "finitio": "^1.2.0",
+    "lodash": "^4.17.15",
+    "mime-types": "^2.1.26",
+    "mkdirp": "^1.0.4",
+    "winston": "^3.2.1"
+  }
+}
