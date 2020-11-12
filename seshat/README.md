@@ -1,26 +1,27 @@
-# Skeleton
+# Seshat - Easy attachement upload/download
 
-This is a skeleton of a nodejs project with:
+Seshat is a simple docker container to manage file uploads/downloads for
+long-lived user attachments.
 
-* Babel 7.x
-* Mocha 8.x
-* Chai 4.x
-* Eslint (with enspirit's config)
+## Dependencies
 
-# Commands
+To install the dependencies, run `make install`
 
-## Run the app:
-Command: `npm start`
+Some of the dependencies on this project depend on the package `fiber` that is incompatible with some versions of node.
+It is recommended to use node v10.6.x with this project.
 
-## Run the tests:
-Command: `npm test`
+## Unit tests
 
-## Run the tests (+ watch for file changes & rerun):
-Command: `npm run test:watch`
+`make unit-test`
 
-A report will be generated in `tests/test-results.xml`. This file is compatible with jenkins' junit plugin.
+## Webspicy
 
-## Run the tests (+ output coverage report):
-Command: `npm run test:coverage`
+To run the webspicy test, make sure to run sehsat in a terminal by using `make run`, then in another terminal run `make webspicy`
 
-The coverage report will be generated in the folder `coverage/`.
+## Build the docker image
+
+`make image`
+
+## Push the docker image to the q8s registry
+
+`make push`

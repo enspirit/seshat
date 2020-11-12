@@ -27,6 +27,4 @@ services:
     env_file:
       ./webspicy/env/devel.env
     volumes:
-      - ./webspicy/Rakefile:/home/app/Rakefile
       - ./webspicy/formaldoc:/home/app/formaldoc
-      - ./webspicy/domain:/home/app/domain

@@ -2,3 +2,4 @@ node_modules
 .nyc_output/
 tests/test-results.xml
 coverage
+tmp
