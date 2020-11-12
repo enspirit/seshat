@@ -3,6 +3,7 @@ import express from 'express';
 import mkdir from './mkdir';
 import Finitio from 'finitio';
 import bodyParser from 'body-parser';
+import logger from '../../../logger';
 
 const SESHAT_CONTENT_TYPE = 'application/vnd.seshat-action+json';
 
@@ -10,7 +11,7 @@ const typeName = (word) => {
   return word[0].toUpperCase() + word.substr(1) + 'Action';
 };
 
-export default ({actions, storage, ...config}) => {
+export default ({ actions, storage }) => {
   const ActionSchemas = actions.map((a) => {
     return `
       ${typeName(a.name)} = {
@@ -48,7 +49,7 @@ export default ({actions, storage, ...config}) => {
     try {
       system.dress(req.body);
     } catch (e) {
-      console.error(e);
+      logger.error(e);
       return res.status(422).send('Invalid action or parameters');
     }
 

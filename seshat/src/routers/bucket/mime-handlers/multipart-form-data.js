@@ -3,18 +3,18 @@ import Busboy from 'busboy';
 import logger from '../../../logger';
 
 export default (req, res, next) => {
-  let contentType = req.headers['content-type'] || '';
-  if (contentType.indexOf('multipart/form-data') < 0){
+  const contentType = req.headers['content-type'] || '';
+  if (contentType.indexOf('multipart/form-data') < 0) {
     return next();
   }
 
-  let busboy = new Busboy({ headers: req.headers });
+  const busboy = new Busboy({ headers: req.headers });
 
-  let promises = [];
+  const promises = [];
 
   busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
     logger.info('File [' + fieldname + ']: filename: ' + filename + ', encoding: ' + encoding + ', mimetype: ' + mimetype);
-    let p = req.pipeline.process({
+    const p = req.pipeline.process({
       filename: filename,
       path: req.path,
       encoding: encoding,

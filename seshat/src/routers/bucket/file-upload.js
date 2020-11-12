@@ -4,7 +4,7 @@ import defaultHandler from './mime-handlers/default';
 import logger from '../../logger';
 import { FileNotFoundError } from '../../robust/errors';
 
-let initPipeline = (typology, path) => (req, res, next) => {
+const initPipeline = (typology, path) => (req, res, next) => {
   req.pipeline = typology.getPipeline(req);
 
   req.pipeline.on('error', (err) => {
@@ -15,12 +15,12 @@ let initPipeline = (typology, path) => (req, res, next) => {
   });
 
   req.pipeline.on('success', (files) => {
-    let file = files[0];
+    const file = files[0];
     let location = file.filename;
-    if (file.path !== '/'){
+    if (file.path !== '/') {
       location = file.path + '/' + encodeURIComponent(file.filename);
     }
-    if (file.originalFilename){
+    if (file.originalFilename) {
       location = location + '?n=' + encodeURIComponent(file.originalFilename);
     }
 
@@ -33,10 +33,10 @@ let initPipeline = (typology, path) => (req, res, next) => {
   next();
 };
 
-export default ({typology, path}) => {
+export default ({ typology, path }) => {
   const router = express.Router();
 
-  let handlers = [
+  const handlers = [
     initPipeline(typology, path),
     multipartHandler,
     defaultHandler
