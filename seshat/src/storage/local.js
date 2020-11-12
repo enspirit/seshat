@@ -11,7 +11,7 @@ import {
   ArgumentError,
   UnsecurePathError
 } from '../robust/errors';
-import mkdirp from 'mkdirp';
+import makeDir from 'make-dir';
 
 const flstat = Promise.promisify(fs.lstat);
 const freaddir = Promise.promisify(fs.readdir);
@@ -99,7 +99,7 @@ export default class LocalStorage extends AbstractStorage {
             throw new FileNotFoundError(`The subdirectory '${directory}' does not exist`);
           }
           if (!exists) {
-            return mkdirp(directory);
+            return makeDir(directory);
           }
         })
         .then(() => fsexists(filepath))
@@ -134,7 +134,7 @@ export default class LocalStorage extends AbstractStorage {
 
   mkdir(path) {
     const itemPath = this.itemPath(path);
-    return mkdirp(itemPath);
+    return makeDir(itemPath);
   }
 
   // returns a full path of a bucket item
