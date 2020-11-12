@@ -1,6 +1,6 @@
 import express from 'express';
 
-export default ({storage}) => {
+export default ({ storage }) => {
   const router = express.Router();
 
   router.delete(/^(.*)$/, (req, res) => {

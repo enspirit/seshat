@@ -38,8 +38,8 @@ _.each(config.get('buckets'), (config, path) => {
 });
 
 // Error handler
-app.use(function(err, req, res, next) {
-  console.error(err.stack);
+app.use(function(err, req, res, _) {
+  logger.error(err.stack);
   res.status(500).send('Something broke!');
 });
 

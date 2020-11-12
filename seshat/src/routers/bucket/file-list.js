@@ -1,7 +1,7 @@
 import express from 'express';
 import path from 'path';
 
-export default ({storage, ...config}) => {
+export default ({ storage, ...config }) => {
   const router = express.Router();
 
   router.get(/^(.*)$/, (req, res, next) => {

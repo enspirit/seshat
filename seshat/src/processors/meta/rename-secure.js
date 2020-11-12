@@ -12,12 +12,12 @@ export default (length = 16) => {
     process: (file) => {
       return randomBytes(length)
         .then((buf) => {
-          let unique = buf
+          const unique = buf
             .toString('base64')
             .replace(/\//g, '_')
             .replace(/\+/g, '-');
 
-          let extension = file.mimetype ?
+          const extension = file.mimetype ?
             mime.extension(file.mimetype) : 'bin';
 
           file.originalFilename = file.filename;

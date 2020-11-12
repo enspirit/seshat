@@ -1,6 +1,6 @@
 import { UnsecurePathError } from '../../robust/errors';
 
-export default ({storage}) => {
+export default ({ storage }) => {
   return (req, res, next) => {
     const fpath = decodeURIComponent(req.path);
     storage.dirent(fpath)
