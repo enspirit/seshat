@@ -8,7 +8,9 @@
     "dev": "nodemon --ignore tmp --exec npm start",
     "test": "mocha --reporter=mocha-junit-reporter --require @babel/register --recursive --reporter-options mochaFile=tests/test-results.xml tests",
     "test:coverage": "nyc --reporter=cobertura mocha --require @babel/register --recursive tests",
-    "test:watch": "mocha --require @babel/register --recursive --watch tests"
+    "test:watch": "mocha --require @babel/register --recursive --watch tests",
+    "lint": "eslint src tests *.js .eslintrc.js",
+    "lint:fix": "eslint --fix src tests *.js .eslintrc.js"
   },
   "author": "Louis Lambeau <llambeau@quadrabee.com>",
   "license": "ISC",

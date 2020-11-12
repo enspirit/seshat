@@ -133,5 +133,8 @@ endef
 # Generate all standard rules for all components.
 $(foreach component,$(COMPONENTS),$(eval $(call make-goal,$(component))))
 
+lint: seshat.on
+	docker-compose exec -T seshat npm run lint
+
 test: webspicy.on
 	docker-compose exec -T webspicy webspicy config.rb

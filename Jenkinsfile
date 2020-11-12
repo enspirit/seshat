@@ -30,6 +30,16 @@ pipeline {
       }
     }
 
+    stage ('Linting') {
+      steps {
+        container('builder') {
+          script {
+            sh 'make lint'
+          }
+        }
+      }
+    }
+
     stage ('Testing') {
       steps {
         container('builder') {
