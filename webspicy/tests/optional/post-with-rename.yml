@@ -29,6 +29,8 @@
 
       - description: |-
           when requested with renaming
+        headers:
+          Content-Type: application/vnd.seshat-action+json
         params:
           rename: true
           force: true
