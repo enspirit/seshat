@@ -34,6 +34,7 @@ _.each(config.get('buckets'), (config, path) => {
     path += '/';
   }
   config.path = path;
+  console.log('setting up bucket', path, bucket(config));
   app.use(path, bucket(config));
 });
 

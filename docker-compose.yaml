@@ -1,9 +1,9 @@
-version: '3.6'
+version: '3.8'
 
 services:
 
   seshat:
-    image: seshat
+    image: seshat/seshat
     command: npm run dev
     ports:
       - 3000:3000
@@ -18,7 +18,7 @@ services:
       - ./seshat/package.json:/home/app/package.json
 
   webspicy:
-    image: webspicy
+    image: seshat/webspicy
     # Keep it on to speed up consecutive tests run
     command:
       tail -f /dev/null
@@ -27,4 +27,7 @@ services:
     env_file:
       ./webspicy/env/devel.env
     volumes:
-      - ./webspicy/formaldoc:/home/app/formaldoc
+      - ./webspicy/support:/home/app/support
+      - ./webspicy/tests:/home/app/tests
+      - ./webspicy/config.rb:/home/app/config.rb
+      - ./webspicy/schema.fio:/home/app/schema.fio
