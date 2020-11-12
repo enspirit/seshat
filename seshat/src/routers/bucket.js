@@ -7,12 +7,14 @@ import fileDelete from './bucket/file-delete';
 import direntMiddleware from './bucket/dirent-mw';
 import seshatActions from './bucket/actions';
 
+import { DEFAULTS as defaultActions } from './bucket/actions';
+
 const DEFAULTS = {
   uploadPage: true,
   lastModified: true,
   etag: true,
   cacheControl: 'private',
-  actions: require('./bucket/actions').DEFAULTS
+  actions: defaultActions
 };
 
 export default (config) => {

@@ -70,7 +70,10 @@ export default ({ actions, storage }) => {
   return router;
 };
 
-module.exports.mkdir = mkdir;
-module.exports.DEFAULTS = [
-  mkdir
-];
+const DEFAULTS = [mkdir];
+
+export {
+  mkdir,
+  DEFAULTS
+};
+

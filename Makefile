@@ -84,7 +84,7 @@ restart: seshat.restart
 # for a given component, say $1.
 define make-goal
 $1/Dockerfile.built: $1/Dockerfile $(shell find $1 -type f | grep -v "\/tmp\|\.idea\|\.bundle\|\.log\|\.bash_history\|\.class\|\.pushed\|\.built\|target\|wp-content\|backups\|vendor\|node_modules\|screenshots" | sed 's/ /\\ /g')
-	docker build ${$1_BUILD_ARGS} -t $(shell echo $1 | tr A-Z a-z) ./$1 | tee $1/Dockerfile.log
+	docker build -t seshat/$1 ./$1 | tee $1/Dockerfile.log
 	touch $1/Dockerfile.built
 
 $1.image: $1/Dockerfile.built
@@ -123,8 +123,8 @@ $1/Dockerfile.pushed: $1/Dockerfile.built
 		echo "No private registry defined, ignoring. (set DOCKER_REGISTRY or place it in .env file)"; \
 		return 1; \
 	fi
-	docker tag $1 $(DOCKER_REGISTRY)/$1:$(DOCKER_TAG)
-	docker push $(DOCKER_REGISTRY)/$1:$(DOCKER_TAG) | tee -a $1/Dockerfile.log
+	docker tag seshat/$1 $(DOCKER_REGISTRY)/$1:$(DOCKER_TAG)
+	docker push $(DOCKER_REGISTRY)/seshat/$1:$(DOCKER_TAG) | tee -a $1/Dockerfile.log
 	touch $1/Dockerfile.pushed
 
 $1.push: $1/Dockerfile.pushed
