@@ -2,3 +2,4 @@ Dockerfile*.pushed
 Dockerfile*.log
 Dockerfile*.built
 .DS_Store
+volumes
