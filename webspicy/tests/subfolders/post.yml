@@ -40,17 +40,22 @@ services:
         content_type: ~
         status: 204
 
-  counterexamples:
+  ## Disabled for now (tag=skip), as ruby's http client
+  ## is too smart and rewrites urls such as http://host:port/subfolders/../simplest
+  ## as http://host:port/simplest
+  ## We can therefore not test this counterexample for now
+  ##
+  # counterexamples:
 
-    - description: |-
-        when trying to cheat on folder names
-      params:
-        folder: ../simplest
-      headers:
-        Content-Type: text/csv;charset=UTF-8
-      body: |-
-        identifier,name
-        1,blambeau
-      expected:
-        content_type: text/plain
-        status: 403
+    # - description: |-
+    #     when trying to cheat on folder names
+    #   params:
+    #     folder: ../simplest
+    #   headers:
+    #     Content-Type: text/csv;charset=UTF-8
+    #   body: |-
+    #     identifier,name
+    #     1,blambeau
+    #   expected:
+    #     content_type: text/plain
+    #     status: 403

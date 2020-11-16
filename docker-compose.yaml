@@ -16,6 +16,7 @@ services:
       - ./seshat/babel.config.json:/home/app/babel.config.json
       - ./seshat/.eslintrc.js:/home/app/.eslintrc.js
       - ./seshat/package.json:/home/app/package.json
+      - ./volumes/seshat/:/home/app/tmp/
 
   webspicy:
     image: seshat/webspicy
@@ -31,3 +32,4 @@ services:
       - ./webspicy/tests:/home/app/tests
       - ./webspicy/config.rb:/home/app/config.rb
       - ./webspicy/schema.fio:/home/app/schema.fio
+      - ./volumes/seshat/:/home/app/tmp/
