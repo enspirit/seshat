@@ -7,7 +7,7 @@ const expect = require('chai').expect;
 const stream = require('stream');
 const devnull = require('dev-null');
 const chaiAsPromised = require('chai-as-promised');
-const {FileNotFoundError, ArgumentError, UnsecurePathError} =
+const { FileNotFoundError, ArgumentError, UnsecurePathError } =
   require('../../../lib/robust/errors');
 
 require('chai').use(chaiAsPromised);
@@ -33,7 +33,7 @@ describe('LocalStorage', () => {
     });
 
     dynamicTree = false;
-    storage = new LocalStorage({path: '/tmp', dynamicTree: dynamicTree});
+    storage = new LocalStorage({ path: '/tmp', dynamicTree: dynamicTree });
     fstream = new stream.Readable();
     fstream.push('hello world');
     fstream.push(null);
