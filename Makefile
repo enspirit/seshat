@@ -139,5 +139,13 @@ lint: seshat.on
 lint.fix: seshat.on
 	docker-compose exec -T seshat npm run lint:fix
 
-test: webspicy.on
+test-folders:
+	mkdir -p volumes/seshat/simplest
+	mkdir -p volumes/seshat/simplest/old
+	mkdir -p volumes/seshat/subfolders
+
+test-files: test-folders
+	touch volumes/seshat/simplest/old.txt
+
+test: webspicy.on test-files
 	docker-compose exec -T webspicy webspicy config.rb
