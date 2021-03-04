@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const express = require('express');
 const mkdir = require('./mkdir');
+const mv = require('./mv');
 const Finitio = require('finitio');
 const bodyParser = require('body-parser');
 
@@ -62,7 +63,8 @@ module.exports = ({actions, storage, ...config}) => {
         res.send(204);
       })
       .catch((err) => {
-        res.send(err.message);
+        err.statusCode = err.statusCode || 400;
+        res.status(err.statusCode).send(err.message);
       });
   });
 
@@ -70,6 +72,8 @@ module.exports = ({actions, storage, ...config}) => {
 };
 
 module.exports.mkdir = mkdir;
+module.exports.mv = mv;
 module.exports.DEFAULTS = [
-  mkdir
+  mkdir,
+  mv
 ];

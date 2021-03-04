@@ -19,8 +19,14 @@ class DirectoyNotExist
   end
 
   def instrument(test_case, client)
+    return if (test_case.tags & ['rename', 'rename_file']).any?
     dir = File.join('tmp', directory)
     Dir.delete(dir) if File.directory?(dir)
+  end
+
+  def check(invocation)
+    dir = File.join('tmp', directory)
+    raise "Directoy does exist" if File.directory?(dir)
   end
 
 end

@@ -6,13 +6,16 @@ clean:
 	rm -rf tmp/*
 
 test-folders:
-	mkdir -p tmp/simplest
+	mkdir -p tmp/simplest/old
 	mkdir -p tmp/subfolders
+
+test-files: test-folders
+	touch tmp/simplest/old.txt
 
 unit-test: test-folders
 	gulp test
 
-webspicy: test-folders
+webspicy: test-files
 	bundle exec rake test
 
 test: unit-test webspicy
@@ -21,7 +24,7 @@ run:
 	NODE_ENV=test ./bin/www
 
 watch:
-	supervisor ./bin/www
+	NODE_ENV=test supervisor ./bin/www
 
 image:
 	docker build -t enspirit/seshat:latest .

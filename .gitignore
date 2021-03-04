@@ -4,3 +4,4 @@ node_modules
 config/*
 tmp/*
 /Dockerfile.log
+rspec.xml
