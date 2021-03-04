@@ -3,3 +3,4 @@ Dockerfile*.log
 Dockerfile*.built
 .DS_Store
 volumes
+rspec.xml

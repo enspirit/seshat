@@ -1,0 +1,84 @@
+---
+  name: |-
+    Actions: mv
+
+  url: |-
+    /simplest/
+
+  services:
+  - method: |-
+      POST
+
+    description: |-
+      Allows renaming an existing file
+
+    preconditions: |-
+      - The file simplest/old.txt should exist
+
+    postconditions: |-
+      - The file simplest/old.txt must not exist
+      - The file simplest/new.txt should exist
+
+    input_schema: |-
+      {
+        action: String
+        params: {
+          old: String,
+          new: String
+        }
+      }
+
+    output_schema: |-
+      .
+
+    error_schema: |-
+      Error
+
+    examples:
+
+      - description: |-
+          when requested to change the old.txt file to new.txt
+        tags:
+          - rename_file
+        headers:
+          Content-Type: application/vnd.seshat-action+json
+        params:
+          action: mv
+          params:
+            old: old.txt
+            new: new.txt
+        expected:
+          content_type: ~
+          status: 204
+
+    counterexamples:
+
+      - description: |-
+          when requested to change the name of a file that doesn't exist
+        tags:
+          - rename_file
+        headers:
+          Content-Type: application/vnd.seshat-action+json
+        params:
+          action: mv
+          params:
+            old: donotexist.txt
+            new: new.txt
+        expected:
+          content_type: text/html
+          status: 400
+
+      - description: |-
+          when requested to change the name of a file to something that already exists
+        tags:
+          - rename_file
+        headers:
+          Content-Type: application/vnd.seshat-action+json
+        params:
+          action: mv
+          params:
+            old: exists.txt
+            new: donotoverride.txt
+        expected:
+          content_type: text/html
+          status: 400

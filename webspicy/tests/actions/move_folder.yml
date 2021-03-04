@@ -1,0 +1,84 @@
+---
+  name: |-
+    Actions: mv
+
+  url: |-
+    /simplest/
+
+  services:
+  - method: |-
+      POST
+
+    description: |-
+      Allows renaming an existing directory
+
+    preconditions: |-
+      - The directory simplest/old should exist
+
+    postconditions: |-
+      - The directory simplest/old must not exist
+      - The directory simplest/new should exist
+
+    input_schema: |-
+      {
+        action: String
+        params: {
+          old: String,
+          new: String
+        }
+      }
+
+    output_schema: |-
+      .
+
+    error_schema: |-
+      Error
+
+    examples:
+
+      - description: |-
+          when requested to change the old/ directory to new/
+        tags:
+          - rename
+        headers:
+          Content-Type: application/vnd.seshat-action+json
+        params:
+          action: mv
+          params:
+            old: old
+            new: new
+        expected:
+          content_type: ~
+          status: 204
+
+    counterexamples:
+
+      - description: |-
+          when requested to change the name of a directory that doesn't exist
+        tags:
+          - rename
+        headers:
+          Content-Type: application/vnd.seshat-action+json
+        params:
+          action: mv
+          params:
+            old: donotexist
+            new: new
+        expected:
+          content_type: text/html
+          status: 400
+
+      - description: |-
+          when requested to change the name of a directory to something that already exists
+        tags:
+          - rename
+        headers:
+          Content-Type: application/vnd.seshat-action+json
+        params:
+          action: mv
+          params:
+            old: exists
+            new: donotoverride
+        expected:
+          content_type: text/html
+          status: 400

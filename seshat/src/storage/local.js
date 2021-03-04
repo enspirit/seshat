@@ -16,6 +16,7 @@ import makeDir from 'make-dir';
 const flstat = Promise.promisify(fs.lstat);
 const freaddir = Promise.promisify(fs.readdir);
 const fsunlink = Promise.promisify(fs.unlink);
+const fsrename = Promise.promisify(fs.rename);
 
 const fsexists = (fpath) => {
   return new Promise((resolve) => {
@@ -139,6 +140,28 @@ export default class LocalStorage extends AbstractStorage {
   mkdir(path) {
     const itemPath = this.itemPath(path);
     return makeDir(itemPath);
+  }
+
+  mv(oldName, newName) {
+    const oldItemPath = this.itemPath(oldName);
+    const newItemPath = this.itemPath(newName);
+
+    const notFoundError = new FileNotFoundError(`The directory '${oldName}' does not exist`);
+    notFoundError.statusCode = 404;
+
+    return flstat(oldItemPath)
+      .then((stats) => {
+        if (!stats.isDirectory() && !stats.isFile()) {
+          throw notFoundError;
+        }
+      })
+      .then(() => fsexists(newItemPath))
+      .then((exists) => {
+        if (exists) {
+          throw new FileAlreadyExistsError(`The new location '${newName}' already exists`);
+        }
+        return fsrename(oldItemPath, newItemPath);
+      });
   }
 
   // returns a full path of a bucket item

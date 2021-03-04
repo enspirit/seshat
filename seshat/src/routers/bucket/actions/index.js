@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import express from 'express';
 import mkdir from './mkdir';
+import mv from './mv';
 import Finitio from 'finitio';
 import bodyParser from 'body-parser';
 import logger from '../../../logger';
@@ -63,17 +64,19 @@ export default ({ actions, storage }) => {
         res.send(204);
       })
       .catch((err) => {
-        res.send(err.message);
+        err.statusCode = err.statusCode || 400;
+        res.status(err.statusCode).send(err.message);
       });
   });
 
   return router;
 };
 
-const DEFAULTS = [mkdir];
+const DEFAULTS = [mkdir, mv];
 
 export {
   mkdir,
+  mv,
   DEFAULTS
 };
 

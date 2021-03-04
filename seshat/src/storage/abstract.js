@@ -26,4 +26,8 @@ export default class FileStorage {
     throw new NotImplementedError('FileStorage#delete not implemented');
   }
 
+  mv(/*oldpath, newpath*/) {
+    throw new NotImplementedError('FileStorage#mv not implemented');
+  }
+
 }
