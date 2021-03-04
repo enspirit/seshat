@@ -5,9 +5,9 @@ Error = String
 MimeType = String
 
 File = {
-  name: String
-  isDirectory: False
-  type: MimeType
+  name         :  String
+  isDirectory  :  False
+  type         :  MimeType|Nil
 }
 
 Directory = {

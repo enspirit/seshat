@@ -25,6 +25,10 @@ const fsexists = (fpath) => {
   });
 };
 
+const mimeLookup = (fname) => {
+  return mime.lookup(fname) || null;
+};
+
 export default class LocalStorage extends AbstractStorage {
 
   constructor({ path, dynamicTree = false }) {
@@ -65,7 +69,7 @@ export default class LocalStorage extends AbstractStorage {
           const dirent = {
             name: entry.name,
             isDirectory: entry.isDirectory(),
-            type : entry.isDirectory() ? 'directory' : mime.lookup(entry.name)
+            type : entry.isDirectory() ? 'directory' : mimeLookup(entry.name)
           };
           return dirent;
         });
