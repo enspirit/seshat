@@ -4,3 +4,4 @@ tests/test-results.xml
 coverage
 tmp
 dist/
+package-lock.json
