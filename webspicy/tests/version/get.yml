@@ -1,0 +1,33 @@
+---
+  name: |-
+    Seshat's version endpoint
+
+  url: |-
+    /version
+
+  services:
+  - method: |-
+      GET
+
+    description: |-
+      Allows getting information about the running instance
+
+    input_schema: |-
+      .
+
+    output_schema: |-
+      Seshat.Version
+
+    error_schema: |-
+      Error
+
+    examples:
+
+      - description: |-
+          when requested
+        params: {}
+        headers:
+          Accept: application/json
+        expected:
+          content_type: application/json
+          status: 200

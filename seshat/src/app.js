@@ -4,6 +4,7 @@ import logger from './logger';
 import expressWinston from 'express-winston';
 import cors from 'cors';
 import config from '../config';
+import { version } from '../package.json';
 
 const app = express();
 
@@ -34,8 +35,11 @@ _.each(config.get('buckets'), (config, path) => {
     path += '/';
   }
   config.path = path;
-  console.log('setting up bucket', path, bucket(config));
   app.use(path, bucket(config));
+});
+
+app.get('/version', (req, res) => {
+  res.send({ seshat: { version } });
 });
 
 // Error handler

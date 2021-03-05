@@ -2,6 +2,12 @@
 
 Error = String
 
+Seshat.Version = {
+  seshat: {
+    version: String
+  }
+}
+
 MimeType = String
 
 File = {
