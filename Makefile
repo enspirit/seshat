@@ -151,3 +151,6 @@ test-files: test-folders
 
 test: webspicy.on test-files
 	docker-compose exec -T webspicy webspicy config.rb
+
+release: seshat.image seshat.push
+	cd seshat && npm publish
