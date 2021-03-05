@@ -10,17 +10,14 @@
       POST
 
     description: |-
-      Allows renaming an existing directory or file
+      Allows renaming an existing directory
 
     preconditions: |-
       - The directory simplest/old should exist
-      - The file simplest/old.txt should exist
 
     postconditions: |-
       - The directory simplest/old must not exist
       - The directory simplest/new should exist
-      - The file simplest/old.txt must not exist
-      - The file simplest/new.txt should exist
 
     input_schema: |-
       {
@@ -54,21 +51,6 @@
           content_type: ~
           status: 204
 
-      - description: |-
-          when requested to change the old.txt file to new.txt
-        tags:
-          - rename_file
-        headers:
-          Content-Type: application/vnd.seshat-action+json
-        params:
-          action: mv
-          params:
-            old: old.txt
-            new: new.txt
-        expected:
-          content_type: ~
-          status: 204
-
     counterexamples:
 
       - description: |-
@@ -82,21 +64,6 @@
           params:
             old: donotexist
             new: new
-        expected:
-          content_type: text/html
-          status: 404
-
-      - description: |-
-          when requested to change the name of a file that doesn't exist
-        tags:
-          - rename_file
-        headers:
-          Content-Type: application/vnd.seshat-action+json
-        params:
-          action: mv
-          params:
-            old: donotexist.txt
-            new: new.txt
         expected:
           content_type: text/html
           status: 404

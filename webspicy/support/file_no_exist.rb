@@ -21,7 +21,7 @@ class FileNotExist
   def check(invocation)
     return if invocation.test_case.tags.include?('rename')
     file = File.join('tmp', filename)
-    raise "File does exist" if File.file?(file)
+    raise "File #{file} does exist" if File.file?(file)
   end
 
 end

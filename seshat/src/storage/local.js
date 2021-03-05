@@ -146,7 +146,7 @@ export default class LocalStorage extends AbstractStorage {
     const oldItemPath = this.itemPath(oldName);
     const newItemPath = this.itemPath(newName);
 
-    const notFoundError = new FileNotFoundError(`The directory '${oldName}' does not exist`);
+    const notFoundError = new FileNotFoundError(`The directory '${oldItemPath}' does not exist`);
     notFoundError.statusCode = 404;
 
     return flstat(oldItemPath).then((stats) => {
