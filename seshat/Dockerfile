@@ -4,10 +4,8 @@ WORKDIR /home/app
 
 RUN apk add --no-cache bash
 
-COPY package.json ./
+COPY . ./
 
 RUN npm install
-
-COPY . ./
 
 CMD ["npm", "start"]
