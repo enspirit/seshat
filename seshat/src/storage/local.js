@@ -149,14 +149,23 @@ export default class LocalStorage extends AbstractStorage {
     const notFoundError = new FileNotFoundError(`The directory '${oldItemPath}' does not exist`);
     notFoundError.statusCode = 404;
 
-    return flstat(oldItemPath).then((stats) => {
-      if (!stats.isDirectory() && !stats.isFile()) {
-        throw notFoundError;
-      }
-      return fsrename(oldItemPath, newItemPath);
-    }).catch(() => {
-      throw notFoundError;
-    });
+    return flstat(oldItemPath)
+      .then((stats) => {
+        if (!stats.isDirectory() && !stats.isFile()) {
+          throw notFoundError;
+        }
+      })
+      .then(() => fsexists(newItemPath))
+      .then((exists) => {
+        if (exists) {
+          throw new FileAlreadyExistsError(`The new location '${newItemPath}' already exists`);
+        } else {
+          return fsrename(oldItemPath, newItemPath);
+        }
+      })
+      .catch((err) => {
+        throw err;
+      });
   }
 
   // returns a full path of a bucket item

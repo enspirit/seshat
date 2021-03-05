@@ -66,4 +66,19 @@
             new: new
         expected:
           content_type: text/html
-          status: 404
+          status: 400
+
+      - description: |-
+          when requested to change the name of a directory to something that already exists
+        tags:
+          - rename
+        headers:
+          Content-Type: application/vnd.seshat-action+json
+        params:
+          action: mv
+          params:
+            old: exists
+            new: donotoverride
+        expected:
+          content_type: text/html
+          status: 400

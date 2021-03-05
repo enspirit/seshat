@@ -2,6 +2,14 @@ require 'webspicy'
 
 Webspicy::Configuration.new(Path.dir) do |c|
 
+  c.around_each  do |tc, &bl|
+    simplestNew = File.join('tmp', 'simplest/new')
+    Dir.delete(simplestNew) if File.directory?(simplestNew)
+    simplestNew = File.join('tmp', 'simplest/new.txt')
+    File.delete(simplestNew) if File.file?(simplestNew)
+    bl.call
+  end
+
   c.postcondition ValidLocationHeader
   c.postcondition FileSecurelyRenamed
   c.postcondition FileShouldBeNamed

@@ -66,4 +66,19 @@
             new: new.txt
         expected:
           content_type: text/html
-          status: 404
+          status: 400
+
+      - description: |-
+          when requested to change the name of a file to something that already exists
+        tags:
+          - rename_file
+        headers:
+          Content-Type: application/vnd.seshat-action+json
+        params:
+          action: mv
+          params:
+            old: exists.txt
+            new: donotoverride.txt
+        expected:
+          content_type: text/html
+          status: 400
