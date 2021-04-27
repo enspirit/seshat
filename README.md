@@ -14,9 +14,6 @@ See webspicy test suite in [webspicy/tests](https://github.com/enspirit/seshat/t
 
 To install the dependencies, run `make install`
 
-Some of the dependencies on this project depend on the package `fiber` that is incompatible with some versions of node.
-It is recommended to use node v10.6.x with this project.
-
 ## Unit tests
 
 `make unit-test`
