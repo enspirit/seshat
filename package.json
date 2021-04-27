@@ -14,7 +14,7 @@
     "lint:fix": "eslint --fix src tests *.js .eslintrc.js",
     "prepare": "npm run build"
   },
-  "files":  [
+  "files": [
     "dist",
     "config",
     "index.js"

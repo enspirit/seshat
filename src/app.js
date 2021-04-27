@@ -43,7 +43,8 @@ app.get('/version', (req, res) => {
 });
 
 // Error handler
-app.use(function(err, req, res, _) {
+// eslint-disable-next-line no-unused-vars
+app.use(function(err, req, res, next) {
   logger.error(err.stack);
   res.status(500).send('Something broke!');
 });
