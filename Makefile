@@ -60,8 +60,14 @@ test-files: test-folders
 	touch volumes/seshat/simplest/old.txt
 	touch volumes/seshat/simplest/donotoverride.txt
 
-test: test-files
+test.unit:
+	docker-compose exec -T seshat npm run test
+	docker-compose exec -T seshat npm run test:coverage
+
+test.integration: test-files
 	docker-compose exec -T webspicy webspicy config.rb
+
+test: test.unit test.integration
 
 release: seshat.image
 	docker tag seshat/seshat enspirit/seshat:$(DOCKER_TAG)
