@@ -1,5 +1,4 @@
-Seshat
-===========
+# Seshat - Easy attachement upload/download
 
 Storage as a REST api.
 
@@ -10,3 +9,26 @@ Storage as a REST api.
 See examples in [seshat/config/](https://github.com/enspirit/seshat/tree/master/seshat/config).
 
 See webspicy test suite in [webspicy/tests](https://github.com/enspirit/seshat/tree/master/webspicy/tests)
+
+## Dependencies
+
+To install the dependencies, run `make install`
+
+Some of the dependencies on this project depend on the package `fiber` that is incompatible with some versions of node.
+It is recommended to use node v10.6.x with this project.
+
+## Unit tests
+
+`make unit-test`
+
+## Webspicy
+
+To run the webspicy test, make sure to run sehsat in a terminal by using `make run`, then in another terminal run `make webspicy`
+
+## Build the docker image
+
+`make image`
+
+## Push the docker image to the q8s registry
+
+`make push`

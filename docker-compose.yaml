@@ -8,14 +8,14 @@ services:
     ports:
       - 3000:3000
     env_file:
-      ./seshat/env/devel.env
+      ./env/devel.env
     volumes:
-      - ./seshat/src:/home/app/src
-      - ./seshat/tests:/home/app/tests
-      - ./seshat/config:/home/app/config
-      - ./seshat/babel.config.json:/home/app/babel.config.json
-      - ./seshat/.eslintrc.js:/home/app/.eslintrc.js
-      - ./seshat/package.json:/home/app/package.json
+      - ./src:/home/app/src
+      - ./tests:/home/app/tests
+      - ./config:/home/app/config
+      - ./babel.config.json:/home/app/babel.config.json
+      - ./.eslintrc.js:/home/app/.eslintrc.js
+      - ./package.json:/home/app/package.json
       - ./volumes/seshat/:/home/app/tmp/
 
   webspicy:
