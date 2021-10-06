@@ -4,9 +4,9 @@ winston.configure({
   transports: [
     new winston.transports.Console({
       json: false,
-      colorize: true
-    })
-  ]
+      colorize: true,
+    }),
+  ],
 });
 
 winston.level = 'debug';

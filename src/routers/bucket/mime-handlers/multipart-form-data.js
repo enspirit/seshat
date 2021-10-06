@@ -13,13 +13,13 @@ export default (req, res, next) => {
   const promises = [];
 
   busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
-    logger.info('File [' + fieldname + ']: filename: ' + filename + ', encoding: ' + encoding + ', mimetype: ' + mimetype);
+    logger.info(`File [${fieldname}]: filename: ${filename}, encoding: ${encoding}, mimetype: ${mimetype}`);
     const p = req.pipeline.process({
       filename: filename,
       path: req.path,
       encoding: encoding,
       mimetype: mimetype,
-      stream: file
+      stream: file,
     }, req.query);
     promises.push(p);
   });

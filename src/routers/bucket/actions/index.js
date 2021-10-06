@@ -9,7 +9,7 @@ import logger from '../../../logger';
 const SESHAT_CONTENT_TYPE = 'application/vnd.seshat-action+json';
 
 const typeName = (word) => {
-  return word[0].toUpperCase() + word.substr(1) + 'Action';
+  return `${word[0].toUpperCase() + word.substr(1)}Action`;
 };
 
 export default ({ actions, storage }) => {
@@ -34,7 +34,7 @@ export default ({ actions, storage }) => {
   const router = express.Router();
 
   router.post(/^(.*)$/, bodyParser.json({ type: SESHAT_CONTENT_TYPE }), (req, res, next) => {
-    if (req.header('Content-Type') != SESHAT_CONTENT_TYPE) {
+    if (req.header('Content-Type') !== SESHAT_CONTENT_TYPE) {
       return next();
     }
     if (!req.dirent) {
@@ -77,6 +77,6 @@ const DEFAULTS = [mkdir, mv];
 export {
   mkdir,
   mv,
-  DEFAULTS
+  DEFAULTS,
 };
 

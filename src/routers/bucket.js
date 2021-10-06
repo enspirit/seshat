@@ -14,7 +14,7 @@ const DEFAULTS = {
   lastModified: true,
   etag: true,
   cacheControl: 'private',
-  actions: defaultActions
+  actions: defaultActions,
 };
 
 export default (config) => {

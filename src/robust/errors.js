@@ -23,5 +23,5 @@ export {
   FileNotFoundError,
   PipelineClosedError,
   UnsecurePathError,
-  FileAlreadyExistsError
+  FileAlreadyExistsError,
 };

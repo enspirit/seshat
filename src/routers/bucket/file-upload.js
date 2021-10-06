@@ -18,14 +18,14 @@ const initPipeline = (typology, path) => (req, res, next) => {
     const file = files[0];
     let location = file.filename;
     if (file.path !== '/') {
-      location = file.path + '/' + encodeURIComponent(file.filename);
+      location = `${file.path}/${encodeURIComponent(file.filename)}`;
     }
     if (file.originalFilename) {
-      location = location + '?n=' + encodeURIComponent(file.originalFilename);
+      location = `${location}?n=${encodeURIComponent(file.originalFilename)}`;
     }
 
     location = (path + location).replace(/\/\/+/g, '/');
-    logger.debug('Location set to `' + location + '`');
+    logger.debug(`Location set to \`${location}\``);
     res.location(location);
     res.sendStatus(204);
   });
@@ -39,7 +39,7 @@ export default ({ typology, path }) => {
   const handlers = [
     initPipeline(typology, path),
     multipartHandler,
-    defaultHandler
+    defaultHandler,
   ];
 
   //

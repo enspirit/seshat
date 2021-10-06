@@ -5,7 +5,7 @@ export default () => {
     process: (file) => {
       file.stream.resume();
       return Promise.resolve(null);
-    }
+    },
   };
 };
 

@@ -23,13 +23,13 @@ describe('LocalStorage', () => {
     mockMkdirP = sinon.stub().returns(Promise.resolve());
     mockFs = {
       createWriteStream: createWriteStream,
-      exists: sinon.stub().yields(true)
+      exists: sinon.stub().yields(true),
     };
     mockWriteStream = devnull();
     createWriteStream = sinon.stub().returns(mockWriteStream);
     LocalStorage = proxyquire('../../../dist/storage/local', {
       'fs': mockFs,
-      'mkdirp-promise': mockMkdirP
+      'mkdirp-promise': mockMkdirP,
     }).default;
 
     dynamicTree = false;

@@ -16,5 +16,5 @@ export default {
       throw new Error('Invalid folder name');
     }
     return storage.mv(path.join(dirent.name, params.old), path.join(dirent.name, params.new));
-  }
+  },
 };

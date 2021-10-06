@@ -8,7 +8,7 @@ export default class StorageProcessor extends AbstractProcessor {
   }
 
   process(file, args) {
-    const filepath = (file.path + '/' + file.filename).replace(/\/\/+/g, '/');
+    const filepath = (`${file.path}/${file.filename}`).replace(/\/\/+/g, '/');
     return this.storage.save(file.stream, filepath, args.force)
       .then(() => file);
   }

@@ -25,7 +25,7 @@ export default (length = 16) => {
 
           return Promise.resolve(file);
         });
-    }
+    },
   };
 };
 

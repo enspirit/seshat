@@ -1,3 +1,3 @@
 module.exports = {
-  'extends': '@enspirit/eslint-config-node'
+  'extends': '@enspirit/eslint-config-node',
 };

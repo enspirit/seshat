@@ -21,7 +21,7 @@ export default ({ storage, ...config }) => {
       },
       default: () => {
         return res.status(406).send('Format not supported');
-      }
+      },
     });
   });
 

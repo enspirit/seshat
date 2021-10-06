@@ -15,5 +15,5 @@ export default {
       throw new Error('Invalid filename');
     }
     return storage.mkdir(path.join(dirent.name, params.name));
-  }
+  },
 };

@@ -37,7 +37,7 @@ export default (req, res, next) => {
     path: req.path,
     mimetype: mimetype,
     charset: charset,
-    stream: req
+    stream: req,
   }, req.query);
 
   p.then(() => next());

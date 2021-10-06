@@ -7,6 +7,6 @@ export default () => {
     process: (file) => {
       logger.info('DEBUG:', inspect(file));
       return Promise.resolve(file);
-    }
+    },
   };
 };
