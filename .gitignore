@@ -4,3 +4,10 @@ Dockerfile*.built
 .DS_Store
 volumes
 rspec.xml
+node_modules
+.nyc_output/
+test-results.xml
+coverage
+tmp
+dist/
+package-lock.json

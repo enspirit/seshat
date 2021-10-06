@@ -1,0 +1,8 @@
+env
+volumes
+webspicy
+.git
+docker-compose*
+README*
+Jenkinsfile
+.gitignore
