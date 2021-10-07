@@ -3,6 +3,7 @@ pipeline {
 
   environment {
     SLACK_CHANNEL = '#opensource-cicd'
+    DOCKER_TAG = get_docker_tag()
   }
 
   stages {
@@ -49,6 +50,24 @@ pipeline {
         }
       }
     }
+
+    stage ('Pushing Docker Images') {
+      when {
+        anyOf {
+          branch 'master'
+          buildingTag()
+        }
+      }
+      steps {
+        container('builder') {
+          script {
+            docker.withRegistry('', 'dockerhub-credentials') {
+              sh 'make release'
+            }
+          }
+        }
+      }
+    }
   }
 
   post {
@@ -65,4 +84,11 @@ pipeline {
     }
   }
 
+}
+
+def get_docker_tag() {
+  if (env.TAG_NAME != null) {
+    return env.TAG_NAME
+  }
+  return 'latest'
 }

@@ -72,4 +72,4 @@ test: test.unit test.integration
 release: seshat.image
 	docker tag seshat/seshat enspirit/seshat:$(DOCKER_TAG)
 	docker push enspirit/seshat:$(DOCKER_TAG)
-	npm publish --access public
+
