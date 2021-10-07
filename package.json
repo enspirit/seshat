@@ -4,7 +4,7 @@
   "description": "Storage REST API.",
   "main": "index.js",
   "scripts": {
-    "build": "babel ./src --out-dir ./dist --source-maps --copy-files",
+    "build": "babel ./src --out-dir ./lib --source-maps --copy-files",
     "start": "babel-node src/index.js",
     "dev": "nodemon --ignore tmp --exec npm start",
     "test": "mocha --reporter=mocha-junit-reporter --require @babel/register --recursive --reporter-options mochaFile=tests/test-results.xml tests",
@@ -15,7 +15,7 @@
     "prepare": "npm run build"
   },
   "files": [
-    "dist",
+    "lib",
     "config",
     "index.js"
   ],

@@ -9,5 +9,5 @@ node_modules
 test-results.xml
 coverage
 tmp
-dist/
+lib/
 package-lock.json

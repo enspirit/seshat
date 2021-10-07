@@ -8,7 +8,7 @@ const stream = require('stream');
 const devnull = require('dev-null');
 const chaiAsPromised = require('chai-as-promised');
 const { FileNotFoundError, ArgumentError, UnsecurePathError } =
-  require('../../../dist/robust/errors');
+  require('../../../lib/robust/errors');
 
 require('chai').use(chaiAsPromised);
 require('chai').use(require('sinon-chai'));
@@ -27,7 +27,7 @@ describe('LocalStorage', () => {
     };
     mockWriteStream = devnull();
     createWriteStream = sinon.stub().returns(mockWriteStream);
-    LocalStorage = proxyquire('../../../dist/storage/local', {
+    LocalStorage = proxyquire('../../../lib/storage/local', {
       'fs': mockFs,
       'mkdirp-promise': mockMkdirP,
     }).default;
