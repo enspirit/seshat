@@ -10,13 +10,13 @@ services:
     env_file:
       ./env/devel.env
     volumes:
-      - ./src:/home/app/src
-      - ./tests:/home/app/tests
-      - ./config:/home/app/config
-      - ./babel.config.json:/home/app/babel.config.json
-      - ./.eslintrc.js:/home/app/.eslintrc.js
-      - ./package.json:/home/app/package.json
-      - ./volumes/seshat/:/home/app/tmp/
+      - ./src:/home/app/webapp/src
+      - ./tests:/home/app/webapp/tests
+      - ./config:/home/app/webapp/config
+      - ./babel.config.json:/home/app/webapp/babel.config.json
+      - ./.eslintrc.js:/home/app/webapp/.eslintrc.js
+      - ./package.json:/home/app/webapp/package.json
+      - ./volumes/seshat/:/home/app/webapp/tmp/
 
   webspicy:
     image: seshat/webspicy
@@ -33,3 +33,8 @@ services:
       - ./webspicy/config.rb:/home/app/config.rb
       - ./webspicy/schema.fio:/home/app/schema.fio
       - ./volumes/seshat/:/home/app/tmp/
+
+  fake-gcs-server:
+    image: fsouza/fake-gcs-server
+    volumes:
+      - ./volumes/fake-gcs:/data
