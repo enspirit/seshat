@@ -1,0 +1,59 @@
+---
+  name: |-
+    Directory listing
+
+  url: |-
+    /{bucket}/
+
+  services:
+  - method: |-
+      GET
+
+    description: |-
+      Allows getting a list of the bucket content
+
+    preconditions:
+      - The url must correspond to a bucket
+
+    input_schema: |-
+      {
+        bucket: String
+      }
+
+    output_schema: |-
+      FolderContent
+
+    error_schema: |-
+      Error
+
+    examples:
+
+      - description: |-
+          when requested on a local storage bucket
+        params:
+          bucket: local/simplest
+        headers:
+          Accept: application/json
+        expected:
+          content_type: application/json
+          status: 200
+
+    counterexamples:
+
+      - description: |-
+          when trying to list an unexisting bucket, it fails
+        params:
+          bucket: foobar
+        body: |-
+        expected:
+          content_type: text/html
+          status: 404
+
+      - description: |-
+          when trying to get an unexisting subitem, it fails
+        params:
+          bucket: simplest/foobar
+        body: |-
+        expected:
+          content_type: text/html
+          status: 404

@@ -3,7 +3,7 @@ name: |-
   File upload
 
 url: |-
-  /simplest/{suffix}
+  /local/simplest/{suffix}
 
 services:
 - method: |-

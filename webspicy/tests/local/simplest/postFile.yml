@@ -3,7 +3,7 @@ name: |-
   File upload
 
 url: |-
-  /simplest/
+  /{bucket}/
 
 services:
 - method: |-
@@ -21,7 +21,8 @@ services:
 
   input_schema: |-
     {
-      force :? Boolean
+      bucket :  String
+      force  :? Boolean
     }
 
   output_schema: |-
@@ -36,6 +37,7 @@ services:
         when requested with a .csv file
       params:
         force: true
+        bucket: local/simplest
       file_upload:
         path: ./test.csv
         content_type: "text/csv"
@@ -47,6 +49,7 @@ services:
         when requested with file with special characters in name
       params:
         force: true
+        bucket: local/simplest
       file_upload:
         path: "./98's results.csv"
         content_type: "text/csv"

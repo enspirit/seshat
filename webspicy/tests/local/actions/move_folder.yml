@@ -3,7 +3,7 @@
     Actions: mv
 
   url: |-
-    /simplest/
+    /local/simplest/
 
   services:
   - method: |-
@@ -13,11 +13,11 @@
       Allows renaming an existing directory
 
     preconditions: |-
-      - The directory simplest/old should exist
+      - The directory local/simplest/old should exist
 
     postconditions: |-
-      - The directory simplest/old must not exist
-      - The directory simplest/new should exist
+      - The directory local/simplest/old must not exist
+      - The directory local/simplest/new should exist
 
     input_schema: |-
       {

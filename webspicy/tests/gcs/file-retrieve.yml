@@ -1,0 +1,40 @@
+---
+  name: |-
+    File retrieval
+
+  url: |-
+    /gcs/{file}
+
+  services:
+  - method: |-
+      GET
+
+    description: |-
+      Allows getting a file from a bucket
+
+    preconditions:
+      - The url must correspond to a file in a bucket
+
+    input_schema: |-
+      {
+        file: String
+      }
+
+    output_schema: |-
+      .
+
+    error_schema: |-
+      Error
+
+    examples:
+
+      - description: |-
+          when requested for existing files
+        tags:
+          - gcs
+        params:
+          file: subfolder/other-file.js
+        expected:
+          content_type: application/javascript
+          status: 200
+

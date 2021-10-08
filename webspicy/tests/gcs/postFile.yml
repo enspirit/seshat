@@ -1,0 +1,44 @@
+---
+name: |-
+  GCS file upload
+
+url: |-
+  /gcs/
+
+services:
+- method: |-
+    POST
+
+  description: |-
+    Allows saving a file through a real file upload
+
+  preconditions:
+    - The url must correspond to a bucket configured with GSCStorage.
+
+  postconditions:
+    - Following the Location header on response allows downloading the file
+
+  input_schema: |-
+    {
+    }
+
+  output_schema: |-
+    .
+
+  error_schema: |-
+    Error
+
+  examples:
+
+    - description: |-
+        when requested with a .js file
+      params: {}
+      tags:
+        - gcs
+      file_upload:
+        path: ./report.csv
+        content_type: "text/csv"
+      expected:
+        content_type: ~
+        status: 204
+

@@ -21,8 +21,9 @@ services:
   webspicy:
     image: seshat/webspicy
     # Keep it on to speed up consecutive tests run
-    command:
-      tail -f /dev/null
+    entrypoint: /bin/sh
+    # keep it running
+    tty: true
     depends_on:
       - seshat
     env_file:
@@ -36,5 +37,8 @@ services:
 
   fake-gcs-server:
     image: fsouza/fake-gcs-server
+    ports:
+      - 8080:8080
     volumes:
-      - ./volumes/fake-gcs:/data
+      - ./volumes/seshat/gcs:/data/
+    command: ["-scheme", "http", "-port", "8080", "-external-url", "http://fake-gcs-server:8080", "-backend", "filesystem"]

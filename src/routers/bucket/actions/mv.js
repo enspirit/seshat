@@ -15,6 +15,7 @@ export default {
     if (['.', '..'].indexOf(params.new) >= 0) {
       throw new Error('Invalid folder name');
     }
+
     return storage.mv(path.join(dirent.name, params.old), path.join(dirent.name, params.new));
   },
 };
