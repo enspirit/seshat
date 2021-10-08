@@ -10,8 +10,8 @@
     "test": "mocha --reporter=mocha-junit-reporter --require @babel/register --recursive --reporter-options mochaFile=tests/test-results.xml tests",
     "test:coverage": "nyc --reporter=cobertura mocha --require @babel/register --recursive tests",
     "test:watch": "mocha --require @babel/register --recursive --watch tests",
-    "lint": "eslint src tests *.js .eslintrc.js",
-    "lint:fix": "eslint --fix src tests *.js .eslintrc.js",
+    "lint": "eslint config src tests *.js .eslintrc.js",
+    "lint:fix": "eslint --fix src config tests *.js .eslintrc.js",
     "prepare": "npm run build"
   },
   "files": [
@@ -41,6 +41,7 @@
     "sinon-chai": "^3.7.0"
   },
   "dependencies": {
+    "@google-cloud/storage": "^5.15.0",
     "bluebird": "^3.7.2",
     "body-parser": "^1.19.0",
     "busboy": "^0.3.1",

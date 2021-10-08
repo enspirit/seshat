@@ -3,7 +3,7 @@
     Actions: mkdir
 
   url: |-
-    /simplest/
+    /local/simplest/
 
   services:
   - method: |-
@@ -13,10 +13,10 @@
       Allows creating a new directory
 
     preconditions: |-
-      - The directory simplest/test must not exist
+      - The directory local/simplest/test must not exist
 
     postconditions: |-
-      - The directory simplest/test should exist
+      - The directory local/simplest/test should exist
 
     input_schema: |-
       {

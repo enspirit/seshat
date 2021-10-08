@@ -3,7 +3,7 @@ name: |-
   File upload
 
 url: |-
-  /subfolders/{folder}
+  /local/subfolders/{folder}
 
 services:
 - method: |-

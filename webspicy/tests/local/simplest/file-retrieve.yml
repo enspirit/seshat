@@ -1,0 +1,39 @@
+---
+  name: |-
+    File retrieval
+
+  url: |-
+    /local/simplest/{file}
+
+  services:
+  - method: |-
+      GET
+
+    description: |-
+      Allows getting a file from a bucket
+
+    preconditions:
+      - The url must correspond to a file in a bucket
+
+    input_schema: |-
+      {
+        file: String
+      }
+
+    output_schema: |-
+      .
+
+    error_schema: |-
+      Error
+
+    examples:
+
+      - description: |-
+          when requested for an existing file
+        params:
+          file: report.csv
+        expected:
+          content_type: text/csv
+          status: 200
+
+    counterexamples: []

@@ -16,6 +16,7 @@ class FileNotFoundError extends ExtendableError {}
 class PipelineClosedError extends ExtendableError {}
 class UnsecurePathError extends ExtendableError {}
 class FileAlreadyExistsError extends ExtendableError {}
+class ActionNotSupportedError extends ExtendableError {}
 
 export {
   ArgumentError,
@@ -24,4 +25,5 @@ export {
   PipelineClosedError,
   UnsecurePathError,
   FileAlreadyExistsError,
+  ActionNotSupportedError,
 };

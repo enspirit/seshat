@@ -3,7 +3,7 @@
     Actions: mv
 
   url: |-
-    /simplest/
+    /local/simplest/
 
   services:
   - method: |-
@@ -13,11 +13,11 @@
       Allows renaming an existing file
 
     preconditions: |-
-      - The file simplest/old.txt should exist
+      - The file local/simplest/old.txt should have been previously uploaded
 
     postconditions: |-
-      - The file simplest/old.txt must not exist
-      - The file simplest/new.txt should exist
+      - The file local/simplest/old.txt must not exist
+      - The file local/simplest/new.txt should exist
 
     input_schema: |-
       {

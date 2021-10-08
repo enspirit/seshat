@@ -4,20 +4,20 @@ import LocalStorage from '../src/storage/local';
 
 const tmpStorage = new LocalStorage({
   dynamicTree: true,
-  path: path.join(__dirname, '../tmp')
+  path: path.join(__dirname, '../tmp'),
 });
 
 export default {
   api: {
     port: 3000,
-    cors: '*'
+    cors: '*',
   },
   buckets: {
     '/simplest': {
       typology: new Typology()
         .add(Typology.renameSecure())
         .add(Typology.storage(tmpStorage)),
-      storage: tmpStorage
-    }
-  }
+      storage: tmpStorage,
+    },
+  },
 };

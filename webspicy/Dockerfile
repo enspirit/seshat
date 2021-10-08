@@ -1,4 +1,4 @@
-FROM enspirit/webspicy:0.15.8
+FROM enspirit/webspicy:0.20.8
 
 COPY tests /home/app/tests
 COPY support /home/app/support

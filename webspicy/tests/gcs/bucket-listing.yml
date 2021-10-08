@@ -1,0 +1,66 @@
+---
+  name: |-
+    Directory listing
+
+  url: |-
+    /gcs/{subpath}
+
+  services:
+  - method: |-
+      GET
+
+    description: |-
+      Allows getting a list of the bucket content
+
+    preconditions:
+      - The url must correspond to a bucket
+
+    input_schema: |-
+      {
+        subpath :? String
+      }
+
+    output_schema: |-
+      FolderContent
+
+    error_schema: |-
+      Error
+
+    examples:
+
+      - description: |-
+          when requested on the root of the bucket
+        tags:
+          - gcs
+        params:
+          subpath: ""
+        headers:
+          Accept: application/json
+        expected:
+          content_type: application/json
+          status: 200
+
+      - description: |-
+          when requested for a subfolder
+        params:
+          subpath: subfolder
+        tags:
+          - gcs
+        headers:
+          Accept: application/json
+        expected:
+          content_type: application/json
+          status: 200
+
+    counterexamples:
+
+      - description: |-
+          when trying to get an unexisting subitem, it fails
+        tags:
+          - gcs
+          - only
+        params:
+          subpath: foobar
+        expected:
+          content_type: text/html
+          status: 404
