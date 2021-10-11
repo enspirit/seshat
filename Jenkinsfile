@@ -51,23 +51,23 @@ pipeline {
       }
     }
 
-    // stage ('Pushing Docker Images') {
-    //   when {
-    //     anyOf {
-    //       branch 'master'
-    //       buildingTag()
-    //     }
-    //   }
-    //   steps {
-    //     container('builder') {
-    //       script {
-    //         docker.withRegistry('', 'dockerhub-credentials') {
-    //           sh 'make release'
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
+    stage ('Pushing Docker Images') {
+      when {
+        anyOf {
+          branch 'master'
+          buildingTag()
+        }
+      }
+      steps {
+        container('builder') {
+          script {
+            docker.withRegistry('', 'dockerhub-credentials') {
+              sh 'make release'
+            }
+          }
+        }
+      }
+    }
   }
 
   post {

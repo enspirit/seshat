@@ -41,3 +41,8 @@ test-files: test-folders
 	@touch volumes/seshat/local/simplest/report.csv
 	@touch volumes/seshat/local/simplest/donotoverride.txt
 	@touch volumes/seshat/gcs/seshat/subfolder/other-file.js
+
+##
+release: seshat.image
+	docker tag seshat/seshat:${DOCKER_TAG} enspirit/seshat:${DOCKER_TAG}
+	docker push enspirit/seshat:${DOCKER_TAG}
