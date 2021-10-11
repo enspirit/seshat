@@ -6,3 +6,5 @@ docker-compose*
 README*
 Jenkinsfile
 .gitignore
+node_modules
+package-lock.json

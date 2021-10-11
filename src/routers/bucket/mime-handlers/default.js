@@ -1,5 +1,5 @@
 import ContentType from 'content-type';
-import mime from 'mime';
+import mime from 'mime-types';
 
 export default (req, res, next) => {
   // TODO: find better logic than this, we should
