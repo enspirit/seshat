@@ -3,7 +3,7 @@ version: '3.8'
 services:
 
   seshat:
-    image: seshat/seshat
+    image: seshat/seshat:${DOCKER_TAG}
     command: npm run dev
     ports:
       - 3000:3000
@@ -19,7 +19,7 @@ services:
       - ./volumes/seshat/:/home/app/webapp/tmp/
 
   webspicy:
-    image: seshat/webspicy
+    image: seshat/webspicy:${DOCKER_TAG}
     # Keep it on to speed up consecutive tests run
     entrypoint: /bin/sh
     # keep it running
