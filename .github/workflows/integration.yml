@@ -23,7 +23,6 @@ jobs:
 
       - run: make -j images
       - run: make up
-      - run: docker-compose exec -T seshat ls -l volumes/seshat/
       - name: Running tests
         run: make tests
         id: tests
