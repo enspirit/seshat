@@ -9,7 +9,6 @@ services:
       - 3000:3000
     env_file:
       ./env/devel.env
-    user: "1000:1000"
     volumes:
       - ./src:/home/app/webapp/src
       - ./tests:/home/app/webapp/tests
@@ -29,7 +28,6 @@ services:
       - seshat
     env_file:
       ./webspicy/env/devel.env
-    user: "1000:1000"
     volumes:
       - ./webspicy/support:/home/app/support
       - ./webspicy/tests:/home/app/tests
@@ -41,7 +39,6 @@ services:
     image: fsouza/fake-gcs-server
     ports:
       - 8080:8080
-    user: "1000:1000"
     volumes:
       - ./volumes/seshat/gcs:/data/
     command: ["-scheme", "http", "-port", "8080", "-external-url", "http://fake-gcs-server:8080", "-backend", "filesystem"]
