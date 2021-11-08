@@ -23,6 +23,7 @@ jobs:
 
       - run: make -j images
       - run: make up
+      - run: ls -l
       - name: Running tests
         run: make tests
         id: tests
