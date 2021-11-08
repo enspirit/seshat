@@ -29,7 +29,7 @@ tests.prepare: test-folders test-files fake-gcs-server.restart
 tests.integration:: tests.prepare
 
 test-folders:
-	@rm -rf volumes/seshat/* || true
+	@rm -rf volumes/seshat/*
 	@mkdir -p volumes/seshat/local/optional
 	@mkdir -p volumes/seshat/local/simplest/old
 	@mkdir -p volumes/seshat/local/simplest/donotoverride
