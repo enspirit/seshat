@@ -21,8 +21,6 @@ jobs:
 
       - uses: actions/checkout@v2
       - run: id -u && id -g
-
-
       - run: make -j images
       - run: make up
       - name: Running tests
