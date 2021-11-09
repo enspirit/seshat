@@ -20,10 +20,11 @@ jobs:
       #     channel: '#opensource-cicd'
 
       - uses: actions/checkout@v2
+      - run: id -u && id -g
+
 
       - run: make -j images
       - run: make up
-      - run: ls -l
       - name: Running tests
         run: make tests
         id: tests
