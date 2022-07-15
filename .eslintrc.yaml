@@ -5,7 +5,11 @@
     mocha: true
     es6: true
   parser: "@typescript-eslint/parser"
+  plugins:
+    - "@typescript-eslint"
   parserOptions:
     sourceType: module
     ecmaFeatures:
       modules: true
+  rules:
+    "@typescript-eslint/no-unused-vars": ["error"]
