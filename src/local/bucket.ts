@@ -37,7 +37,6 @@ export default class LocalBucket extends AbstractBucket {
   }
 
   async get(path: string) {
-    console.log('local getting', path);
     return LocalObject.fromPath(this.pathTo(path));
   }
 
