@@ -45,6 +45,12 @@ describe('LocalObject', () => {
       const string = await streamToString(stream);
       expect(string).to.match(/name.*@enspirit\/seshat/);
     });
+
+    it('rejects for objects that are not files', async () => {
+      const folder = await LocalObject.fromPath(__dirname);
+      expect(() => folder.getReadableStream()).to.throw(/object is not a file/);
+    });
+
   });
 
 });
