@@ -2,13 +2,17 @@ import * as express from 'express';
 import AbstractBucket from './bucket';
 import { ObjectNotFoundError } from './errors';
 
-export const createApp = (bucket: AbstractBucket): express.Express => {
+export interface SeshatConfig {
+  bucket: AbstractBucket
+}
+
+export const createApp = (config: SeshatConfig): express.Express => {
   const app = express();
 
   app.get('/*', async (req, res) => {
     const fpath = req.params[0];
     try {
-      const object = await bucket.get(fpath);
+      const object = await config.bucket.get(fpath);
       res.set('Content-Type', object.contentType);
       res.set('Content-Length', object.contentLength.toString());
       object.getReadableStream().pipe(res);
@@ -23,7 +27,7 @@ export const createApp = (bucket: AbstractBucket): express.Express => {
   app.delete('/*', async (req, res) => {
     const fpath = req.params[0];
     try {
-      await bucket.delete(fpath);
+      await config.bucket.delete(fpath);
       res.sendStatus(204);
     } catch (err) {
       if (err instanceof ObjectNotFoundError) {

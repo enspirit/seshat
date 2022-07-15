@@ -11,9 +11,12 @@ chai.use(sinonChai);
 
 describe('the express app', () => {
 
-  let app;
+  let app, config;
   beforeEach(() => {
-    app = createApp(mockBucket);
+    config = {
+      bucket: mockBucket,
+    };
+    app = createApp(config);
   });
 
   beforeEach(() => {
