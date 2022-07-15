@@ -5,6 +5,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
 import * as mime from 'mime-types';
+import { SeshatError, ObjectNotFoundError } from '../errors';
 
 export default class LocalObject extends SeshatObject {
 
@@ -48,8 +49,22 @@ export default class LocalObject extends SeshatObject {
     return fs.createWriteStream(this.path);
   }
 
-  static async fromPath(fpath: string) {
-    const stats = await fsPromises.stat(fpath);
-    return new LocalObject(fpath, stats);
+  static async fromPath(fpath: string): Promise<LocalObject> {
+    try {
+      const stats = await fsPromises.stat(fpath);
+      return new LocalObject(fpath, stats);
+    } catch (err) {
+      if (err.code === 'ENOENT') {
+        throw new ObjectNotFoundError(`Object ${fpath} not found`);
+      }
+      throw new SeshatError(err.message);
+    }
+  }
+
+  static async readdir(dirpath: string): Promise<LocalObject[]> {
+    const objectPaths = await fsPromises.readdir(dirpath);
+    return Promise.all(objectPaths.map(fpath => {
+      return this.fromPath(path.join(dirpath, fpath));
+    }));
   }
 }

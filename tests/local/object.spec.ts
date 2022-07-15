@@ -6,6 +6,7 @@ chai.use(chaiAsPromised);
 import { expect } from 'chai';
 import LocalObject from '../../src/local/object';
 import { readFileSync, writeFileSync } from 'fs';
+import { ObjectNotFoundError } from '../../src/errors';
 
 const streamToString = (stream): Promise<string> => {
   const chunks: any[] = [];
@@ -34,7 +35,20 @@ describe('LocalObject', () => {
 
     it('rejects for invalid path', async () => {
       const promise = LocalObject.fromPath(path.join(__dirname, '/unknown.ts'));
-      expect(promise).to.be.rejectedWith(/ENOENT/);
+      expect(promise).to.be.rejectedWith(ObjectNotFoundError);
+    });
+
+  });
+
+  describe('.readdir', () => {
+
+    it('returns a valid list of objects for folder', async () => {
+      const promise = LocalObject.readdir(path.join(__dirname));
+      expect(promise).to.eventually.be.an('array');
+      const objects = await promise;
+      const thisTestFile = objects.find(o => o.name === 'object.spec.ts');
+      // eslint-disable-next-line no-unused-expressions
+      expect(thisTestFile).to.exist;
     });
 
   });

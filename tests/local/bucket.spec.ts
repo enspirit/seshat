@@ -5,6 +5,7 @@ import * as chaiAsPromised from 'chai-as-promised';
 chai.use(chaiAsPromised);
 
 import { expect } from 'chai';
+import { ObjectNotFoundError } from '../../src/errors';
 
 describe('LocalBucket', () => {
 
@@ -46,12 +47,12 @@ describe('LocalBucket', () => {
 
     it('rejects if file does not exist', () => {
       const promise = bucket.get('unknown.file');
-      return expect(promise).to.be.rejectedWith(/ENOENT/);
+      return expect(promise).to.be.rejectedWith(ObjectNotFoundError);
     });
 
     it('rejects if folder does not exist', () => {
       const promise = bucket.get('folder/');
-      return expect(promise).to.be.rejectedWith(/ENOENT/);
+      return expect(promise).to.be.rejectedWith(ObjectNotFoundError);
     });
 
     it('rejects if path goes out of bucket', () => {

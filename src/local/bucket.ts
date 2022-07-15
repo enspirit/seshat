@@ -3,7 +3,6 @@ import AbstractBucket from '../bucket';
 import LocalObject from './object';
 
 export default class LocalBucket extends AbstractBucket {
-
   constructor(private path: string) {
     super();
   }
@@ -37,6 +36,10 @@ export default class LocalBucket extends AbstractBucket {
 
   async get(path: string) {
     return LocalObject.fromPath(this.pathTo(path));
+  }
+
+  async list(prefix: string) {
+    return LocalObject.readdir(prefix);
   }
 
   private pathTo(fpath: string): string {

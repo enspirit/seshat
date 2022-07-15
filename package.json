@@ -5,11 +5,10 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "dev": "tsc --watch & nodemon dist",
+    "dev": "node dist/src/example.js",
     "test": "mocha -r ts-node/register tests/**/*.spec.ts",
-    "test:watch": "mocha -r ts-node/register tests/**/*.spec.ts --watch --watch-files src/**/*.ts,tests/**/*.ts",
-    "lint": "eslint src --ext ts",
-    "tsc": "tsc"
+    "test:watch": "mocha -r ts-node/register tests/*.spec.ts tests/**/*.spec.ts --watch --watch-files src/**/*.ts,tests/**/*.ts",
+    "lint": "eslint src --ext ts"
   },
   "keywords": [],
   "author": "",
@@ -28,14 +27,18 @@
     "@types/chai-as-promised": "^7.1.5",
     "@types/mocha": "^9.1.1",
     "@types/node": "^18.0.4",
+    "@types/sinon": "^10.0.12",
+    "@types/sinon-chai": "^3.2.8",
+    "@types/supertest": "^2.0.12",
     "@typescript-eslint/parser": "^5.30.6",
     "chai": "^4.3.6",
     "chai-as-promised": "^7.1.1",
     "eslint": "^8.19.0",
     "mocha": "^10.0.0",
+    "sinon": "^14.0.0",
+    "sinon-chai": "^3.7.0",
     "supertest": "^6.2.4",
     "ts-node": "^10.9.1",
-    "tsc": "^2.0.4",
     "typescript": "^4.7.4"
   }
 }
