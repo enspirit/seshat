@@ -3,7 +3,7 @@ import * as request from 'supertest';
 import * as chai from 'chai';
 import * as path from 'path';
 import mockBucket, { reset as resetMockBucket } from './mocks/bucket';
-import { mockFileObject } from './mocks/object';
+import { mockFileObject, mockFolderObject } from './mocks/object';
 import { expect } from 'chai';
 import * as sinonChai from 'sinon-chai';
 import { ObjectNotFoundError } from '../src/errors';
@@ -89,16 +89,25 @@ describe('the express app', () => {
     });
   });
 
-  describe('on GET /:file', () => {
+  describe('on GET /:path', () => {
 
     it('gets the correct object from the bucket (file)', async () => {
       await request(app).get('/file.txt');
       expect(mockBucket.get).to.be.calledOnceWith('file.txt');
     });
 
-    it('gets the correct object from the bucket (subfolder)', async () => {
+    it('gets the correct object from the bucket (file in subfolder)', async () => {
       await request(app).get('/subfolder/another.pdf');
       return expect(mockBucket.get).to.be.calledOnceWith('subfolder/another.pdf');
+    });
+
+    it('returns proper 404 status code and content-type when path is folder', async () => {
+      const stub = mockBucket.get as sinon.SinonStub;
+      stub.resolves(mockFolderObject);
+
+      return request(app)
+        .get('/subfolder')
+        .expect(404);
     });
 
     it('returns proper status code and content-type when bucket has object', () => {

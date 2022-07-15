@@ -16,6 +16,9 @@ export const createApp = (config: SeshatConfig): express.Express => {
     const fpath = req.params[0];
     try {
       const object = await bucket.get(fpath);
+      if (object.isDirectory) {
+        throw new ObjectNotFoundError('Prefix found instead of object');
+      }
       res.set('Content-Type', object.contentType);
       res.set('Content-Length', object.contentLength.toString());
       object.getReadableStream().pipe(res);
@@ -23,6 +26,7 @@ export const createApp = (config: SeshatConfig): express.Express => {
       if (err instanceof ObjectNotFoundError) {
         return res.sendStatus(404);
       }
+      console.error('ben ouais', err.message);
       return res.status(500).send(err.message);
     }
   });

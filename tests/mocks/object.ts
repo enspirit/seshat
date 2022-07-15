@@ -18,3 +18,20 @@ export const mockFileObject = {
     throw new Error('not implemented');
   },
 } as SeshatObject;
+
+export const mockFolderObject = {
+  name: 'folder',
+  isFile: false,
+  isDirectory: true,
+  atime: new Date(),
+  ctime: new Date(),
+  mtime: new Date(),
+  contentLength: 22,
+  contentType: 'folder',
+  getReadableStream() {
+    throw new Error('cannot get readable stream on folder');
+  },
+  getWritableStream() {
+    throw new Error('cannot get writable stream on folder');
+  },
+} as SeshatObject;
