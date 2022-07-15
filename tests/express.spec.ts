@@ -24,6 +24,58 @@ describe('the express app', () => {
     resetMockBucket();
   });
 
+  describe('on GET /:path', () => {
+
+    it('gets the correct object from the bucket (file)', async () => {
+      await request(app).get('/file.txt');
+      expect(mockBucket.get).to.be.calledOnceWith('file.txt');
+    });
+
+    it('gets the correct object from the bucket (file in subfolder)', async () => {
+      await request(app).get('/subfolder/another.pdf');
+      return expect(mockBucket.get).to.be.calledOnceWith('subfolder/another.pdf');
+    });
+
+    it('returns proper 404 status code and content-type when path is folder', async () => {
+      const stub = mockBucket.get as sinon.SinonStub;
+      stub.resolves(mockFolderObject);
+
+      return request(app)
+        .get('/subfolder')
+        .expect(404);
+    });
+
+    it('returns proper status code and content-type when bucket has object', () => {
+      const stub = mockBucket.get as sinon.SinonStub;
+      stub.resolves(mockFileObject);
+
+      return request(app)
+        .get('/file.txt')
+        .expect('Content-Type', mockFileObject.contentType)
+        .expect('Content-Length', mockFileObject.contentLength.toString())
+        .expect(200);
+    });
+
+    it('returns proper status code when bucket reports object not found', () => {
+      const stub = mockBucket.get as sinon.SinonStub;
+      stub.rejects(new ObjectNotFoundError('oops'));
+
+      return request(app)
+        .get('/file.txt')
+        .expect(404);
+    });
+
+    it('returns proper status code when bucket reports unknown error', async () => {
+      const stub = mockBucket.get as sinon.SinonStub;
+      stub.rejects(new Error('oops'));
+
+      await request(app)
+        .get('/file.txt')
+        .expect(500);
+    });
+
+  });
+
   describe('on POST /:path', () => {
 
     it('properly writes the object on bucket (one file)', async () => {
@@ -97,58 +149,6 @@ describe('the express app', () => {
         .get('/file.txt')
         .expect(500);
     });
-  });
-
-  describe('on GET /:path', () => {
-
-    it('gets the correct object from the bucket (file)', async () => {
-      await request(app).get('/file.txt');
-      expect(mockBucket.get).to.be.calledOnceWith('file.txt');
-    });
-
-    it('gets the correct object from the bucket (file in subfolder)', async () => {
-      await request(app).get('/subfolder/another.pdf');
-      return expect(mockBucket.get).to.be.calledOnceWith('subfolder/another.pdf');
-    });
-
-    it('returns proper 404 status code and content-type when path is folder', async () => {
-      const stub = mockBucket.get as sinon.SinonStub;
-      stub.resolves(mockFolderObject);
-
-      return request(app)
-        .get('/subfolder')
-        .expect(404);
-    });
-
-    it('returns proper status code and content-type when bucket has object', () => {
-      const stub = mockBucket.get as sinon.SinonStub;
-      stub.resolves(mockFileObject);
-
-      return request(app)
-        .get('/file.txt')
-        .expect('Content-Type', mockFileObject.contentType)
-        .expect('Content-Length', mockFileObject.contentLength.toString())
-        .expect(200);
-    });
-
-    it('returns proper status code when bucket reports object not found', () => {
-      const stub = mockBucket.get as sinon.SinonStub;
-      stub.rejects(new ObjectNotFoundError('oops'));
-
-      return request(app)
-        .get('/file.txt')
-        .expect(404);
-    });
-
-    it('returns proper status code when bucket reports unknown error', async () => {
-      const stub = mockBucket.get as sinon.SinonStub;
-      stub.rejects(new Error('oops'));
-
-      await request(app)
-        .get('/file.txt')
-        .expect(500);
-    });
-
   });
 
 });

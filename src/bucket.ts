@@ -1,7 +1,6 @@
 import SeshatObject from './object';
 import { Readable } from 'stream';
 export default abstract class AbstractBucket {
-
   abstract exists(path: string): Promise<boolean>;
   abstract fileExists(path: string): Promise<boolean>;
   abstract dirExists(path: string): Promise<boolean>;
