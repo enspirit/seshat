@@ -1,0 +1,36 @@
+{
+  "name": "@enspirit/seshat",
+  "version": "2.0.0",
+  "description": "Seshat v2",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch & nodemon dist",
+    "test": "mocha -r ts-node/register tests/**/*.spec.ts --watch",
+    "test:watch": "mocha -r ts-node/register tests/**/*.spec.ts --watch",
+    "lint": "eslint src --ext ts",
+    "tsc": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "18.0.4",
+    "express": "4.18.1",
+    "nodemon": "2.0.19"
+  },
+  "devDependencies": {
+    "@enspirit/eslint-config-node": "^0.1.5",
+    "@types/chai": "^4.3.1",
+    "@types/mocha": "^9.1.1",
+    "@types/node": "^18.0.4",
+    "@typescript-eslint/parser": "^5.30.6",
+    "chai": "^4.3.6",
+    "eslint": "^8.19.0",
+    "mocha": "^10.0.0",
+    "supertest": "^6.2.4",
+    "ts-node": "^10.9.1",
+    "tsc": "^2.0.4",
+    "typescript": "^4.7.4"
+  }
+}
