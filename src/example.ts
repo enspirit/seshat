@@ -3,6 +3,14 @@ import { createApp } from './express';
 import LocalBucket from './local/bucket';
 
 const bucket = new LocalBucket(path.join(__dirname, '../../'));
-const app = createApp(bucket);
+const config = {
+  bucket,
+};
+const app = createApp(config);
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
 
 app.listen(3000);

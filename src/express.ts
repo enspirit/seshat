@@ -18,7 +18,7 @@ export const createApp = (config: SeshatConfig): express.Express => {
       object.getReadableStream().pipe(res);
     } catch (err) {
       if (err instanceof ObjectNotFoundError) {
-        return res.send(404);
+        return res.sendStatus(404);
       }
       return res.status(500).send(err.message);
     }
@@ -31,7 +31,7 @@ export const createApp = (config: SeshatConfig): express.Express => {
       res.sendStatus(204);
     } catch (err) {
       if (err instanceof ObjectNotFoundError) {
-        return res.send(404);
+        return res.sendStatus(404);
       }
       return res.status(500).send(err.message);
     }
