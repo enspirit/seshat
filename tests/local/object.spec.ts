@@ -101,10 +101,10 @@ describe.only('LocalObject', () => {
     });
 
     it('returns a valid object', async () => {
-      await LocalObject.write(testFile, readStream);
+      const obj = await LocalObject.write(testFile, readStream);
 
-      const content = fs.readFileSync(testFile).toString();
-      expect(content).to.equal('hello world');
+      expect(obj.name).to.equal('test.txt');
+      expect(obj.path).to.equal('/tmp/test.txt');
     });
 
     it('creates new files properly', async () => {
@@ -113,7 +113,6 @@ describe.only('LocalObject', () => {
       const content = fs.readFileSync(testFile).toString();
       expect(content).to.equal('hello world');
     });
-
   });
 
   describe('#getReadableStream', () => {
