@@ -28,18 +28,13 @@ describe('the express app', () => {
 
     it('properly writes the object and returns Location header', async () => {
       await request(app)
-        .post('/test.txt')
+        .post('/')
         .attach('package.json', path.join(__dirname, '../package.json'))
         .expect('Location', '/package.json')
         .expect(204);
-    });
 
-    it('properly writes the object and returns Location header', async () => {
-      await request(app)
-        .post('/test.txt')
-        .attach('package.json', path.join(__dirname, '../package.json'))
-        .expect('Location', '/package.json')
-        .expect(204);
+      // eslint-disable-next-line no-unused-expressions
+      expect(mockBucket.put).to.be.calledTwice;
     });
 
   });

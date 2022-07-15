@@ -1,6 +1,7 @@
 import * as express from 'express';
 import AbstractBucket from './bucket';
 import { ObjectNotFoundError } from './errors';
+import * as busboy from 'busboy';
 
 export interface SeshatConfig {
   bucket: AbstractBucket
@@ -8,11 +9,12 @@ export interface SeshatConfig {
 
 export const createApp = (config: SeshatConfig): express.Express => {
   const app = express();
+  const { bucket } = config;
 
   app.get('/*', async (req, res) => {
     const fpath = req.params[0];
     try {
-      const object = await config.bucket.get(fpath);
+      const object = await bucket.get(fpath);
       res.set('Content-Type', object.contentType);
       res.set('Content-Length', object.contentLength.toString());
       object.getReadableStream().pipe(res);
@@ -27,7 +29,7 @@ export const createApp = (config: SeshatConfig): express.Express => {
   app.delete('/*', async (req, res) => {
     const fpath = req.params[0];
     try {
-      await config.bucket.delete(fpath);
+      await bucket.delete(fpath);
       res.sendStatus(204);
     } catch (err) {
       if (err instanceof ObjectNotFoundError) {
@@ -35,6 +37,21 @@ export const createApp = (config: SeshatConfig): express.Express => {
       }
       return res.status(500).send(err.message);
     }
+  });
+
+  app.post('/', (req, res) => {
+    const bb = busboy({ headers: req.headers });
+
+    bb.on('file', async (_fieldname, file, fileinfo) => {
+      console.log('file:', file, fileinfo);
+      await bucket.put(fileinfo.filename, file);
+    });
+
+    bb.on('close', () => {
+      res.sendStatus(204);
+    });
+
+    req.pipe(bb);
   });
 
   return app;

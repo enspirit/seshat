@@ -20,7 +20,7 @@ const streamToString = (stream): Promise<string> => {
   });
 };
 
-describe.only('LocalObject', () => {
+describe('LocalObject', () => {
 
   let object: LocalObject;
   beforeEach(async () => {
