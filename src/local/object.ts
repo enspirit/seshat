@@ -74,4 +74,19 @@ export default class LocalObject extends SeshatObject {
       throw new SeshatError(err.message);
     }
   }
+
+  static async delete(fpath: string): Promise<void> {
+    const object = await this.fromPath(fpath);
+    if (object.isDirectory) {
+      throw new SeshatError('Path does not match single object.');
+    }
+    try {
+      await fsPromises.unlink(fpath);
+    } catch (err) {
+      if (err.code === 'ENOENT') {
+        throw new ObjectNotFoundError(`Object ${fpath} not found`);
+      }
+      throw new SeshatError(err.message);
+    }
+  }
 }

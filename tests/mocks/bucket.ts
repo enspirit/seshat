@@ -19,6 +19,8 @@ const mockBucket: AbstractBucket = {
   get: sinon.stub().resolves(mockFileObject),
 
   list: sinon.stub().resolves([mockFileObject]),
+
+  delete: sinon.stub().resolves(),
 };
 
 export default mockBucket;

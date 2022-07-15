@@ -5,8 +5,8 @@ chai.use(chaiAsPromised);
 
 import { expect } from 'chai';
 import LocalObject from '../../src/local/object';
-import { readFileSync, writeFileSync } from 'fs';
-import { ObjectNotFoundError } from '../../src/errors';
+import { fstat, readFileSync, writeFileSync } from 'fs';
+import { ObjectNotFoundError, PrefixNotFoundError } from '../../src/errors';
 
 const streamToString = (stream): Promise<string> => {
   const chunks: any[] = [];
@@ -48,7 +48,31 @@ describe('LocalObject', () => {
       const objects = await promise;
       const thisTestFile = objects.find(o => o.name === 'object.spec.ts');
       // eslint-disable-next-line no-unused-expressions
-      expect(thisTestFile).to.exist;
+      return expect(thisTestFile).to.exist;
+    });
+
+    it('rejects for unknown folders', async () => {
+      const promise = LocalObject.readdir(path.join(__dirname, 'unknown'));
+      return expect(promise).to.be.rejectedWith(PrefixNotFoundError, /Unable to find objects/);
+    });
+
+  });
+
+  describe('.delete', () => {
+
+    it('resolves for existing files', async () => {
+      writeFileSync('/tmp/test.txt', 'test');
+      await LocalObject.delete('/tmp/test.txt');
+    });
+
+    it('rejects for unknown files', () => {
+      const p = LocalObject.delete('/tmp/unknown.txt');
+      return expect(p).to.be.rejectedWith(ObjectNotFoundError);
+    });
+
+    it('rejects for unknown files', async () => {
+      const p = LocalObject.delete(__dirname);
+      return expect(p).to.be.rejectedWith(/Path does not match single object/);
     });
 
   });

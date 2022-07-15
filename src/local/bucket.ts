@@ -43,6 +43,10 @@ export default class LocalBucket extends AbstractBucket {
     return LocalObject.readdir(dirpath);
   }
 
+  async delete(path: string) {
+    return LocalObject.delete(this.pathTo(path));
+  }
+
   private pathTo(fpath: string): string {
     const filepath = path.join(this.path, fpath);
     return this.ensureSecure(filepath);

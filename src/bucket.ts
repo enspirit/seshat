@@ -6,6 +6,6 @@ export default abstract class AbstractBucket {
   abstract dirExists(path: string): Promise<boolean>;
 
   abstract get(path: string): Promise<SeshatObject>;
-
+  abstract delete(path: string): Promise<void>;
   abstract list(prefix?: string): Promise<SeshatObject[]>;
 }
