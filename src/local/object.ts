@@ -1,4 +1,4 @@
-import { Readable } from 'stream';
+import { Readable, Writable } from 'stream';
 import SeshatObject from '../object';
 
 import * as path from 'path';
@@ -39,6 +39,13 @@ export default class LocalObject extends SeshatObject {
       throw new Error('Unable to get a stream, object is not a file');
     }
     return fs.createReadStream(this.path);
+  }
+
+  getWritableStream(): Writable {
+    if (!this.isFile) {
+      throw new Error('Unable to get a stream, object is not a file');
+    }
+    return fs.createWriteStream(this.path);
   }
 
   static async fromPath(fpath: string) {

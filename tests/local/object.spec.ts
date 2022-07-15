@@ -5,10 +5,20 @@ chai.use(chaiAsPromised);
 
 import { expect } from 'chai';
 import LocalObject from '../../src/local/object';
+import { readFileSync, writeFileSync } from 'fs';
+
+const streamToString = (stream): Promise<string> => {
+  const chunks: any[] = [];
+  return new Promise((resolve, reject) => {
+    stream.on('data', (chunk) => chunks.push(Buffer.from(chunk)));
+    stream.on('error', (err) => reject(err));
+    stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+  });
+};
 
 describe('LocalObject', () => {
 
-  let object;
+  let object: LocalObject;
   beforeEach(async () => {
     object = await LocalObject.fromPath(path.join(__dirname, '../../package.json'));
   });
@@ -31,15 +41,6 @@ describe('LocalObject', () => {
 
   describe('#getReadableStream', () => {
 
-    const streamToString = (stream): Promise<string> => {
-      const chunks: any[] = [];
-      return new Promise((resolve, reject) => {
-        stream.on('data', (chunk) => chunks.push(Buffer.from(chunk)));
-        stream.on('error', (err) => reject(err));
-        stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
-      });
-    };
-
     it('works as expected', async () => {
       const stream = object.getReadableStream();
       const string = await streamToString(stream);
@@ -49,6 +50,21 @@ describe('LocalObject', () => {
     it('rejects for objects that are not files', async () => {
       const folder = await LocalObject.fromPath(__dirname);
       expect(() => folder.getReadableStream()).to.throw(/object is not a file/);
+    });
+
+  });
+
+  describe('#getWritableStream', () => {
+
+    it('works as expected', async () => {
+      writeFileSync('/tmp/test.txt', '');
+      const object = await LocalObject.fromPath('/tmp/test.txt');
+      const stream = object.getWritableStream();
+      stream.write('hello world');
+      stream.end();
+      await new Promise(resolve => stream.on('finish', resolve));
+      const content = readFileSync('/tmp/test.txt');
+      expect(content.toString()).to.equal('hello world');
     });
 
   });

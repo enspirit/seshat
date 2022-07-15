@@ -1,5 +1,5 @@
 import { SeshatStats } from './types';
-import { Readable } from 'stream';
+import { Readable, Writable } from 'stream';
 
 export default abstract class SeshatObject implements SeshatStats {
   abstract name: string
@@ -12,4 +12,5 @@ export default abstract class SeshatObject implements SeshatStats {
   abstract contentLength: number
 
   abstract getReadableStream(): Readable
+  abstract getWritableStream(): Writable
 }
