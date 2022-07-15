@@ -1,11 +1,14 @@
-import * as path from 'path';
+import { expect } from 'chai';
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
+import { readFileSync, writeFileSync } from 'fs';
 chai.use(chaiAsPromised);
 
-import { expect } from 'chai';
+import { Readable } from 'stream';
+import * as path from 'path';
+import * as fs from 'fs';
+
 import LocalObject from '../../src/local/object';
-import { fstat, readFileSync, writeFileSync } from 'fs';
 import { ObjectNotFoundError, PrefixNotFoundError } from '../../src/errors';
 
 const streamToString = (stream): Promise<string> => {
@@ -17,7 +20,7 @@ const streamToString = (stream): Promise<string> => {
   });
 };
 
-describe('LocalObject', () => {
+describe.only('LocalObject', () => {
 
   let object: LocalObject;
   beforeEach(async () => {
@@ -73,6 +76,42 @@ describe('LocalObject', () => {
     it('rejects for unknown files', async () => {
       const p = LocalObject.delete(__dirname);
       return expect(p).to.be.rejectedWith(/Path does not match single object/);
+    });
+
+  });
+
+  describe('.write', () => {
+
+    // ensure file does not exist
+    const ensureRm = (path) => {
+      try {
+        fs.unlinkSync(path);
+      } catch (_err) {
+        return;
+      }
+    };
+
+    const testFile = '/tmp/test.txt';
+    let readStream;
+    beforeEach(() => {
+      ensureRm(testFile);
+      readStream = new Readable();
+      readStream.push('hello world');
+      readStream.push(null);
+    });
+
+    it('returns a valid object', async () => {
+      await LocalObject.write(testFile, readStream);
+
+      const content = fs.readFileSync(testFile).toString();
+      expect(content).to.equal('hello world');
+    });
+
+    it('creates new files properly', async () => {
+      await LocalObject.write(testFile, readStream);
+
+      const content = fs.readFileSync(testFile).toString();
+      expect(content).to.equal('hello world');
     });
 
   });

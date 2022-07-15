@@ -1,8 +1,10 @@
 import * as path from 'path';
 import AbstractBucket from '../bucket';
 import LocalObject from './object';
+import { Readable } from 'stream';
 
 export default class LocalBucket extends AbstractBucket {
+
   constructor(private path: string) {
     super();
   }
@@ -36,6 +38,10 @@ export default class LocalBucket extends AbstractBucket {
 
   async get(path: string) {
     return LocalObject.fromPath(this.pathTo(path));
+  }
+
+  async put(path: string, stream: Readable) {
+    return LocalObject.write(path, stream);
   }
 
   async list(prefix: string = './') {

@@ -89,4 +89,9 @@ export default class LocalObject extends SeshatObject {
       throw new SeshatError(err.message);
     }
   }
+
+  static async write(fpath: string, stream: Readable): Promise<LocalObject> {
+    await fsPromises.writeFile(fpath, stream);
+    return this.fromPath(fpath);
+  }
 }

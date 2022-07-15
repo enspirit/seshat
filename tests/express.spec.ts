@@ -1,6 +1,7 @@
 import { createApp } from '../src/express';
 import * as request from 'supertest';
 import * as chai from 'chai';
+import * as path from 'path';
 import mockBucket, { reset as resetMockBucket } from './mocks/bucket';
 import { mockFileObject } from './mocks/object';
 import { expect } from 'chai';
@@ -21,6 +22,26 @@ describe('the express app', () => {
 
   beforeEach(() => {
     resetMockBucket();
+  });
+
+  describe('on POST /:path', () => {
+
+    it('properly writes the object and returns Location header', async () => {
+      await request(app)
+        .post('/test.txt')
+        .attach('package.json', path.join(__dirname, '../package.json'))
+        .expect('Location', '/package.json')
+        .expect(204);
+    });
+
+    it('properly writes the object and returns Location header', async () => {
+      await request(app)
+        .post('/test.txt')
+        .attach('package.json', path.join(__dirname, '../package.json'))
+        .expect('Location', '/package.json')
+        .expect(204);
+    });
+
   });
 
   describe('on DELETE /:file', () => {
