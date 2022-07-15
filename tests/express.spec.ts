@@ -26,15 +26,26 @@ describe('the express app', () => {
 
   describe('on POST /:path', () => {
 
-    it('properly writes the object and returns Location header', async () => {
+    it('properly writes the object on bucket (one file)', async () => {
       await request(app)
         .post('/')
         .attach('package.json', path.join(__dirname, '../package.json'))
-        .expect('Location', '/package.json')
-        .expect(204);
+        .expect(200);
+
+      expect(mockBucket.put).to.be.calledOnceWith('package.json');
+    });
+
+    it('properly writes the objects on bucket (multiple files)', async () => {
+      await request(app)
+        .post('/')
+        .attach('package.json', path.join(__dirname, '../package.json'))
+        .attach('tsconfig.json', path.join(__dirname, '../tsconfig.json'))
+        .expect(200);
 
       // eslint-disable-next-line no-unused-expressions
       expect(mockBucket.put).to.be.calledTwice;
+      expect(mockBucket.put).to.be.calledWith('package.json');
+      expect(mockBucket.put).to.be.calledWith('tsconfig.json');
     });
 
   });

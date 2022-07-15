@@ -2,6 +2,7 @@ import * as express from 'express';
 import AbstractBucket from './bucket';
 import { ObjectNotFoundError } from './errors';
 import * as busboy from 'busboy';
+import SeshatObject from './object';
 
 export interface SeshatConfig {
   bucket: AbstractBucket
@@ -42,13 +43,14 @@ export const createApp = (config: SeshatConfig): express.Express => {
   app.post('/', (req, res) => {
     const bb = busboy({ headers: req.headers });
 
+    const files: SeshatObject[] = [];
+
     bb.on('file', async (_fieldname, file, fileinfo) => {
-      console.log('file:', file, fileinfo);
-      await bucket.put(fileinfo.filename, file);
+      files.push(await bucket.put(fileinfo.filename, file));
     });
 
-    bb.on('close', () => {
-      res.sendStatus(204);
+    bb.on('finish', () => {
+      res.status(200).send(files);
     });
 
     req.pipe(bb);
