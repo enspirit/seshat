@@ -5,7 +5,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
 import * as mime from 'mime-types';
-import { SeshatError, ObjectNotFoundError } from '../errors';
+import { SeshatError, ObjectNotFoundError, PrefixNotFoundError } from '../errors';
 
 export default class LocalObject extends SeshatObject {
 
@@ -62,9 +62,16 @@ export default class LocalObject extends SeshatObject {
   }
 
   static async readdir(dirpath: string): Promise<LocalObject[]> {
-    const objectPaths = await fsPromises.readdir(dirpath);
-    return Promise.all(objectPaths.map(fpath => {
-      return this.fromPath(path.join(dirpath, fpath));
-    }));
+    try {
+      const objectPaths = await fsPromises.readdir(dirpath);
+      return Promise.all(objectPaths.map(fpath => {
+        return this.fromPath(path.join(dirpath, fpath));
+      }));
+    } catch (err) {
+      if (err.code === 'ENOENT') {
+        throw new PrefixNotFoundError(`Unable to find objects with prefix ${dirpath}`);
+      }
+      throw new SeshatError(err.message);
+    }
   }
 }

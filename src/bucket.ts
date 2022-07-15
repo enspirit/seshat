@@ -7,5 +7,5 @@ export default abstract class AbstractBucket {
 
   abstract get(path: string): Promise<SeshatObject>;
 
-  abstract list(prefix: string): Promise<SeshatObject[]>;
+  abstract list(prefix?: string): Promise<SeshatObject[]>;
 }

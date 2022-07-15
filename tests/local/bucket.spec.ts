@@ -5,13 +5,36 @@ import * as chaiAsPromised from 'chai-as-promised';
 chai.use(chaiAsPromised);
 
 import { expect } from 'chai';
-import { ObjectNotFoundError } from '../../src/errors';
+import { ObjectNotFoundError, PrefixNotFoundError } from '../../src/errors';
 
 describe('LocalBucket', () => {
 
   let bucket;
   beforeEach(() => {
     bucket = new LocalBucket(path.join(__dirname, '../../'));
+  });
+
+  describe('list()', () => {
+
+    it('resolves the correct list of objects (no param)', async () => {
+      const objects = await bucket.list();
+      const packageJson = objects.find(o => o.name === 'package.json');
+      // eslint-disable-next-line no-unused-expressions
+      expect(packageJson).to.exist;
+    });
+
+    it('resolves the correct list of objects (src/)', async () => {
+      const objects = await bucket.list('src/');
+      const indexTs = objects.find(o => o.name === 'index.ts');
+      // eslint-disable-next-line no-unused-expressions
+      expect(indexTs).to.exist;
+    });
+
+    it('rejects if the prefix/folder does not exist', () => {
+      const promise = bucket.list('unknown/');
+      return expect(promise).to.be.rejectedWith(PrefixNotFoundError);
+    });
+
   });
 
   describe('get()', () => {

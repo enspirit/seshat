@@ -38,8 +38,9 @@ export default class LocalBucket extends AbstractBucket {
     return LocalObject.fromPath(this.pathTo(path));
   }
 
-  async list(prefix: string) {
-    return LocalObject.readdir(prefix);
+  async list(prefix: string = './') {
+    const dirpath = this.pathTo(prefix);
+    return LocalObject.readdir(dirpath);
   }
 
   private pathTo(fpath: string): string {
