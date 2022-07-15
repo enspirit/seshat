@@ -1,0 +1,76 @@
+---
+  name: |-
+    The get-object action
+
+  url: |-
+    /{path}
+
+  services:
+  - method: |-
+      POST
+
+    description: |-
+      Allows retrieving an object
+
+    preconditions:
+      - The url must correspond to an existing object
+
+    input_schema: |-
+      {
+        path: String
+      }
+
+    output_schema: |-
+      SeshatObject
+
+    error_schema: |-
+      Error
+
+    examples:
+
+      - description: |-
+          when executing the 'get-object' action for an existing object (file)
+        headers:
+          content-type: application/vnd.seshat-action+json
+          seshat-action: core/get-object
+        params:
+          path: package.json
+        expected:
+          content_type: application/json
+          status: 200
+        assert:
+          - "pathFD('', :name => '/package.json')"
+          - "pathFD('', :isFile => true)"
+          - "pathFD('', :isDirectory => false)"
+          - "pathFD('', :contentType => 'application/json')"
+
+      - description: |-
+          when executing the 'get-object' action for an existing object (folder)
+        headers:
+          content-type: application/vnd.seshat-action+json
+          seshat-action: core/get-object
+        params:
+          path: src
+        expected:
+          content_type: application/json
+          status: 200
+        assert:
+          - "pathFD('', :name => '/src')"
+          - "pathFD('', :isFile => false)"
+          - "pathFD('', :isDirectory => true)"
+          - "pathFD('', :contentType => 'directory')"
+
+    counterexamples:
+
+      - description: |-
+          when executing the 'get-object' action for a non existing object
+        headers:
+          content-type: application/vnd.seshat-action+json
+          seshat-action: core/get-object
+        params:
+          path: does-not-exist.json
+        expected:
+          content_type: application/json
+          status: 404
+        assert:
+          - "match('error', /^Object .* not found/)"

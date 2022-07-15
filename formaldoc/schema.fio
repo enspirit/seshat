@@ -1,0 +1,16 @@
+@import webspicy/scalars
+
+SeshatObject = {
+  name: String
+  isFile: Boolean
+  isDirectory: Boolean
+  atime: Date
+  ctime: Date
+  mtime: Date
+  contentType: String
+  contentLength: Integer
+}
+
+Error = {
+  error: String
+}

@@ -1,0 +1,88 @@
+import express, { NextFunction, Request, Response, Router, RequestHandler } from 'express';
+import { SeshatConfig } from '../../types';
+import { ObjectNotFoundError } from '../../errors';
+
+export interface RetrieveObjectConfig {
+  downloadAs: {
+    enabled: boolean,
+    queryParam: string
+  }
+}
+
+export const DefaultConfig: RetrieveObjectConfig = {
+  downloadAs: {
+    enabled: true,
+    queryParam: 'downloadAs',
+  },
+};
+
+export const createRouter = (seshatConfig: SeshatConfig, routerConfig: RetrieveObjectConfig = DefaultConfig): Router => {
+  const router = express();
+  const { bucket } = seshatConfig;
+
+  /**
+   * Expose the object on the request
+   */
+  const exposeObject: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+    if (req.seshat && req.seshat.object) {
+      return next();
+    }
+    req.seshat ||= {
+      bucket,
+    };
+    try {
+      req.seshat.object = await bucket.get(req.path);
+      console.log('with', req.seshat.object);
+      next();
+    } catch (err) {
+      if (err instanceof ObjectNotFoundError) {
+        return res
+          .status(404)
+          .send({ error: `File not found: ${req.path}` });
+      }
+      next(err);
+    }
+  };
+
+  /**
+   * Allows a user to download a file as an attachment with different name
+   */
+  const downloadAs: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
+    const filename = req.query[routerConfig.downloadAs.queryParam];
+    if (filename) {
+      res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
+    }
+    next();
+  };
+
+  const middlewares: RequestHandler[] = [exposeObject];
+
+  if (routerConfig.downloadAs.enabled) {
+    middlewares.push(downloadAs);
+  }
+
+  /**
+   * Retrieve file actions
+   */
+  router.get('*', middlewares, async (req: Request, res: Response) => {
+    try {
+      const { object } = req.seshat;
+      if (object.isDirectory) {
+        throw new ObjectNotFoundError('Prefix found instead of object');
+      }
+      res.set('Content-Type', object.contentType);
+      res.set('Content-Length', object.contentLength.toString());
+      object.getReadableStream().pipe(res);
+    } catch (err) {
+      if (err instanceof ObjectNotFoundError) {
+        return res
+          .status(404)
+          .send({ error: `File not found: ${req.path}` });
+      }
+
+      return res.status(500).send(err.message);
+    }
+  });
+
+  return router;
+};

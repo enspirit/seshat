@@ -1,0 +1,38 @@
+---
+name: |-
+  Multipart file upload
+
+url: |-
+  /tmp/
+
+services:
+- method: |-
+    POST
+
+  description: |-
+    Allows creating files through real file uploads
+
+  input_schema: |-
+    .
+
+  output_schema: |-
+    [SeshatObject]
+
+  error_schema: |-
+    Error
+
+  examples:
+
+    - description: |-
+        when requested with a single file
+      tags:
+        - only
+      file_upload:
+        param_name: some-todos.csv
+        path: ./fixtures/todos.csv
+        content_type: "text/csv"
+      expected:
+        status: 200
+        content_type: application/json
+      assert:
+        - "pathFD('0', :name => '/tmp/some-todos.csv')"
