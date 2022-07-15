@@ -20,6 +20,45 @@ describe('the express app', () => {
     resetMockBucket();
   });
 
+  describe('on DELETE /:file', () => {
+    it('deletes the correct object from the bucket (file)', async () => {
+      await request(app).delete('/file.txt');
+      expect(mockBucket.delete).to.be.calledOnceWith('file.txt');
+    });
+
+    it('deletes the correct object from the bucket (subfolder file)', async () => {
+      await request(app).delete('/subfolder/file.txt');
+      expect(mockBucket.delete).to.be.calledOnceWith('subfolder/file.txt');
+    });
+
+    it('returns proper status code when bucket has object', () => {
+      const stub = mockBucket.delete as sinon.SinonStub;
+      stub.resolves();
+
+      return request(app)
+        .delete('/file.txt')
+        .expect(204);
+    });
+
+    it('returns proper status code when bucket reports object not found', () => {
+      const stub = mockBucket.delete as sinon.SinonStub;
+      stub.rejects(new ObjectNotFoundError('oops'));
+
+      return request(app)
+        .delete('/file.txt')
+        .expect(404);
+    });
+
+    it('returns proper status code when bucket reports unknown error', async () => {
+      const stub = mockBucket.get as sinon.SinonStub;
+      stub.rejects(new Error('oops'));
+
+      await request(app)
+        .get('/file.txt')
+        .expect(500);
+    });
+  });
+
   describe('on GET /:file', () => {
 
     it('gets the correct object from the bucket (file)', async () => {

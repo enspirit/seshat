@@ -3,10 +3,9 @@ import { mockFileObject } from './object';
 import * as sinon from 'sinon';
 
 export const reset = () => {
-  (mockBucket.exists as sinon.SinonStub).reset();
-  (mockBucket.fileExists as sinon.SinonStub).reset();
-  (mockBucket.dirExists as sinon.SinonStub).reset();
-  (mockBucket.get as sinon.SinonStub).reset();
+  for (const meth of Object.getOwnPropertyNames(mockBucket)) {
+    mockBucket[meth].reset();
+  }
 };
 
 const mockBucket: AbstractBucket = {

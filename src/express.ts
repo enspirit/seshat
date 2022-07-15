@@ -20,5 +20,18 @@ export const createApp = (bucket: AbstractBucket): express.Express => {
     }
   });
 
+  app.delete('/*', async (req, res) => {
+    const fpath = req.params[0];
+    try {
+      await bucket.delete(fpath);
+      res.sendStatus(204);
+    } catch (err) {
+      if (err instanceof ObjectNotFoundError) {
+        return res.send(404);
+      }
+      return res.status(500).send(err.message);
+    }
+  });
+
   return app;
 };
