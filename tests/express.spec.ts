@@ -35,6 +35,16 @@ describe('the express app', () => {
       expect(mockBucket.put).to.be.calledOnceWith('package.json');
     });
 
+    it('properly returns the object list (one file)', async () => {
+      const res = await request(app)
+        .post('/')
+        .attach('package.json', path.join(__dirname, '../package.json'))
+        .expect(200);
+
+      expect(res.body).to.be.an('array');
+      expect(res.body).to.have.length(1);
+    });
+
     it('properly writes the objects on bucket (multiple files)', async () => {
       await request(app)
         .post('/')

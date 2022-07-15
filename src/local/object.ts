@@ -91,7 +91,9 @@ export default class LocalObject extends SeshatObject {
   }
 
   static async write(fpath: string, stream: Readable): Promise<LocalObject> {
-    await fsPromises.writeFile(fpath, stream);
+    const fileStream = fs.createWriteStream(fpath);
+    stream.pipe(fileStream);
+    await new Promise(resolve => fileStream.on('finish', resolve));
     return this.fromPath(fpath);
   }
 }

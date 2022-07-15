@@ -26,7 +26,6 @@ export const createApp = (config: SeshatConfig): express.Express => {
       if (err instanceof ObjectNotFoundError) {
         return res.sendStatus(404);
       }
-      console.error('ben ouais', err.message);
       return res.status(500).send(err.message);
     }
   });
@@ -47,14 +46,15 @@ export const createApp = (config: SeshatConfig): express.Express => {
   app.post('/', (req, res) => {
     const bb = busboy({ headers: req.headers });
 
-    const files: SeshatObject[] = [];
+    const promises = [];
 
     bb.on('file', async (_fieldname, file, fileinfo) => {
-      files.push(await bucket.put(fileinfo.filename, file));
+      promises.push(bucket.put(fileinfo.filename, file));
     });
 
-    bb.on('finish', () => {
-      res.status(200).send(files);
+    bb.on('finish', async () => {
+      const objects = await Promise.all(promises);
+      res.status(200).send(objects);
     });
 
     req.pipe(bb);

@@ -41,7 +41,7 @@ export default class LocalBucket extends AbstractBucket {
   }
 
   async put(path: string, stream: Readable) {
-    return LocalObject.write(this.pathTo(path), stream);
+    return await LocalObject.write(this.pathTo(path), stream);
   }
 
   async list(prefix: string = './') {
