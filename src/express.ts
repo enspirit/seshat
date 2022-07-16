@@ -2,7 +2,7 @@ import * as express from 'express';
 import AbstractBucket from './bucket';
 import { ObjectNotFoundError } from './errors';
 import * as busboy from 'busboy';
-import SeshatObject from './object';
+import seshatRequestMiddleware from './middlewares/seshat-request';
 
 export interface SeshatConfig {
   bucket: AbstractBucket
@@ -11,11 +11,21 @@ export interface SeshatConfig {
 export const createApp = (config: SeshatConfig): express.Express => {
   const app = express();
   const { bucket } = config;
+  app.use(seshatRequestMiddleware(config));
 
   app.get('/*', async (req, res) => {
     const fpath = req.params[0];
     try {
       const object = await bucket.get(fpath);
+
+      if (req.isSeshatProtocol) {
+        if (object.isFile) {
+          return res.send(object);
+        } else {
+          return res.send(await bucket.list(fpath));
+        }
+      }
+
       if (object.isDirectory) {
         throw new ObjectNotFoundError('Prefix found instead of object');
       }
