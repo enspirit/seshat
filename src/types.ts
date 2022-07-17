@@ -1,3 +1,5 @@
+import AbstractBucket from './bucket';
+
 export interface SeshatStats {
   name: string
   isFile: boolean
@@ -8,3 +10,9 @@ export interface SeshatStats {
   contentType: string
   contentLength: number
 }
+
+export interface SeshatConfig {
+  bucket: AbstractBucket
+}
+
+export { AbstractBucket };

@@ -1,12 +1,8 @@
 import * as express from 'express';
-import AbstractBucket from './bucket';
+import { SeshatConfig } from './types';
 import { ObjectNotFoundError } from './errors';
 import * as busboy from 'busboy';
 import seshatRequestMiddleware from './middlewares/seshat-request';
-
-export interface SeshatConfig {
-  bucket: AbstractBucket
-}
 
 export const createApp = (config: SeshatConfig): express.Express => {
   const app = express();
