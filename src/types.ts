@@ -15,7 +15,17 @@ export interface SeshatConfig {
   bucket: AbstractBucket
 }
 
+export enum SeshatOperation {
+  GetObject,
+  CreateObject,
+  OverrideObject,
+  DeleteObject,
+  ListPrefix,
+  DeletePrefix,
+  RunAction
+}
 export interface SeshatRequest {
+  operation?: SeshatOperation,
   filename: string,
   path: string,
   bucket: AbstractBucket

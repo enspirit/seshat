@@ -2,12 +2,10 @@ import * as express from 'express';
 import { SeshatConfig } from './types';
 import { ObjectNotFoundError } from './errors';
 import * as busboy from 'busboy';
-import seshatRequestMiddleware from './middlewares/seshat-request';
 
 export const createApp = (config: SeshatConfig): express.Express => {
   const app = express();
   const { bucket } = config;
-  app.use(seshatRequestMiddleware(config));
 
   app.get('/*', async (req, res) => {
     const fpath = req.params[0];
