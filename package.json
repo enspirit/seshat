@@ -2,17 +2,22 @@
   "name": "@enspirit/seshat",
   "version": "2.0.0",
   "description": "Seshat v2",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "src/types.ts",
   "scripts": {
     "build": "tsc",
     "dev": "tsc-watch --onSuccess 'node ./dist/src/example.js'",
     "test": "mocha -r ts-node/register 'tests/**/*.spec.ts'",
     "test:watch": "mocha -r ts-node/register tests/*.spec.ts 'tests/**/*.spec.ts' --watch --watch-files src/**/*.ts,tests/**/*.ts",
-    "lint": "eslint src --ext ts"
+    "lint": "eslint src --ext ts",
+    "preversion": "npm run build"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "files": [
+    "dist"
+  ],
   "dependencies": {
     "@types/express": "^4.17.13",
     "@types/mime-types": "^2.1.1",

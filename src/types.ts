@@ -28,3 +28,10 @@ export interface SeshatObject {
   getReadableStream(): Readable
   getWritableStream(): Writable
 }
+
+declare global {
+  namespace Express {
+    interface Request {
+    }
+  }
+}

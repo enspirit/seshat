@@ -1,7 +1,7 @@
-import * as express from 'express';
+import express from 'express';
 import { SeshatConfig } from './types';
 import { ObjectNotFoundError } from './errors';
-import * as busboy from 'busboy';
+import busboy from 'busboy';
 
 export const createApp = (config: SeshatConfig): express.Express => {
   const app = express();

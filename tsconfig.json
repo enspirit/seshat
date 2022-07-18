@@ -1,18 +1,20 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "incremental": true,
+    "target": "es2022",
     "module": "commonjs",
+    "declaration": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "outDir": "dist",
     "sourceMap": true
   },
   "files": [
     "./node_modules/@types/mocha/index.d.ts",
     "./node_modules/@types/node/index.d.ts",
-    "src/types/index.d.ts",
   ],
   "include": [
     "src/**/*.ts",
-    "tests/**/*.ts",
   ],
   "exclude": [
     "node_modules"
