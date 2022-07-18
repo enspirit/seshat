@@ -1,10 +1,8 @@
-import * as request from 'supertest';
 import * as chai from 'chai';
-import * as path from 'path';
 import { expect } from 'chai';
 import { Request, Response, NextFunction } from 'express';
 import * as sinonChai from 'sinon-chai';
-import { DownloadAsOptions, default as downloadAsMw } from '../../../src/express/middlewares/download-as';
+import { default as downloadAsMw } from '../../../src/express/middlewares/download-as';
 import * as sinon from 'sinon';
 chai.use(sinonChai);
 
@@ -81,6 +79,5 @@ describe('the download-as express middleware', () => {
       expect(mockResponse.setHeader).to.not.be.called;
     });
   });
-
 
 });
