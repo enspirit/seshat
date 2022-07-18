@@ -1,9 +1,9 @@
-import * as chai from 'chai';
+import chai from 'chai';
 import { expect } from 'chai';
 import { Request, Response, NextFunction } from 'express';
-import * as sinonChai from 'sinon-chai';
+import sinonChai from 'sinon-chai';
 import { default as downloadAsMw } from '../../../src/express/middlewares/download-as';
-import * as sinon from 'sinon';
+import sinon from 'sinon';
 chai.use(sinonChai);
 
 describe('the download-as express middleware', () => {

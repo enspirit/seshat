@@ -1,13 +1,13 @@
 import { createApp } from '../src/express';
-import * as request from 'supertest';
-import * as chai from 'chai';
-import * as path from 'path';
+import request from 'supertest';
+import chai from 'chai';
+import path from 'path';
 import mockBucket, { reset as resetMockBucket } from './mocks/bucket';
 import { mockFileObject, mockFolderObject } from './mocks/object';
 import { expect } from 'chai';
-import * as sinonChai from 'sinon-chai';
+import sinonChai from 'sinon-chai';
 import { ObjectNotFoundError } from '../src/errors';
-import * as sinon from 'sinon';
+import sinon from 'sinon';
 chai.use(sinonChai);
 
 describe('the express app', () => {

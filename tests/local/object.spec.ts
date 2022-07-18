@@ -1,12 +1,12 @@
 import { expect } from 'chai';
-import * as chai from 'chai';
-import * as chaiAsPromised from 'chai-as-promised';
+import chai from 'chai';
+import chaiAsPromised from 'chai-as-promised';
 import { readFileSync, writeFileSync } from 'fs';
 chai.use(chaiAsPromised);
 
 import { Readable } from 'stream';
-import * as path from 'path';
-import * as fs from 'fs';
+import path from 'path';
+import fs from 'fs';
 
 import LocalObject from '../../src/local/object';
 import { ObjectNotFoundError, PrefixNotFoundError } from '../../src/errors';

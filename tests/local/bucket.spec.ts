@@ -1,7 +1,7 @@
-import * as path from 'path';
-import * as chai from 'chai';
+import path from 'path';
+import chai from 'chai';
+import chaiAsPromised from 'chai-as-promised';
 import LocalBucket from '../../src/local/bucket';
-import * as chaiAsPromised from 'chai-as-promised';
 chai.use(chaiAsPromised);
 
 import { expect } from 'chai';
