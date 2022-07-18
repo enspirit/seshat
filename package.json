@@ -6,8 +6,8 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc-watch --onSuccess 'node ./dist/src/example.js'",
-    "test": "mocha -r ts-node/register tests/**/*.spec.ts",
-    "test:watch": "mocha -r ts-node/register tests/*.spec.ts tests/**/*.spec.ts --watch --watch-files src/**/*.ts,tests/**/*.ts",
+    "test": "mocha -r ts-node/register 'tests/**/*.spec.ts'",
+    "test:watch": "mocha -r ts-node/register tests/*.spec.ts 'tests/**/*.spec.ts' --watch --watch-files src/**/*.ts,tests/**/*.ts",
     "lint": "eslint src --ext ts"
   },
   "keywords": [],
