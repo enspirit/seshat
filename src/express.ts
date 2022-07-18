@@ -11,15 +11,6 @@ export const createApp = (config: SeshatConfig): express.Express => {
     const fpath = req.params[0];
     try {
       const object = await bucket.get(fpath);
-
-      if (req.isSeshatProtocol) {
-        if (object.isFile) {
-          return res.send(object);
-        } else {
-          return res.send(await bucket.list(fpath));
-        }
-      }
-
       if (object.isDirectory) {
         throw new ObjectNotFoundError('Prefix found instead of object');
       }
