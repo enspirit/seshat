@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "description": "Seshat v2",
   "main": "dist/index.js",
-  "types": "src/types.ts",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "dev": "tsc-watch --onSuccess 'node ./dist/src/example.js'",
