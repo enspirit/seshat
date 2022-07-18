@@ -1,12 +1,8 @@
-import { SeshatRequest } from '../types';
-
-export {};
+export { };
 
 declare global {
   namespace Express {
     interface Request {
-      isSeshatProtocol: boolean
-      seshat: SeshatRequest
     }
   }
 }

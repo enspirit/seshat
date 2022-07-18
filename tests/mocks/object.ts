@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as fs from 'fs';
-import SeshatObject from '../../src/object';
+import { SeshatObject } from '../../src/types';
 
 export const mockFileObject = {
   name: 'file.txt',

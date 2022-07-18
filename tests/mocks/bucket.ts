@@ -3,7 +3,7 @@ import { mockFileObject } from './object';
 import { Readable } from 'stream';
 import * as fs from 'fs';
 import * as sinon from 'sinon';
-import SeshatObject from '../../src/object';
+import { SeshatObject } from '../../src/types';
 
 export const reset = () => {
   for (const meth of Object.getOwnPropertyNames(mockBucket)) {

@@ -1,6 +1,21 @@
-import AbstractBucket from './bucket';
+import { Readable, Writable } from 'stream';
 
-export interface SeshatStats {
+export interface SeshatConfig {
+  bucket: SeshatBucket
+}
+
+export interface SeshatBucket {
+  exists(path: string): Promise<boolean>;
+  fileExists(path: string): Promise<boolean>;
+  dirExists(path: string): Promise<boolean>;
+
+  get(path: string): Promise<SeshatObject>;
+  put(path: string, stream: Readable): Promise<SeshatObject>;
+  delete(path: string): Promise<void>;
+  list(prefix?: string): Promise<SeshatObject[]>;
+}
+
+export interface SeshatObject {
   name: string
   isFile: boolean
   isDirectory: boolean
@@ -9,26 +24,7 @@ export interface SeshatStats {
   mtime: Date
   contentType: string
   contentLength: number
-}
 
-export interface SeshatConfig {
-  bucket: AbstractBucket
+  getReadableStream(): Readable
+  getWritableStream(): Writable
 }
-
-export enum SeshatOperation {
-  GetObject,
-  CreateObject,
-  OverrideObject,
-  DeleteObject,
-  ListPrefix,
-  DeletePrefix,
-  RunAction
-}
-export interface SeshatRequest {
-  operation?: SeshatOperation,
-  filename: string,
-  path: string,
-  bucket: AbstractBucket
-}
-
-export { AbstractBucket };

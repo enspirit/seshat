@@ -1,5 +1,5 @@
 import { Readable, Writable } from 'stream';
-import SeshatObject from '../object';
+import { SeshatObject } from '../types';
 
 import * as path from 'path';
 import * as fs from 'fs';
@@ -7,7 +7,7 @@ import * as fsPromises from 'fs/promises';
 import * as mime from 'mime-types';
 import { SeshatError, ObjectNotFoundError, PrefixNotFoundError } from '../errors';
 
-export default class LocalObject extends SeshatObject {
+export default class LocalObject implements SeshatObject {
 
   path: string;
   name: string;
@@ -20,8 +20,6 @@ export default class LocalObject extends SeshatObject {
   contentLength: number;
 
   constructor(fpath: string, stats: fs.Stats) {
-    super();
-
     this.path = fpath;
     this.name = path.basename(fpath);
     this.isFile = stats.isFile();
