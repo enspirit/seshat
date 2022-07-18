@@ -15,4 +15,10 @@ export interface SeshatConfig {
   bucket: AbstractBucket
 }
 
+export interface SeshatRequest {
+  filename: string,
+  path: string,
+  bucket: AbstractBucket
+}
+
 export { AbstractBucket };
