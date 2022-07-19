@@ -4,7 +4,6 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import { createRouter } from '../../../src/express/routers/multipart-uploads';
 import mockBucket from '../../mocks/bucket';
-import middlewares from '../../../src/express/middlewares';
 import { SeshatConfig } from '../../../src/types';
 chai.use(sinonChai);
 

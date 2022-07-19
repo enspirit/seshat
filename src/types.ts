@@ -7,13 +7,17 @@ export interface SeshatConfig {
   middlewares?: SeshatMiddlewareFactory[]
 }
 
+export interface SeshatObjectMeta {
+  mimeType: string
+}
+
 export interface SeshatBucket {
   exists(path: string): Promise<boolean>;
   fileExists(path: string): Promise<boolean>;
   dirExists(path: string): Promise<boolean>;
 
   get(path: string): Promise<SeshatObject>;
-  put(path: string, stream: Readable): Promise<SeshatObject>;
+  put(path: string, stream: Readable, meta: SeshatObjectMeta): Promise<SeshatObject>;
   delete(path: string): Promise<void>;
   list(prefix?: string): Promise<SeshatObject[]>;
 }

@@ -32,7 +32,6 @@ export const createRouter = (seshatConfig: SeshatConfig, routerConfig: RetrieveO
     };
     try {
       req.seshat.object = await bucket.get(req.path);
-      console.log('with', req.seshat.object);
       next();
     } catch (err) {
       if (err instanceof ObjectNotFoundError) {
