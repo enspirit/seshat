@@ -11,7 +11,7 @@ import fs from 'fs';
 import LocalObject from '../../src/local/object';
 import { ObjectNotFoundError, PrefixNotFoundError } from '../../src/errors';
 
-const streamToString = (stream): Promise<string> => {
+const streamToString = (stream: Readable): Promise<string> => {
   const chunks: any[] = [];
   return new Promise((resolve, reject) => {
     stream.on('data', (chunk) => chunks.push(Buffer.from(chunk)));
@@ -108,7 +108,7 @@ describe('LocalObject', () => {
   describe('.write', () => {
 
     // ensure file does not exist
-    const ensureRm = (path) => {
+    const ensureRm = (path: string) => {
       try {
         fs.unlinkSync(path);
       } catch (_err) {
@@ -117,7 +117,7 @@ describe('LocalObject', () => {
     };
 
     const testFile = '/tmp/test.txt';
-    let readStream;
+    let readStream: Readable;
     beforeEach(() => {
       ensureRm(testFile);
       readStream = new Readable();

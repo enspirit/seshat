@@ -1,17 +1,17 @@
 import path from 'path';
-import express, { Router } from 'express';
+import express, { Router, Request, Response, NextFunction } from 'express';
 import Busboy from 'busboy';
-import { SeshatConfig, SeshatObjectMeta } from '../../types';
+import { SeshatConfig, SeshatObjectMeta, SeshatObject } from '../../types';
 
 export const createRouter = (config: SeshatConfig): Router => {
 
   const { bucket } = config;
   const router = express();
 
-  const isMultiPartFormDataRequest = (req, res, next) => {
+  const isMultiPartFormDataRequest = (req: Request, res: Response, next: NextFunction) => {
     // We only execute this router when dealing with
     // multipart-formdata requests
-    const contentType = req.headers['content-type'];
+    const contentType = req.headers['content-type'] || '';
     if (contentType.indexOf('multipart/form-data') < 0) {
       return next('route');
     }
@@ -25,7 +25,7 @@ export const createRouter = (config: SeshatConfig): Router => {
 
     const basePath = req.path;
     const busboy = Busboy({ headers: req.headers });
-    const promises = [];
+    const promises: Array<Promise<SeshatObject>> = [];
 
     busboy.on('error', (error: Error) => {
       return res.status(500).send({ error: error.message });

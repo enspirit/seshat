@@ -1,4 +1,4 @@
-import express, { Router } from 'express';
+import express, { NextFunction, Request, Response, Router } from 'express';
 import { json } from 'body-parser';
 import { SeshatConfig, SeshatAction } from '../../types';
 import { ObjectNotFoundError } from '../../errors';
@@ -7,11 +7,11 @@ export const SESHAT_ACTION_HEADER = 'application/vnd.seshat-action+json';
 
 export const createRouter = (config: SeshatConfig): Router => {
 
-  const { actions } = config;
+  const actions = config.actions || [];
   const router = express();
   router.use(json({ type: SESHAT_ACTION_HEADER }));
 
-  const isSeshatActionRequest = (req, res, next) => {
+  const isSeshatActionRequest = (req: Request, res: Response, next: NextFunction) => {
     // We only execute this router if the header is present,
     // otherwise we execute the next matching routes
     if (req.headers['content-type'] === SESHAT_ACTION_HEADER) {
@@ -41,7 +41,7 @@ export const createRouter = (config: SeshatConfig): Router => {
     try {
       const actionResult = await action.run(req);
       return res.send(actionResult);
-    } catch (error) {
+    } catch (error: any) {
       if (error instanceof ObjectNotFoundError) {
         return res.status(404).send({ error: error.message });
       }

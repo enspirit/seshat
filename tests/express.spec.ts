@@ -1,3 +1,4 @@
+import { Application } from 'express';
 import { createApp } from '../src/express';
 import request from 'supertest';
 import chai from 'chai';
@@ -12,7 +13,7 @@ chai.use(sinonChai);
 
 describe('the express app', () => {
 
-  let app, config;
+  let app: Application, config;
   beforeEach(() => {
     config = {
       bucket: mockBucket,

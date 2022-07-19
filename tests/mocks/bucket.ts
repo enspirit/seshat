@@ -1,13 +1,17 @@
 import { mockFileObject } from './object';
 import { Readable } from 'stream';
 import * as fs from 'fs';
-import * as sinon from 'sinon';
+import { SinonStub, SinonSpy, default as sinon } from 'sinon';
 import { SeshatBucket, SeshatObject } from '../../src/types';
 
 export const reset = () => {
-  for (const meth of Object.getOwnPropertyNames(mockBucket)) {
-    mockBucket[meth].resetHistory();
-  }
+  mockBucket.exists.resetHistory();
+  mockBucket.fileExists.resetHistory();
+  mockBucket.dirExists.resetHistory();
+  mockBucket.get.resetHistory();
+  mockBucket.list.resetHistory();
+  mockBucket.delete.resetHistory();
+  mockBucket.put.resetHistory();
 };
 
 const fakeBucket = {
@@ -18,7 +22,17 @@ const fakeBucket = {
   },
 };
 
-const mockBucket: SeshatBucket = {
+interface MockBucket {
+  exists: SinonStub,
+  fileExists: SinonStub,
+  dirExists: SinonStub,
+  get: SinonStub,
+  list: SinonStub,
+  delete: SinonStub,
+  put: SinonSpy
+}
+
+const mockBucket: MockBucket = {
   exists: sinon.stub().resolves(true),
 
   fileExists: sinon.stub().resolves(true),
@@ -34,4 +48,4 @@ const mockBucket: SeshatBucket = {
   put: sinon.spy(fakeBucket, 'put'),
 };
 
-export default mockBucket;
+export default mockBucket as SeshatBucket;

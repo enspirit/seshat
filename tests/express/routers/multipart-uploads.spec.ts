@@ -7,7 +7,7 @@ import mockBucket from '../../mocks/bucket';
 import { SeshatConfig } from '../../../src/types';
 chai.use(sinonChai);
 
-import express from 'express';
+import express, { Application } from 'express';
 import { mockFileObject } from '../../mocks/object';
 
 describe('the multipart-uploads express router', () => {
@@ -15,7 +15,7 @@ describe('the multipart-uploads express router', () => {
   let config: SeshatConfig;
 
   let router;
-  let app;
+  let app: Application;
   beforeEach(() => {
     config = {
       bucket: mockBucket,

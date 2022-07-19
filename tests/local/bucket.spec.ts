@@ -7,11 +7,11 @@ chai.use(chaiAsPromised);
 import { expect } from 'chai';
 import { ObjectNotFoundError, PrefixNotFoundError } from '../../src/errors';
 import { mockFileObject } from '../mocks/object';
-import { SeshatObject } from '../../src/types';
+import { SeshatObject, SeshatBucket } from '../../src/types';
 
 describe('LocalBucket', () => {
 
-  let bucket;
+  let bucket: SeshatBucket;
   beforeEach(() => {
     bucket = new LocalBucket(path.join(__dirname, '../../'));
   });
@@ -138,13 +138,13 @@ describe('LocalBucket', () => {
   describe('put()', () => {
 
     it('resolves with the object created', async () => {
-      const object = await bucket.put('tmp/test.json', mockFileObject.getReadableStream());
+      const object = await bucket.put('tmp/test.json', mockFileObject.getReadableStream(), { mimeType: mockFileObject.contentType });
       expect(object.name).to.equal('tmp/test.json');
       expect(object.contentType).to.equal('application/json');
     });
 
     it('rejects if path goes out of bucket', () => {
-      const promise = bucket.put('../../../file.txt', mockFileObject.getReadableStream());
+      const promise = bucket.put('../../../file.txt', mockFileObject.getReadableStream(), { mimeType: mockFileObject.contentType });
       return expect(promise).to.be.rejectedWith(/Relative paths are not allowed/);
     });
 
@@ -152,7 +152,7 @@ describe('LocalBucket', () => {
     });
 
     it('accepts relative path while they remain in bucket', async () => {
-      const promise = bucket.put('tmp/subfolder/../index.json', mockFileObject.getReadableStream());
+      const promise = bucket.put('tmp/subfolder/../index.json', mockFileObject.getReadableStream(), { mimeType: mockFileObject.contentType });
       await expect(promise).to.not.be.rejected;
       const object = await promise;
       expect(object.name).to.equal('tmp/index.json');
@@ -164,7 +164,7 @@ describe('LocalBucket', () => {
 
     let createdObject: SeshatObject;
     beforeEach(async () => {
-      createdObject = await bucket.put('tmp/test.json', mockFileObject.getReadableStream());
+      createdObject = await bucket.put('tmp/test.json', mockFileObject.getReadableStream(), { mimeType: mockFileObject.contentType });
     });
 
     it('deletes the file properly', async () => {

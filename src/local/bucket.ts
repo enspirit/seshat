@@ -56,7 +56,7 @@ export default class LocalBucket implements SeshatBucket {
   }
 
   // checks that the path is not outside of the bucket folder
-  private ensureSecure(filepath) {
+  private ensureSecure(filepath: string) {
     const fullpath = path.join(this.path, filepath);
     if (!this.isPathSecure(fullpath)) {
       throw new Error('Relative paths are not allowed');
@@ -64,7 +64,7 @@ export default class LocalBucket implements SeshatBucket {
     return filepath;
   }
 
-  private isPathSecure(filepath) {
+  private isPathSecure(filepath: string) {
     const dest = path.normalize(filepath);
     return dest.indexOf(this.path) === 0;
   }

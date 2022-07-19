@@ -53,7 +53,7 @@ export default class LocalObject implements SeshatObject {
       const fullpath = basePath ? path.join(basePath, fpath) : fpath;
       const stats = await fsPromises.stat(fullpath);
       return new LocalObject(fpath, fullpath, stats);
-    } catch (err) {
+    } catch (err: any) {
       if (err.code === 'ENOENT') {
         throw new ObjectNotFoundError(`Object ${fpath} not found`);
       }
@@ -68,7 +68,7 @@ export default class LocalObject implements SeshatObject {
       return Promise.all(objectPaths.map(fpath => {
         return this.fromPath(path.join(dirpath, fpath), basePath);
       }));
-    } catch (err) {
+    } catch (err: any) {
       if (err.code === 'ENOENT') {
         throw new PrefixNotFoundError(`Unable to find objects with prefix ${dirpath}`);
       }
@@ -83,7 +83,7 @@ export default class LocalObject implements SeshatObject {
     }
     try {
       await fsPromises.unlink(fpath);
-    } catch (err) {
+    } catch (err: any) {
       if (err.code === 'ENOENT') {
         throw new ObjectNotFoundError(`Object ${fpath} not found`);
       }

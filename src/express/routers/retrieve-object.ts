@@ -32,15 +32,12 @@ export const createRouter = (seshatConfig: SeshatConfig, routerConfig: RetrieveO
     };
     try {
       req.seshat.object = await bucket.get(req.path);
-      next();
     } catch (err) {
-      if (err instanceof ObjectNotFoundError) {
-        return res
-          .status(404)
-          .send({ error: `File not found: ${req.path}` });
+      if (!(err instanceof ObjectNotFoundError)) {
+        next(err);
       }
-      next(err);
     }
+    next();
   };
 
   /**
@@ -64,15 +61,21 @@ export const createRouter = (seshatConfig: SeshatConfig, routerConfig: RetrieveO
    * Retrieve file actions
    */
   router.get('*', middlewares, async (req: Request, res: Response) => {
+    const { object } = req.seshat;
+    if (!object) {
+      return res
+        .status(404)
+        .send({ error: `File not found: ${req.path}` });
+    }
     try {
-      const { object } = req.seshat;
       if (object.isDirectory) {
         throw new ObjectNotFoundError('Prefix found instead of object');
       }
       res.set('Content-Type', object.contentType);
       res.set('Content-Length', object.contentLength.toString());
       object.getReadableStream().pipe(res);
-    } catch (err) {
+    } catch (err: any) {
+
       if (err instanceof ObjectNotFoundError) {
         return res
           .status(404)

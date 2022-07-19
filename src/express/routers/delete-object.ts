@@ -14,7 +14,7 @@ export const createRouter = (config: SeshatConfig): Router => {
     try {
       await bucket.delete(fpath);
       res.sendStatus(204);
-    } catch (err) {
+    } catch (err: any) {
       if (err instanceof ObjectNotFoundError) {
         return res.sendStatus(404);
       }

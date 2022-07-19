@@ -2,20 +2,18 @@ import path = require('path');
 import { createApp } from './express';
 import LocalBucket from './local/bucket';
 import SeshatMiddlewares from './express/middlewares';
-import SeshatActions from './actions';
 import { SeshatConfig } from './types';
+import { Request, Response, NextFunction } from 'express';
 
 const bucket = new LocalBucket(path.join(__dirname, '../'));
-const actions = SeshatActions.map(clazz => new clazz());
 const config: SeshatConfig = {
   bucket,
-  actions,
   middlewares: SeshatMiddlewares,
 };
 
 const app = createApp(config);
 
-app.use((err, req, res, _next) => {
+app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
 });
