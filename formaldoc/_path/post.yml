@@ -3,7 +3,7 @@ name: |-
   Multipart file upload
 
 url: |-
-  /tmp/
+  /{path}
 
 services:
 - method: |-
@@ -13,7 +13,9 @@ services:
     Allows creating files through real file uploads
 
   input_schema: |-
-    .
+    {
+      path: String
+    }
 
   output_schema: |-
     [SeshatObject]
@@ -25,11 +27,11 @@ services:
 
     - description: |-
         when requested with a single file
-      tags:
-        - only
+      params:
+        path: /tmp
       file_upload:
         param_name: some-todos.csv
-        path: ./fixtures/todos.csv
+        path: ../fixtures/todos.csv
         content_type: "text/csv"
       expected:
         status: 200

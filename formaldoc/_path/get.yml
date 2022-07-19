@@ -1,0 +1,42 @@
+---
+  name: |-
+    The get-object action
+
+  url: |-
+    /{path}
+
+  services:
+  - method: |-
+      GET
+
+    description: |-
+      Allows retrieving a file
+
+    preconditions:
+      - The url must correspond to an existing object
+
+    input_schema: |-
+      {
+        path: String
+      }
+
+    output_schema: |-
+      {
+        ...: String | .
+      }
+
+    error_schema: |-
+      Error
+
+    examples:
+
+      - description: |-
+          FOR: the file exists
+        params:
+          path: package.json
+        expected:
+          content_type: application/json
+          status: 200
+        assert:
+        - "pathFD('', :name => '@enspirit/seshat')"
+
