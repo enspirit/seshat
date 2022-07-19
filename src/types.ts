@@ -22,6 +22,15 @@ export interface SeshatBucket {
   list(prefix?: string): Promise<SeshatObject[]>;
 }
 
+export type SeshatBucketAction = 'put' | 'get' | 'delete' | 'list'
+
+export interface SeshatBucketPolicy {
+  get(path: string): Promise<void>
+  put(path: string, meta: SeshatObjectMeta): Promise<void>
+  delete(path: string): Promise<void>
+  list(prefix?: string): Promise<void>
+}
+
 export interface SeshatObject {
   name: string
   isFile: boolean

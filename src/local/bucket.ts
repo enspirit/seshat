@@ -1,56 +1,30 @@
 import * as path from 'path';
 import LocalObject from './object';
 import { Readable } from 'stream';
-import { SeshatBucket } from '../types';
+import AbstractBucket from '../abstract-bucket';
 
-export default class LocalBucket implements SeshatBucket {
+export default class LocalBucket extends AbstractBucket {
 
   constructor(private path: string) {
+    super();
   }
 
-  async exists(path: string) {
-    try {
-      await this.get(path);
-      return true;
-    } catch (err) {
-      return false;
-    }
-  }
-
-  async fileExists(path: string) {
-    try {
-      const object = await this.get(path);
-      return object.isFile;
-    } catch (err) {
-      return false;
-    }
-  }
-
-  async dirExists(path: string) {
-    try {
-      const object = await this.get(path);
-      return object.isDirectory;
-    } catch (err) {
-      return false;
-    }
-  }
-
-  async get(path: string) {
+  async _get(path: string) {
     this.ensureSecure(path);
     return LocalObject.fromPath(path, this.path);
   }
 
-  async put(path: string, stream: Readable) {
+  async _put(path: string, stream: Readable) {
     this.ensureSecure(path);
     return await LocalObject.write(path, stream, this.path);
   }
 
-  async list(prefix: string = '') {
+  async _list(prefix: string = '') {
     this.ensureSecure(prefix);
     return LocalObject.readdir(prefix, this.path);
   }
 
-  async delete(path: string) {
+  async _delete(path: string) {
     this.ensureSecure(path);
     return LocalObject.delete(path, this.path);
   }
