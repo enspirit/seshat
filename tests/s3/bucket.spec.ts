@@ -10,7 +10,7 @@ import { ObjectNotFoundError, PrefixNotFoundError } from '../../src/errors';
 import { mockFileObject } from '../mocks/object';
 import { client as s3Client, ensureS3Object, ensureNoS3Object, ensureS3BucketEmpty } from './helpers';
 
-describe.only('S3Bucket', () => {
+describe('S3Bucket', () => {
 
   let bucket: S3Bucket;
   const bucketName = 'seshat-bucket';
@@ -19,7 +19,7 @@ describe.only('S3Bucket', () => {
     bucket = new S3Bucket(bucketName, s3Client);
   });
 
-  describe.only('list()', () => {
+  describe('list()', () => {
 
     beforeEach(async () => {
       await ensureS3BucketEmpty();
@@ -140,6 +140,36 @@ describe.only('S3Bucket', () => {
       const object = await bucket.put('test.json', readableStream, metadata);
       expect(object.name).to.equal('test.json');
       expect(object.contentType).to.equal('application/json');
+    });
+
+  });
+
+  describe('delete()', () => {
+
+    it('uses the s3client properly', async () => {
+      await ensureS3Object('package.json');
+
+      const spy = sinon.spy(s3Client, 'deleteObject');
+      await bucket.delete('package.json');
+      await expect(spy).to.be.calledOnceWith({
+        Bucket: 'seshat-bucket',
+        Key: 'package.json',
+      });
+
+      spy.restore();
+    });
+
+    it('succeeds for existing objects', async () => {
+      await ensureS3Object('package.json');
+
+      await bucket.delete('package.json');
+    });
+
+    it('rejects properly when object does not exist', async () => {
+      await ensureNoS3Object('test.json');
+
+      const p = bucket.delete('test.json');
+      await expect(p).to.be.rejectedWith(ObjectNotFoundError, /Object test.json not found/);
     });
 
   });

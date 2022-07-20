@@ -40,8 +40,14 @@ export default class S3Bucket extends AbstractBucket {
     return this._get(path);
   }
 
-  _delete(path: string): Promise<void> {
-    throw new Error('Method not implemented.');
+  async _delete(path: string): Promise<void> {
+    // ensure object exists before deleting it
+    // in this, seshat differs from plain S3
+    await this._get(path);
+    await this.s3client.deleteObject({
+      Bucket: this.bucketName,
+      Key: path,
+    }).promise();
   }
 
   async _list(prefix?: string | undefined): Promise<SeshatObject[]> {
