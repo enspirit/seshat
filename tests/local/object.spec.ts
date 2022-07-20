@@ -8,17 +8,9 @@ import { Readable } from 'stream';
 import path from 'path';
 import fs from 'fs';
 
+import { streamToString } from '../helpers';
 import LocalObject from '../../src/local/object';
 import { ObjectNotFoundError, PrefixNotFoundError } from '../../src/errors';
-
-const streamToString = (stream: Readable): Promise<string> => {
-  const chunks: any[] = [];
-  return new Promise((resolve, reject) => {
-    stream.on('data', (chunk) => chunks.push(Buffer.from(chunk)));
-    stream.on('error', (err) => reject(err));
-    stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
-  });
-};
 
 describe('LocalObject', () => {
 

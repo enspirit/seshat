@@ -1,10 +1,12 @@
 import { Readable, Writable } from 'stream';
 import { SeshatObject } from '../types';
-import { HeadObjectOutput } from 'aws-sdk/clients/s3';
+import { default as S3, HeadObjectOutput } from 'aws-sdk/clients/s3';
 
 export default class S3Object implements SeshatObject {
 
   constructor(
+    private s3client: S3,
+    private bucket: string,
     public name: string,
     public isFile: boolean,
     public isDirectory: boolean,
@@ -12,20 +14,24 @@ export default class S3Object implements SeshatObject {
     public contentLength: number,
     public ctime?: Date,
     public mtime?: Date,
-  )
-  {
+  ) {
   }
 
   getReadableStream(): Readable {
-    throw new Error('Method not implemented.');
+    return this.s3client.getObject({
+      Bucket: this.bucket,
+      Key: this.name,
+    }).createReadStream();
   }
 
   getWritableStream(): Writable {
     throw new Error('Method not implemented.');
   }
 
-  static fromHeadOutput(name: string, output: HeadObjectOutput) {
+  static fromHeadOutput(s3client: S3, bucket: string, name: string, output: HeadObjectOutput) {
     return new S3Object(
+      s3client,
+      bucket,
       name,
       true,
       false,

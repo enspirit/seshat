@@ -18,7 +18,7 @@ export default class S3Bucket extends AbstractBucket {
         Key: path,
       }).promise();
 
-      return S3Object.fromHeadOutput(path, object);
+      return S3Object.fromHeadOutput(this.s3client, this.bucketName, path, object);
     } catch (err: any) {
       if (err.code === 'NotFound') {
         throw new ObjectNotFoundError(`Object ${path} not found`);
