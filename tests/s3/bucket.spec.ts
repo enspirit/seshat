@@ -8,7 +8,7 @@ chai.use(sinonChai);
 
 import { ObjectNotFoundError, PrefixNotFoundError } from '../../src/errors';
 import { mockFileObject } from '../mocks/object';
-import { client as s3Client, ensureS3Object, ensureNoS3Object, ensureS3BucketEmpty } from './helpers';
+import { client as s3client, ensureS3Object, ensureNoS3Object, ensureS3BucketEmpty } from './helpers';
 
 describe('S3Bucket', () => {
 
@@ -16,7 +16,10 @@ describe('S3Bucket', () => {
   const bucketName = 'seshat-bucket';
 
   beforeEach(async () => {
-    bucket = new S3Bucket(bucketName, s3Client);
+    bucket = new S3Bucket({
+      bucket: bucketName,
+      s3client,
+    });
   });
 
   describe('list()', () => {
@@ -28,20 +31,20 @@ describe('S3Bucket', () => {
       await ensureS3Object('src/index.ts');
     });
 
-    it('uses the s3client properly (no prefix)', async () => {
-      const spy = sinon.spy(s3Client, 'listObjectsV2');
+    it('uses the s3client properly (no arg provided)', async () => {
+      const spy = sinon.spy(s3client, 'listObjectsV2');
       await bucket.list();
       await expect(spy).to.be.calledOnceWith({
         Bucket: 'seshat-bucket',
-        Prefix: undefined,
+        Prefix: '',
         Delimiter: '/',
       });
 
       spy.restore();
     });
 
-    it('uses the s3client properly (with prefix)', async () => {
-      const spy = sinon.spy(s3Client, 'listObjectsV2');
+    it('uses the s3client properly (prefix arg provided)', async () => {
+      const spy = sinon.spy(s3client, 'listObjectsV2');
       await bucket.list('src/');
       await expect(spy).to.be.calledOnceWith({
         Bucket: 'seshat-bucket',
@@ -52,7 +55,7 @@ describe('S3Bucket', () => {
       spy.restore();
     });
 
-    it('returns the list of objects (no prefix)', async () => {
+    it('returns the list of objects (no arg provided)', async () => {
       const objects = await bucket.list();
       expect(objects.length).to.equal(2);
       const packageJson = objects.find(o => o.name === 'package.json');
@@ -65,7 +68,7 @@ describe('S3Bucket', () => {
       expect(readmeMd?.contentType).to.equal('text/markdown');
     });
 
-    it('returns the list of objects (with prefix)', async () => {
+    it('returns the list of objects (with prefix arg provided)', async () => {
       const objects = await bucket.list('src/');
       expect(objects.length).to.equal(1);
       const indexTsFile = objects.find(o => o.name === 'src/index.ts');
@@ -77,6 +80,7 @@ describe('S3Bucket', () => {
       const p = bucket.list('/something/that/does/not/exist');
       await expect(p).to.be.rejectedWith(PrefixNotFoundError);
     });
+
   });
 
   describe('get()', () => {
@@ -84,7 +88,7 @@ describe('S3Bucket', () => {
     it('uses the s3client properly', async () => {
       await ensureS3Object('package.json');
 
-      const spy = sinon.spy(s3Client, 'headObject');
+      const spy = sinon.spy(s3client, 'headObject');
       await bucket.get('package.json');
       await expect(spy).to.be.calledOnceWith({
         Bucket: 'seshat-bucket',
@@ -120,7 +124,7 @@ describe('S3Bucket', () => {
 
     it('uses the s3client properly', async () => {
       const readableStream = mockFileObject.getReadableStream();
-      const spy = sinon.spy(s3Client, 'putObject');
+      const spy = sinon.spy(s3client, 'putObject');
       await bucket.put('test.json', readableStream, metadata);
       await expect(spy).to.be.calledOnceWith({
         Bucket: 'seshat-bucket',
@@ -149,7 +153,7 @@ describe('S3Bucket', () => {
     it('uses the s3client properly', async () => {
       await ensureS3Object('package.json');
 
-      const spy = sinon.spy(s3Client, 'deleteObject');
+      const spy = sinon.spy(s3client, 'deleteObject');
       await bucket.delete('package.json');
       await expect(spy).to.be.calledOnceWith({
         Bucket: 'seshat-bucket',
@@ -174,4 +178,59 @@ describe('S3Bucket', () => {
 
   });
 
+  describe('when created with a prefix option', () => {
+
+    beforeEach(async () => {
+      bucket = new S3Bucket({
+        bucket: bucketName,
+        s3client,
+        prefix: 'src/',
+      });
+
+      await ensureS3BucketEmpty();
+      await ensureS3Object('src/index.ts');
+      await ensureS3Object('src/s3/bucket.ts');
+    });
+
+    describe('list()', () => {
+
+      it('uses the s3client properly (no arg provided)', async () => {
+        const spy = sinon.spy(s3client, 'listObjectsV2');
+        await bucket.list();
+        expect(spy).to.be.calledOnceWith({
+          Bucket: 'seshat-bucket',
+          Prefix: 'src/',
+          Delimiter: '/',
+        });
+        spy.restore();
+      });
+
+      it('uses the s3client properly (prefix arg provided)', async () => {
+        const spy = sinon.spy(s3client, 'listObjectsV2');
+        await bucket.list('s3/');
+        await expect(spy).to.be.calledOnceWith({
+          Bucket: 'seshat-bucket',
+          Prefix: 'src/s3/',
+          Delimiter: '/',
+        });
+
+        spy.restore();
+      });
+
+      it('returns s3object with proper names (no arg provided)', async () => {
+        const objects = await bucket.list();
+        expect(objects).to.have.length(1);
+        const [index] = objects;
+        expect(index.name).to.equal('index.ts');
+      });
+
+      it('returns s3object with proper names (prefix provided)', async () => {
+        const objects = await bucket.list('s3/');
+        expect(objects).to.have.length(1);
+        const [bucketTs] = objects;
+        expect(bucketTs.name).to.equal('s3/bucket.ts');
+      });
+    });
+
+  });
 });

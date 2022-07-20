@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { Readable, Writable } from 'stream';
+import { Duplex, Readable, Writable } from 'stream';
 
 export interface SeshatConfig {
   bucket: SeshatBucket
@@ -40,6 +40,9 @@ export interface SeshatObject {
 
   getReadableStream(): Readable
   getWritableStream(): Writable
+}
+
+export interface SeshatObjectTransformer extends Duplex {
 }
 
 export interface SeshatAction {
