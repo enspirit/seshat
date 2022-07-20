@@ -23,6 +23,9 @@ services:
   error_schema: |-
     Error
 
+  postconditions:
+    - (x) Objects can be downloaded using their names
+
   examples:
 
     - description: |-

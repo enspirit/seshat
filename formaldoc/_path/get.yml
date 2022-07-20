@@ -1,6 +1,6 @@
 ---
   name: |-
-    The get-object action
+    GET /{path}
 
   url: |-
     /{path}
