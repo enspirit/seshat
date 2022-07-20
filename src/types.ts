@@ -33,8 +33,8 @@ export interface SeshatObject {
   name: string
   isFile: boolean
   isDirectory: boolean
-  ctime: Date
-  mtime: Date
+  ctime?: Date
+  mtime?: Date
   contentType: string
   contentLength: number
 
