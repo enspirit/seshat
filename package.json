@@ -43,6 +43,7 @@
     "@types/morgan": "^1.9.3",
     "@types/node": "^18.0.4",
     "@types/s3rver": "^3.7.0",
+    "@types/sharp": "^0.30.4",
     "@types/sinon": "^10.0.12",
     "@types/sinon-chai": "^3.2.8",
     "@types/supertest": "^2.0.12",
