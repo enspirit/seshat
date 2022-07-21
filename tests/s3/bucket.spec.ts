@@ -124,7 +124,7 @@ describe('S3Bucket', () => {
 
     it('uses the s3client properly', async () => {
       const readableStream = mockFileObject.getReadableStream();
-      const spy = sinon.spy(s3client, 'putObject');
+      const spy = sinon.spy(s3client, 'upload');
       await bucket.put('test.json', readableStream, metadata);
       await expect(spy).to.be.calledOnceWith({
         Bucket: 'seshat-bucket',

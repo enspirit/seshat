@@ -14,7 +14,6 @@ export default class LocalObject implements SeshatObject {
   name: string;
   isFile: boolean;
   isDirectory: boolean;
-  atime: Date;
   ctime: Date;
   mtime: Date;
   contentType: string;
@@ -25,7 +24,6 @@ export default class LocalObject implements SeshatObject {
     this.#path = fpath;
     this.isFile = stats.isFile();
     this.isDirectory = stats.isDirectory();
-    this.atime = stats.atime;
     this.ctime = stats.ctime;
     this.mtime = stats.mtime;
     this.contentType = stats.isDirectory()

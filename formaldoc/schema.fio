@@ -4,7 +4,6 @@ SeshatObject = {
   name: String
   isFile: Boolean
   isDirectory: Boolean
-  atime: Date
   ctime: Date
   mtime: Date
   contentType: String

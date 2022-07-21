@@ -1,9 +1,9 @@
 ---
 name: |-
-  POST /local/{path}/ - multipart upload
+  POST /local/ - multipart upload
 
 url: |-
-  /local/{path}/
+  /local/
 
 services:
 - method: |-
@@ -14,7 +14,6 @@ services:
 
   input_schema: |-
     {
-      path: String
     }
 
   output_schema: |-
@@ -30,8 +29,6 @@ services:
 
     - description: |-
         when requested with a single file
-      params:
-        path: tmp
       file_upload:
         param_name: some-todos.csv
         path: ../fixtures/todos.csv
@@ -40,4 +37,4 @@ services:
         status: 200
         content_type: application/json
       assert:
-        - "pathFD('0', :name => '/tmp/some-todos.csv')"
+        - "pathFD('0', :name => '/some-todos.csv')"
