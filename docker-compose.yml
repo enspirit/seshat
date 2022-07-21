@@ -1,5 +1,13 @@
 services:
 
+  seshat:
+    build: .
+    command: npm run example
+    environment:
+      S3_ENDPOINT: http://minio:9000
+    ports:
+      - 3000:3000
+
   minio:
     image: minio/minio
     ports:

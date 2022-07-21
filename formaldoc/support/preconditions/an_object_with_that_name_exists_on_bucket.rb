@@ -30,8 +30,6 @@ class AnObjectWithThatNameExistsOnBucket
         filename => file
       }
     }
-    puts "should upload #{filename} into #{folder}"
-    puts "about to upload"
     url = client.config.host + folder + '/'
     response = HTTP[{}].post(url, http_opts)
     puts response

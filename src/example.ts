@@ -25,7 +25,7 @@ app.use('/local', createApp({
 const s3client = new S3({
   accessKeyId: 'access-key',
   secretAccessKey: 'secret-key',
-  endpoint: 'http://127.0.0.1:9000',
+  endpoint: process.env.S3_ENDPOINT || 'http://127.0.0.1:9000',
   s3ForcePathStyle: true,
   signatureVersion: 'v4',
 });
