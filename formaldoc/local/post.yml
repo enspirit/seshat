@@ -1,0 +1,43 @@
+---
+name: |-
+  POST /local/{path}/ - multipart upload
+
+url: |-
+  /local/{path}/
+
+services:
+- method: |-
+    POST
+
+  description: |-
+    Allows creating files through real file uploads
+
+  input_schema: |-
+    {
+      path: String
+    }
+
+  output_schema: |-
+    [SeshatObject]
+
+  error_schema: |-
+    Error
+
+  postconditions:
+    - (x) Objects can be downloaded using their names
+
+  examples:
+
+    - description: |-
+        when requested with a single file
+      params:
+        path: tmp
+      file_upload:
+        param_name: some-todos.csv
+        path: ../fixtures/todos.csv
+        content_type: "text/csv"
+      expected:
+        status: 200
+        content_type: application/json
+      assert:
+        - "pathFD('0', :name => '/tmp/some-todos.csv')"

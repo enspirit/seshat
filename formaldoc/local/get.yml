@@ -1,9 +1,9 @@
 ---
   name: |-
-    GET /{path}
+    GET /local/{path}
 
   url: |-
-    /{path}
+    /local/{path}
 
   services:
   - method: |-

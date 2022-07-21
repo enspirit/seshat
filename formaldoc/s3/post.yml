@@ -1,9 +1,9 @@
 ---
 name: |-
-  Multipart file upload
+  POST /s3/{path}/ - multipart upload
 
 url: |-
-  /{path}
+  /s3/{path}/
 
 services:
 - method: |-

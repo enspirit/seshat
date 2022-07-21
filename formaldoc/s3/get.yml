@@ -1,0 +1,42 @@
+---
+  name: |-
+    GET /s3/{path}
+
+  url: |-
+    /s3/{path}
+
+  services:
+  - method: |-
+      GET
+
+    description: |-
+      Allows retrieving a file
+
+    preconditions:
+      - An object with that name exists on the bucket
+
+    input_schema: |-
+      {
+        path: String
+      }
+
+    output_schema: |-
+      {
+        ...: String | .
+      }
+
+    error_schema: |-
+      Error
+
+    examples:
+
+      - description: |-
+          FOR: the file exists
+        params:
+          path: test.json
+        expected:
+          content_type: application/json
+          status: 200
+        assert:
+        - "pathFD('', :name => '@enspirit/seshat')"
+
