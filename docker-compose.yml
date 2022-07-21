@@ -1,0 +1,13 @@
+services:
+
+  minio:
+    image: minio/minio
+    ports:
+      - 9000:9000
+      - 9001:9001
+    environment:
+      MINIO_ACCESS_KEY: access-key
+      MINIO_SECRET_KEY: secret-key
+    volumes:
+      - ./volumes/s3:/data
+    command: server --console-address 0.0.0.0:9001 /data

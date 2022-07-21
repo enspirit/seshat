@@ -42,7 +42,7 @@ export default class S3Bucket extends AbstractBucket {
   }
 
   async _put(path: string, stream: Readable, meta: SeshatObjectMeta): Promise<SeshatObject> {
-    await this.s3client.putObject({
+    await this.s3client.upload({
       Key: this.objectKey(path),
       Bucket: this.bucket,
       ContentType: meta.mimeType,

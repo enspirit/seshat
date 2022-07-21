@@ -4,9 +4,12 @@ import { default as S3, HeadObjectOutput } from 'aws-sdk/clients/s3';
 
 export default class S3Object implements SeshatObject {
 
+  #s3client: S3;
+  #bucket: string;
+
   constructor(
-    private s3client: S3,
-    private bucket: string,
+    s3client: S3,
+    bucket: string,
     public name: string,
     public isFile: boolean,
     public isDirectory: boolean,
@@ -15,11 +18,13 @@ export default class S3Object implements SeshatObject {
     public ctime?: Date,
     public mtime?: Date,
   ) {
+    this.#s3client = s3client;
+    this.#bucket = bucket;
   }
 
   getReadableStream(): Readable {
-    return this.s3client.getObject({
-      Bucket: this.bucket,
+    return this.#s3client.getObject({
+      Bucket: this.#bucket,
       Key: this.name,
     }).createReadStream();
   }
