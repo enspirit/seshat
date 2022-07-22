@@ -81,7 +81,6 @@ export default class S3Bucket extends AbstractBucket {
       Prefix: this.objectKey(prefix),
       Delimiter: '/',
     }));
-    console.log('with res=', res);
     if (!res.Contents || res.Contents?.length === 0) {
       throw new PrefixNotFoundError(`Unable to find objects with prefix ${prefix}`);
     }
