@@ -1,5 +1,4 @@
 import { Readable } from 'stream';
-export * from './s3/helpers';
 
 export const streamToString = (stream: Readable): Promise<string> => {
   const chunks: any[] = [];
