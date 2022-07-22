@@ -6,7 +6,7 @@ import { Request, Response, NextFunction } from 'express';
 
 import express from 'express';
 import S3Bucket from './s3/bucket';
-import { S3 } from 'aws-sdk';
+import { S3Client } from '@aws-sdk/client-s3';
 
 const app = express();
 
@@ -22,12 +22,14 @@ app.use('/local', createApp({
 /**
  * On '/s3' we expose a seshat bucket based on a s3 bucket (connecting to minio, see docker-compose)
  */
-const s3client = new S3({
-  accessKeyId: 'access-key',
-  secretAccessKey: 'secret-key',
+const s3client = new S3Client({
+  region: 'eu-west1',
+  credentials: {
+    accessKeyId: 'access-key',
+    secretAccessKey: 'secret-key',
+  },
   endpoint: process.env.S3_ENDPOINT || 'http://127.0.0.1:9000',
-  s3ForcePathStyle: true,
-  signatureVersion: 'v4',
+  forcePathStyle: true,
 });
 
 app.use('/s3', createApp({

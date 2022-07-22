@@ -32,14 +32,14 @@ export default class LocalObject implements SeshatObject {
     this.contentLength = stats.size;
   }
 
-  getReadableStream(): Readable {
+  async getReadableStream(): Promise<Readable> {
     if (!this.isFile) {
       throw new Error('Unable to get a stream, object is not a file');
     }
     return fs.createReadStream(this.#path);
   }
 
-  getWritableStream(): Writable {
+  async getWritableStream(): Promise<Writable> {
     if (!this.isFile) {
       throw new Error('Unable to get a stream, object is not a file');
     }

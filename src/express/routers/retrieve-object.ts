@@ -73,7 +73,8 @@ export const createRouter = (seshatConfig: SeshatConfig, routerConfig: RetrieveO
       }
       res.set('Content-Type', object.contentType);
       res.set('Content-Length', object.contentLength.toString());
-      object.getReadableStream().pipe(res);
+      const stream = await object.getReadableStream();
+      stream.pipe(res);
     } catch (err: any) {
 
       if (err instanceof ObjectNotFoundError) {

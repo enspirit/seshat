@@ -145,14 +145,15 @@ describe('LocalObject', () => {
   describe('#getReadableStream', () => {
 
     it('works as expected', async () => {
-      const stream = object.getReadableStream();
+      const stream = await object.getReadableStream();
       const string = await streamToString(stream);
       expect(string).to.match(/name.*@enspirit\/seshat/);
     });
 
     it('rejects for objects that are not files', async () => {
       const folder = await LocalObject.fromPath(__dirname);
-      expect(() => folder.getReadableStream()).to.throw(/object is not a file/);
+      const p = folder.getReadableStream();
+      await expect(p).to.be.rejectedWith(/object is not a file/);
     });
 
   });
@@ -162,7 +163,7 @@ describe('LocalObject', () => {
     it('works as expected', async () => {
       writeFileSync('/tmp/test.txt', '');
       const object = await LocalObject.fromPath('/tmp/test.txt');
-      const stream = object.getWritableStream();
+      const stream = await object.getWritableStream();
       stream.write('hello world');
       stream.end();
       await new Promise(resolve => stream.on('finish', resolve));

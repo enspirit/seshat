@@ -138,13 +138,13 @@ describe('LocalBucket', () => {
   describe('put()', () => {
 
     it('resolves with the object created', async () => {
-      const object = await bucket.put('tmp/test.json', mockFileObject.getReadableStream(), { mimeType: mockFileObject.contentType });
+      const object = await bucket.put('tmp/test.json', await mockFileObject.getReadableStream(), { mimeType: mockFileObject.contentType });
       expect(object.name).to.equal('tmp/test.json');
       expect(object.contentType).to.equal('application/json');
     });
 
-    it('rejects if path goes out of bucket', () => {
-      const promise = bucket.put('../../../file.txt', mockFileObject.getReadableStream(), { mimeType: mockFileObject.contentType });
+    it('rejects if path goes out of bucket', async () => {
+      const promise = bucket.put('../../../file.txt', await mockFileObject.getReadableStream(), { mimeType: mockFileObject.contentType });
       return expect(promise).to.be.rejectedWith(/Relative paths are not allowed/);
     });
 
@@ -152,7 +152,7 @@ describe('LocalBucket', () => {
     });
 
     it('accepts relative path while they remain in bucket', async () => {
-      const promise = bucket.put('tmp/subfolder/../index.json', mockFileObject.getReadableStream(), { mimeType: mockFileObject.contentType });
+      const promise = bucket.put('tmp/subfolder/../index.json', await mockFileObject.getReadableStream(), { mimeType: mockFileObject.contentType });
       await expect(promise).to.not.be.rejected;
       const object = await promise;
       expect(object.name).to.equal('tmp/index.json');
@@ -164,7 +164,7 @@ describe('LocalBucket', () => {
 
     let createdObject: SeshatObject;
     beforeEach(async () => {
-      createdObject = await bucket.put('tmp/test.json', mockFileObject.getReadableStream(), { mimeType: mockFileObject.contentType });
+      createdObject = await bucket.put('tmp/test.json', await mockFileObject.getReadableStream(), { mimeType: mockFileObject.contentType });
     });
 
     it('deletes the file properly', async () => {

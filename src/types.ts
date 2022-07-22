@@ -38,8 +38,8 @@ export interface SeshatObject {
   contentType: string
   contentLength: number
 
-  getReadableStream(): Readable
-  getWritableStream(): Writable
+  getReadableStream(): Promise<Readable>
+  getWritableStream(): Promise<Writable>
 }
 
 export interface SeshatObjectTransformer extends Duplex {

@@ -1,14 +1,14 @@
 import { Readable, Writable } from 'stream';
 import { SeshatObject } from '../types';
-import { default as S3, HeadObjectOutput } from 'aws-sdk/clients/s3';
+import { S3Client, HeadObjectCommandOutput, GetObjectCommand } from '@aws-sdk/client-s3';
 
 export default class S3Object implements SeshatObject {
 
-  #s3client: S3;
+  #s3client: S3Client;
   #bucket: string;
 
   constructor(
-    s3client: S3,
+    s3client: S3Client,
     bucket: string,
     public name: string,
     public isFile: boolean,
@@ -22,18 +22,20 @@ export default class S3Object implements SeshatObject {
     this.#bucket = bucket;
   }
 
-  getReadableStream(): Readable {
-    return this.#s3client.getObject({
+  async getReadableStream(): Promise<Readable> {
+    const object = await this.#s3client.send(new GetObjectCommand({
       Bucket: this.#bucket,
       Key: this.name,
-    }).createReadStream();
+    }));
+    // casting due to https://transang.me/modern-fetch-and-how-to-get-buffer-output-from-aws-sdk-v3-getobjectcommand/
+    return object.Body as Readable;
   }
 
-  getWritableStream(): Writable {
+  getWritableStream(): Promise<Writable> {
     throw new Error('Method not implemented.');
   }
 
-  static fromHeadOutput(s3client: S3, bucket: string, name: string, output: HeadObjectOutput) {
+  static fromHeadOutput(s3client: S3Client, bucket: string, name: string, output: HeadObjectCommandOutput) {
     return new S3Object(
       s3client,
       bucket,

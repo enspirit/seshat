@@ -61,14 +61,14 @@ describe('the AbstractBucket class', () => {
 
     it('calls the _put() method of the concrete subclass', async () => {
       const spy = sinon.spy(bucket, '_put');
-      await bucket.put('/tmp/test.pdf', mockFileObject.getReadableStream(), { mimeType: mockFileObject.contentType });
+      await bucket.put('/tmp/test.pdf', await mockFileObject.getReadableStream(), { mimeType: mockFileObject.contentType });
       expect(spy).to.be.calledOnceWith('/tmp/test.pdf');
     });
 
     it('lets errors from _put() bubble up', async () => {
       const err = new Error('oops');
       const spy = sinon.stub(bucket, '_put').rejects(err);
-      const p = bucket.put('/tmp/test.pdf', mockFileObject.getReadableStream(), { mimeType: mockFileObject.contentType });
+      const p = bucket.put('/tmp/test.pdf', await mockFileObject.getReadableStream(), { mimeType: mockFileObject.contentType });
       await expect(p).to.be.eventually.rejectedWith(err);
       spy.reset();
     });
@@ -78,7 +78,7 @@ describe('the AbstractBucket class', () => {
       it('lets the policy error bubble up', async () => {
         const err = new Error('failed-policy');
         (readOnlyPolicy.put as SinonStub).rejects(err);
-        const p = bucket.put('/tmp/test.pdf', mockFileObject.getReadableStream(), { mimeType: mockFileObject.contentType });
+        const p = bucket.put('/tmp/test.pdf', await mockFileObject.getReadableStream(), { mimeType: mockFileObject.contentType });
         await expect(p).to.be.eventually.rejectedWith(err);
       });
 

@@ -10,10 +10,10 @@ export const mockFileObject = {
   mtime: new Date(),
   contentLength: 22,
   contentType: 'plain/text',
-  getReadableStream() {
+  async getReadableStream() {
     return fs.createReadStream(path.join(__dirname, '../../package.json'));
   },
-  getWritableStream() {
+  async getWritableStream() {
     throw new Error('not implemented');
   },
 } as SeshatObject;
