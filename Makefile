@@ -7,7 +7,7 @@ bundler.install:
 	@bundle install
 
 waitforseshat:
-	@sleep 7
+	@sleep 10
 
 up:
 	@docker-compose up -d --force-recreate --build
