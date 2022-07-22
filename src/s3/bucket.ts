@@ -104,9 +104,4 @@ export default class S3Bucket extends AbstractBucket {
   private seshatKey(key: string): string {
     return key.substring((this.options.prefix || '').length);
   }
-
-  /**
-   * Given t
-   */
-
 }
