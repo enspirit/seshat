@@ -190,45 +190,61 @@ describe('S3Bucket', () => {
 
   });
 
-  // describe('when created with a prefix option', () => {
+  describe('when created with a prefix option', () => {
 
-  //   beforeEach(async () => {
-  //     bucket = new S3Bucket({
-  //       bucket: bucketName,
-  //       s3client: mockS3Client as S3,
-  //       prefix: 'src/',
-  //     });
-  //     mockListObjectV2Request.promise.returns(listObjectsSubfolder);
-  //   });
+    beforeEach(async () => {
+      const objectsInSubfolder = [{
+        Key: 'src/index.js',
+        ContentType: 'application/javascript',
+      }, {
+        Key: 'src/example.js',
+        ContentType: 'application/javascript',
+      }];
+      bucket = new S3Bucket({
+        bucket: bucketName,
+        s3client,
+        prefix: 'src/',
+      });
+      s3client.on(ListObjectsV2Command).resolves({ Contents: objectsInSubfolder });
+    });
 
-  //   describe('list()', () => {
+    describe('list()', () => {
 
-  //     it('uses the s3client properly (no arg provided)', async () => {
-  //       await bucket.list();
-  //       expect(mockS3Client.listObjectsV2).to.be.calledOnceWith({
-  //         Bucket: 'seshat-bucket',
-  //         Prefix: 'src/',
-  //         Delimiter: '/',
-  //       });
-  //     });
+      it('uses the s3client properly (no arg provided)', async () => {
+        await bucket.list();
+        // eslint-disable-next-line no-unused-expressions
+        expect(s3client.send).to.be.calledThrice;
+        expect(s3client.send).to.be.calledWith(sinon.match.instanceOf(ListObjectsV2Command));
+        expect(s3client.send).to.be.calledWith(sinon.match.instanceOf(HeadObjectCommand));
+        expect(s3client.send).to.be.calledWith(sinon.match({
+          input: {
+            Bucket: 'seshat-bucket',
+            Prefix: 'src/',
+            Delimiter: '/',
+          },
+        }));
+      });
 
-  //     it('uses the s3client properly', async () => {
-  //       await bucket.list('s3/');
-  //       await expect(mockS3Client.listObjectsV2).to.be.calledOnceWith({
-  //         Bucket: 'seshat-bucket',
-  //         Prefix: 'src/s3/',
-  //         Delimiter: '/',
-  //       });
-  //     });
+      it('uses the s3client properly', async () => {
+        await bucket.list('s3/');
+        await expect(s3client.send).to.be.calledWith(sinon.match({
+          input: {
+            Bucket: 'seshat-bucket',
+            Prefix: 'src/s3/',
+            Delimiter: '/',
+          },
+        }));
+      });
 
-  //     it('returns s3object with proper names (prefix is removed)', async () => {
-  //       const objects = await bucket.list();
-  //       expect(objects).to.have.length(1);
-  //       const [index] = objects;
-  //       expect(index.name).to.equal('index.ts');
-  //     });
+      it('returns s3object with proper names (prefix is removed)', async () => {
+        const objects = await bucket.list();
+        expect(objects).to.have.length(2);
+        const [index, example] = objects;
+        expect(index.name).to.equal('index.js');
+        expect(example.name).to.equal('example.js');
+      });
 
-  //   });
+    });
 
-  // });
+  });
 });
