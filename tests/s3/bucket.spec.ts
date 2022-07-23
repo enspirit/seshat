@@ -119,7 +119,7 @@ describe('S3Bucket', () => {
 
     it('rejects properly when object does not exist', async () => {
       const error = new Error('NotFound') as any;
-      error.code = 'NotFound';
+      error.name = 'NotFound';
       s3client.on(HeadObjectCommand).rejects(error);
       const p = bucket.get('package.json');
       await expect(p).to.be.rejectedWith(ObjectNotFoundError, /Object package.json not found/);
@@ -182,7 +182,7 @@ describe('S3Bucket', () => {
 
     it('rejects properly when object does not exist', async () => {
       const error = new Error('NotFound') as any;
-      error.code = 'NotFound';
+      error.name = 'NotFound';
       s3client.on(HeadObjectCommand).rejects(error);
       const p = bucket.delete('test.json');
       await expect(p).to.be.rejectedWith(ObjectNotFoundError, /Object test.json not found/);
