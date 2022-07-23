@@ -9,8 +9,8 @@ class AnObjectWithThatNameExistsOnBucket
   end
 
   def instrument
-    # fail!("Unable to find token in email")
-    # puts test_case.specification.inspect()
+    return if test_case.counterexample
+    
     url, _ = test_case.specification.instantiate_url(test_case.params)
 
     filename = File.basename(url)

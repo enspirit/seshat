@@ -40,3 +40,13 @@
         assert:
         - "pathFD('', :name => '@enspirit/seshat')"
 
+    counterexamples:
+
+      - description: |-
+          FOR: the file does not exist
+        params:
+          path: unknown.json
+        expected:
+          content_type: application/json
+          status: 404
+
