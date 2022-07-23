@@ -148,9 +148,6 @@ describe('LocalBucket', () => {
       return expect(promise).to.be.rejectedWith(/Relative paths are not allowed/);
     });
 
-    it.skip('overrides existing objects', async () => {
-    });
-
     it('accepts relative path while they remain in bucket', async () => {
       const promise = bucket.put('tmp/subfolder/../index.json', await mockFileObject.getReadableStream(), { mimeType: mockFileObject.contentType });
       await expect(promise).to.not.be.rejected;
