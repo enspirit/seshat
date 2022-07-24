@@ -9,6 +9,7 @@ import { expect } from 'chai';
 import sinonChai from 'sinon-chai';
 import { ObjectNotFoundError } from '../src/errors';
 import sinon from 'sinon';
+import { Readable } from 'stream';
 chai.use(sinonChai);
 
 describe('the express app', () => {
@@ -89,7 +90,10 @@ describe('the express app', () => {
         .attach('package.json', path.join(__dirname, '../package.json'))
         .expect(200);
 
-      expect(mockBucket.put).to.be.calledOnceWith('/package.json');
+      await expect(mockBucket.put).to.be.calledOnceWith(
+        sinon.match.instanceOf(Readable),
+        { name: '/package.json', mimeType: 'application/json' },
+      );
     });
 
     it('properly returns the object list (one file)', async () => {
@@ -111,8 +115,14 @@ describe('the express app', () => {
 
       // eslint-disable-next-line no-unused-expressions
       expect(mockBucket.put).to.be.calledTwice;
-      expect(mockBucket.put).to.be.calledWith('/package.json');
-      expect(mockBucket.put).to.be.calledWith('/tsconfig.json');
+      await expect(mockBucket.put).to.be.calledWith(
+        sinon.match.instanceOf(Readable),
+        { name: '/package.json', mimeType: 'application/json' },
+      );
+      await expect(mockBucket.put).to.be.calledWith(
+        sinon.match.instanceOf(Readable),
+        { name: '/tsconfig.json', mimeType: 'application/json' },
+      );
     });
 
   });

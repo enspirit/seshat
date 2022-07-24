@@ -1,9 +1,12 @@
 import { Readable } from 'stream';
-import { SeshatBucket, SeshatBucketPolicy, SeshatObject, SeshatObjectMeta } from './types';
+import { SeshatBucket, SeshatBucketPolicy, SeshatObject, SeshatObjectMeta, SeshatObjectTransformer, SeshatObjectTransformerOutput } from './types';
 
 export default abstract class AbstractBucket implements SeshatBucket {
 
-  constructor(private policies: Array<SeshatBucketPolicy> = []) {
+  constructor(
+    private policies: Array<SeshatBucketPolicy> = [],
+    private transformers: Array<SeshatObjectTransformer> = [],
+  ) {
   }
 
   async get(path: string): Promise<SeshatObject> {
@@ -13,12 +16,16 @@ export default abstract class AbstractBucket implements SeshatBucket {
 
   abstract _get(path: string): Promise<SeshatObject>;
 
-  async put(path: string, stream: Readable, meta: SeshatObjectMeta): Promise<SeshatObject> {
-    await this.ensurePolicies((policy: SeshatBucketPolicy) => policy.put(path, meta));
-    return this._put(path, stream, meta);
+  async put(stream: Readable, meta: SeshatObjectMeta): Promise<SeshatObject> {
+    await this.ensurePolicies((policy: SeshatBucketPolicy) => policy.put(meta));
+    const output: SeshatObjectTransformerOutput = await this.transformers.reduce(async (p: Promise<SeshatObjectTransformerOutput>, t: SeshatObjectTransformer) => {
+      const { stream, meta } = await p;
+      return t.transform(stream, meta);
+    }, Promise.resolve({ stream, meta }));
+    return this._put(output.stream, output.meta);
   }
 
-  abstract _put(path: string, stream: Readable, meta: SeshatObjectMeta): Promise<SeshatObject>;
+  abstract _put(stream: Readable, meta: SeshatObjectMeta): Promise<SeshatObject>;
 
   async delete(path: string): Promise<void> {
     await this.ensurePolicies((policy: SeshatBucketPolicy) => policy.delete(path));

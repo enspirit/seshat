@@ -34,9 +34,10 @@ export const createRouter = (config: SeshatConfig): Router => {
     busboy.on('file', (name, file, info) => {
       const filepath = path.join(basePath, name);
       const metadata: SeshatObjectMeta = {
+        name: filepath,
         mimeType: info.mimeType,
       };
-      promises.push(bucket.put(filepath, file, metadata));
+      promises.push(bucket.put(file, metadata));
     });
 
     busboy.on('finish', async () => {

@@ -7,6 +7,7 @@ import { Request, Response, NextFunction } from 'express';
 import express from 'express';
 import S3Bucket from './s3/bucket';
 import { S3Client } from '@aws-sdk/client-s3';
+import SeshatObjectCompressor from './transformers/compressor';
 
 const app = express();
 
@@ -34,6 +35,15 @@ const s3client = new S3Client({
 
 app.use('/s3', createApp({
   bucket: new S3Bucket({ s3client, bucket: 'my-s3-bucket' }),
+  middlewares: SeshatMiddlewares,
+}));
+
+/**
+ * An example of a bucket compressing objects as .gz
+ */
+const gzip = new SeshatObjectCompressor();
+app.use('/gz', createApp({
+  bucket: new S3Bucket({ s3client, bucket: 'my-s3-bucket' }, [], [gzip]),
   middlewares: SeshatMiddlewares,
 }));
 

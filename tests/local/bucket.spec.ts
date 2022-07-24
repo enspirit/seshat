@@ -138,18 +138,21 @@ describe('LocalBucket', () => {
   describe('put()', () => {
 
     it('resolves with the object created', async () => {
-      const object = await bucket.put('tmp/test.json', await mockFileObject.getReadableStream(), { mimeType: mockFileObject.contentType });
+      const meta = { name: 'tmp/test.json', mimeType: mockFileObject.contentType };
+      const object = await bucket.put(await mockFileObject.getReadableStream(), meta);
       expect(object.name).to.equal('tmp/test.json');
       expect(object.contentType).to.equal('application/json');
     });
 
     it('rejects if path goes out of bucket', async () => {
-      const promise = bucket.put('../../../file.txt', await mockFileObject.getReadableStream(), { mimeType: mockFileObject.contentType });
+      const meta = { name: '../../../file.txt', mimeType: mockFileObject.contentType };
+      const promise = bucket.put(await mockFileObject.getReadableStream(), meta);
       return expect(promise).to.be.rejectedWith(/Relative paths are not allowed/);
     });
 
     it('accepts relative path while they remain in bucket', async () => {
-      const promise = bucket.put('tmp/subfolder/../index.json', await mockFileObject.getReadableStream(), { mimeType: mockFileObject.contentType });
+      const meta = { name: 'tmp/subfolder/../index.json', mimeType: mockFileObject.contentType };
+      const promise = bucket.put(await mockFileObject.getReadableStream(), meta);
       await expect(promise).to.not.be.rejected;
       const object = await promise;
       expect(object.name).to.equal('tmp/index.json');
@@ -161,7 +164,8 @@ describe('LocalBucket', () => {
 
     let createdObject: SeshatObject;
     beforeEach(async () => {
-      createdObject = await bucket.put('tmp/test.json', await mockFileObject.getReadableStream(), { mimeType: mockFileObject.contentType });
+      const meta = { name: 'test.json', mimeType: mockFileObject.contentType };
+      createdObject = await bucket.put(await mockFileObject.getReadableStream(), meta);
     });
 
     it('deletes the file properly', async () => {

@@ -1,6 +1,6 @@
 import { Readable } from 'stream';
 import AbstractBucket from '../abstract-bucket';
-import { SeshatObject, SeshatObjectMeta } from '../types';
+import { SeshatBucketPolicy, SeshatObject, SeshatObjectMeta, SeshatObjectTransformer } from '../types';
 import S3Object from './object';
 
 import { S3Client, HeadObjectCommand, ListObjectsV2Command, DeleteObjectCommand } from '@aws-sdk/client-s3';
@@ -16,8 +16,12 @@ export interface S3BucketOptions {
 
 export default class S3Bucket extends AbstractBucket {
 
-  constructor(private options: S3BucketOptions) {
-    super();
+  constructor(
+    private options: S3BucketOptions,
+    policies: Array<SeshatBucketPolicy> = [],
+    transformers: Array<SeshatObjectTransformer> = [],
+  ) {
+    super(policies, transformers);
   }
 
   private get s3client() {
@@ -43,9 +47,9 @@ export default class S3Bucket extends AbstractBucket {
     }
   }
 
-  async _put(path: string, stream: Readable, meta: SeshatObjectMeta): Promise<SeshatObject> {
+  async _put(stream: Readable, meta: SeshatObjectMeta): Promise<SeshatObject> {
     const target = {
-      Key: this.objectKey(path),
+      Key: this.objectKey(meta.name),
       Bucket: this.bucket,
       ContentType: meta.mimeType,
       Body: stream,
@@ -62,7 +66,7 @@ export default class S3Bucket extends AbstractBucket {
 
     await upload.done();
 
-    return this._get(path);
+    return this._get(meta.name);
   }
 
   async _delete(path: string): Promise<void> {

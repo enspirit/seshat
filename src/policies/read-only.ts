@@ -6,7 +6,7 @@ const ReadOnlyPolicy: SeshatBucketPolicy = {
   async get(_path): Promise<void> {
   },
 
-  async put(_path, _meta): Promise<void> {
+  async put(_meta): Promise<void> {
     throw new AccessDeniedError('Access denied.');
   },
 

@@ -9,6 +9,7 @@ chai.use(sinonChai);
 
 import express, { Application } from 'express';
 import { mockFileObject } from '../../mocks/object';
+import { Readable } from 'stream';
 
 describe('the multipart-uploads express router', () => {
 
@@ -22,7 +23,7 @@ describe('the multipart-uploads express router', () => {
     };
     router = createRouter(config);
 
-    mockBucket.put = async (filename, stream) => {
+    mockBucket.put = async (stream, _metadata) => {
       stream.resume();
       return mockFileObject;
     };
@@ -60,7 +61,10 @@ describe('the multipart-uploads express router', () => {
           await request(app)
             .post('/')
             .attach('test.ts', __filename);
-          return expect(spy).to.be.calledOnceWith('/test.ts');
+          return expect(spy).to.be.calledOnceWith(
+            sinon.match.instanceOf(Readable),
+            sinon.match({ name: '/test.ts' }),
+          );
         });
       });
 
@@ -78,7 +82,10 @@ describe('the multipart-uploads express router', () => {
           await request(app)
             .post('/subfolder')
             .attach('test.ts', __filename);
-          return expect(spy).to.be.calledOnceWith('/subfolder/test.ts');
+          await expect(spy).to.be.calledOnceWith(
+            sinon.match.instanceOf(Readable),
+            sinon.match({ name: '/subfolder/test.ts' }),
+          );
         });
 
       });
@@ -102,8 +109,14 @@ describe('the multipart-uploads express router', () => {
             .attach('another.ts', __filename);
 
           await expect(spy).to.be.calledTwice;
-          await expect(spy).to.be.calledWith('/test.ts');
-          await expect(spy).to.be.calledWith('/another.ts');
+          await expect(spy).to.be.calledWith(
+            sinon.match.instanceOf(Readable),
+            sinon.match({ name: '/test.ts' }),
+          );
+          await expect(spy).to.be.calledWith(
+            sinon.match.instanceOf(Readable),
+            sinon.match({ name: '/another.ts' }),
+          );
         });
 
       });
@@ -127,8 +140,17 @@ describe('the multipart-uploads express router', () => {
             .attach('another.ts', __filename);
 
           await expect(spy).to.be.calledTwice;
-          await expect(spy).to.be.calledWith('/subfolder/test.ts');
-          await expect(spy).to.be.calledWith('/subfolder/another.ts');
+
+          await expect(spy).to.be.calledWith(
+            sinon.match.instanceOf(Readable),
+            sinon.match({ name: '/subfolder/test.ts' }),
+          );
+
+          await expect(spy).to.be.calledWith(
+            sinon.match.instanceOf(Readable),
+            sinon.match({ name: '/subfolder/another.ts' }),
+          );
+
         });
 
       });

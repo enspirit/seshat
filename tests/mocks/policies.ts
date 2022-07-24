@@ -5,7 +5,7 @@ export const readOnlyPolicy: SeshatBucketPolicy = {
   async get(_path: string): Promise<void> {
   },
 
-  async put(_path: string, _meta: SeshatObjectMeta): Promise<void> {
+  async put(_meta: SeshatObjectMeta): Promise<void> {
     throw new Error('read only bucket');
   },
 
@@ -23,7 +23,7 @@ export const uploadOnlyPolicy: SeshatBucketPolicy = {
     throw new Error('upload only bucket');
   },
 
-  async put(_path: string, _meta: SeshatObjectMeta): Promise<void> {
+  async put(_meta: SeshatObjectMeta): Promise<void> {
   },
 
   async delete(_path: string): Promise<void> {

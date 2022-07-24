@@ -6,7 +6,7 @@ chai.use(sinonChai);
 
 import AbstractBucket from '../src/abstract-bucket';
 import { Readable } from 'stream';
-import { SeshatBucketPolicy, SeshatObject, SeshatObjectMeta } from '../src/types';
+import { SeshatBucketPolicy, SeshatObject, SeshatObjectMeta, SeshatObjectTransformer } from '../src/types';
 import { mockFileObject } from './mocks/object';
 import { readOnlyPolicy, uploadOnlyPolicy } from './mocks/policies';
 
@@ -16,7 +16,7 @@ describe('the AbstractBucket class', () => {
     async _get(_path: string): Promise<SeshatObject> {
       return mockFileObject;
     }
-    async _put(_path: string, _stream: Readable, _meta: SeshatObjectMeta): Promise<SeshatObject> {
+    async _put(_stream: Readable, _meta: SeshatObjectMeta): Promise<SeshatObject> {
       return mockFileObject;
     }
     async _delete(_path: string): Promise<void> {
@@ -47,9 +47,11 @@ describe('the AbstractBucket class', () => {
 
   let bucket: ConcreteBucket;
   let policies: Array<SeshatBucketPolicy>;
+  let transformers: Array<SeshatObjectTransformer>;
   beforeEach(() => {
     policies = [readOnlyPolicy, uploadOnlyPolicy];
-    bucket = new ConcreteBucket(Object.values(policies));
+    transformers = [];
+    bucket = new ConcreteBucket(Object.values(policies), transformers);
     withAllPoliciesSucceeding();
   });
 
@@ -61,14 +63,17 @@ describe('the AbstractBucket class', () => {
 
     it('calls the _put() method of the concrete subclass', async () => {
       const spy = sinon.spy(bucket, '_put');
-      await bucket.put('/tmp/test.pdf', await mockFileObject.getReadableStream(), { mimeType: mockFileObject.contentType });
-      expect(spy).to.be.calledOnceWith('/tmp/test.pdf');
+      const meta = { name: 'test.pdf', mimeType: mockFileObject.contentType };
+      const stream = await mockFileObject.getReadableStream();
+      await bucket.put(stream, meta);
+      expect(spy).to.be.calledOnceWith(stream, meta);
     });
 
     it('lets errors from _put() bubble up', async () => {
       const err = new Error('oops');
       const spy = sinon.stub(bucket, '_put').rejects(err);
-      const p = bucket.put('/tmp/test.pdf', await mockFileObject.getReadableStream(), { mimeType: mockFileObject.contentType });
+      const meta = { name: 'test.pdf', mimeType: mockFileObject.contentType };
+      const p = bucket.put(await mockFileObject.getReadableStream(), meta);
       await expect(p).to.be.eventually.rejectedWith(err);
       spy.reset();
     });
@@ -78,8 +83,31 @@ describe('the AbstractBucket class', () => {
       it('lets the policy error bubble up', async () => {
         const err = new Error('failed-policy');
         (readOnlyPolicy.put as SinonStub).rejects(err);
-        const p = bucket.put('/tmp/test.pdf', await mockFileObject.getReadableStream(), { mimeType: mockFileObject.contentType });
+        const meta = { name: 'test.pdf', mimeType: mockFileObject.contentType };
+        const p = bucket.put(await mockFileObject.getReadableStream(), meta);
         await expect(p).to.be.eventually.rejectedWith(err);
+      });
+
+    });
+
+    describe('when used with transformers', () => {
+
+      let transformer: SeshatObjectTransformer;
+      beforeEach(() => {
+        transformer = {
+          async transform(stream, meta) {
+            return { stream, meta };
+          },
+        };
+        transformers.push(transformer);
+      });
+
+      it('calls the transformers', async () => {
+        const spy = sinon.spy(transformer, 'transform');
+        const stream = await mockFileObject.getReadableStream();
+        const meta = { name: 'test.pdf', mimeType: mockFileObject.contentType };
+        await bucket.put(stream, meta);
+        expect(spy).to.be.calledOnceWith(stream, meta);
       });
 
     });
