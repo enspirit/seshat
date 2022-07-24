@@ -48,8 +48,14 @@ export interface ObjectTransformerOutput {
   meta: ObjectMeta
 }
 
+export type ObjectTransformerType = 'Ingress';
+
 export interface ObjectTransformer {
+
+  type: ObjectTransformerType;
+
   transform(stream: Readable, meta: ObjectMeta): Promise<ObjectTransformerOutput>;
+
 }
 
 export interface Action {

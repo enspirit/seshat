@@ -1,9 +1,11 @@
 import { createGzip } from 'node:zlib';
 
 import { Readable } from 'stream';
-import { ObjectMeta, ObjectTransformer, ObjectTransformerOutput } from '../types';
+import { ObjectMeta, ObjectTransformer, ObjectTransformerOutput, ObjectTransformerType } from '../types';
 
 export default class ObjectCompressor implements ObjectTransformer {
+
+  type: ObjectTransformerType = 'Ingress';
 
   async transform(stream: Readable, meta: ObjectMeta): Promise<ObjectTransformerOutput> {
     const gzip = createGzip();

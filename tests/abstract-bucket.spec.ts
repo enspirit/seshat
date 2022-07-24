@@ -6,7 +6,7 @@ chai.use(sinonChai);
 
 import AbstractBucket from '../src/abstract-bucket';
 import { Readable } from 'stream';
-import { BucketPolicy, Object, ObjectMeta, ObjectTransformer } from '../src/types';
+import { BucketPolicy, Object, ObjectMeta, ObjectTransformer, ObjectTransformerType } from '../src/types';
 import { mockFileObject } from './mocks/object';
 import { readOnlyPolicy, uploadOnlyPolicy } from './mocks/policies';
 import { ObjectTransformerError } from '../src/errors';
@@ -94,6 +94,8 @@ describe('the AbstractBucket class', () => {
     describe('when used with transformers', () => {
 
       class DummyTransformer implements ObjectTransformer {
+
+        type: ObjectTransformerType = 'Ingress';
 
         async transform(stream: Readable, meta: ObjectMeta) {
           return { stream, meta };
