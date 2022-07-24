@@ -1,4 +1,5 @@
 import { Readable } from 'stream';
+import { SeshatObjectTransformerError } from './errors';
 import { SeshatBucket, SeshatBucketPolicy, SeshatObject, SeshatObjectMeta, SeshatObjectTransformer, SeshatObjectTransformerOutput } from './types';
 
 export default abstract class AbstractBucket implements SeshatBucket {
@@ -20,7 +21,12 @@ export default abstract class AbstractBucket implements SeshatBucket {
     await this.ensurePolicies((policy: SeshatBucketPolicy) => policy.put(meta));
     const output: SeshatObjectTransformerOutput = await this.transformers.reduce(async (p: Promise<SeshatObjectTransformerOutput>, t: SeshatObjectTransformer) => {
       const { stream, meta } = await p;
-      return t.transform(stream, meta);
+      try {
+        const result = await t.transform(stream, meta);
+        return result;
+      } catch (err) {
+        throw new SeshatObjectTransformerError(`Object transformer failed: ${t.constructor.name}`);
+      }
     }, Promise.resolve({ stream, meta }));
     return this._put(output.stream, output.meta);
   }

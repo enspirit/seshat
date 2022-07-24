@@ -9,6 +9,7 @@ import { Readable } from 'stream';
 import { SeshatBucketPolicy, SeshatObject, SeshatObjectMeta, SeshatObjectTransformer } from '../src/types';
 import { mockFileObject } from './mocks/object';
 import { readOnlyPolicy, uploadOnlyPolicy } from './mocks/policies';
+import { SeshatObjectTransformerError } from '../src/errors';
 
 describe('the AbstractBucket class', () => {
 
@@ -92,13 +93,17 @@ describe('the AbstractBucket class', () => {
 
     describe('when used with transformers', () => {
 
+      class DummyTransformer implements SeshatObjectTransformer {
+
+        async transform(stream: Readable, meta: SeshatObjectMeta) {
+          return { stream, meta };
+        }
+
+      }
+
       let transformer: SeshatObjectTransformer;
       beforeEach(() => {
-        transformer = {
-          async transform(stream, meta) {
-            return { stream, meta };
-          },
-        };
+        transformer = new DummyTransformer();
         transformers.push(transformer);
       });
 
@@ -108,6 +113,16 @@ describe('the AbstractBucket class', () => {
         const meta = { name: 'test.pdf', mimeType: mockFileObject.contentType };
         await bucket.put(stream, meta);
         expect(spy).to.be.calledOnceWith(stream, meta);
+      });
+
+      it('catches transformer errors and wraps them into SeshatObjectTransformerError', async () => {
+        const stub = sinon.stub(transformer, 'transform');
+        const error = new Error('a transforming error occured');
+        stub.rejects(error);
+        const stream = await mockFileObject.getReadableStream();
+        const meta = { name: 'test.pdf', mimeType: mockFileObject.contentType };
+        const p = bucket.put(stream, meta);
+        return expect(p).to.be.rejectedWith(SeshatObjectTransformerError, /Object transformer failed: DummyTransformer/);
       });
 
     });
@@ -202,3 +217,4 @@ describe('the AbstractBucket class', () => {
   });
 
 });
+

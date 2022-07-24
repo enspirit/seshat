@@ -5,3 +5,4 @@ export class PrefixNotFoundError extends SeshatError { }
 export class SeshatBucketPolicyError extends SeshatError { }
 export class AccessDeniedError extends SeshatBucketPolicyError { }
 
+export class SeshatObjectTransformerError extends SeshatError { }
