@@ -42,7 +42,7 @@ app.use('/s3', createApp({
  * An example of a bucket compressing objects as .gz
  */
 const gzip = new SeshatObjectCompressor();
-app.use('/gz', createApp({
+app.use('/gzip', createApp({
   bucket: new S3Bucket({ s3client, bucket: 'my-s3-bucket' }, [], [gzip]),
   middlewares: SeshatMiddlewares,
 }));
