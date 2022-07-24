@@ -2,7 +2,7 @@ import { mockFileObject } from './object';
 import { Readable } from 'stream';
 import * as fs from 'fs';
 import { SinonStub, SinonSpy, default as sinon } from 'sinon';
-import { SeshatBucket, SeshatObject, SeshatObjectMeta } from '../../src/types';
+import { Bucket, Object, ObjectMeta } from '../../src/types';
 
 export const reset = () => {
   mockBucket.exists.resetHistory();
@@ -15,7 +15,7 @@ export const reset = () => {
 };
 
 const fakeBucket = {
-  put: async (readable: Readable, _meta: SeshatObjectMeta): Promise<SeshatObject> => {
+  put: async (readable: Readable, _meta: ObjectMeta): Promise<Object> => {
     const devNull = fs.createWriteStream('/dev/null');
     readable.pipe(devNull);
     return mockFileObject;
@@ -48,4 +48,4 @@ const mockBucket: MockBucket = {
   put: sinon.spy(fakeBucket, 'put'),
 };
 
-export default mockBucket as SeshatBucket;
+export default mockBucket as Bucket;

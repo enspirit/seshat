@@ -1,11 +1,11 @@
 import express, { NextFunction, Request, Response, Router } from 'express';
 import { json } from 'body-parser';
-import { SeshatConfig, SeshatAction } from '../../types';
+import { Config, Action } from '../../types';
 import { ObjectNotFoundError } from '../../errors';
 
 export const SESHAT_ACTION_HEADER = 'application/vnd.seshat-action+json';
 
-export const createRouter = (config: SeshatConfig): Router => {
+export const createRouter = (config: Config): Router => {
 
   const actions = config.actions || [];
   const router = express();
@@ -33,7 +33,7 @@ export const createRouter = (config: SeshatConfig): Router => {
     }
 
     // look for the action
-    const action = actions.find((a: SeshatAction) => a.name === actionName);
+    const action = actions.find((a: Action) => a.name === actionName);
     if (!action) {
       return res.status(400).send({ error: `Unknown action: '${actionName}` });
     }

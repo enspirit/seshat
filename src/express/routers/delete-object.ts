@@ -1,8 +1,8 @@
 import express, { Router } from 'express';
-import { SeshatConfig } from '../../types';
+import { Config } from '../../types';
 import { ObjectNotFoundError } from '../../errors';
 
-export const createRouter = (config: SeshatConfig): Router => {
+export const createRouter = (config: Config): Router => {
   const { bucket } = config;
   const router = express();
 

@@ -1,12 +1,12 @@
 import express from 'express';
-import { SeshatConfig } from './types';
+import { Config } from './types';
 import { createRouter as executeActions } from './express/routers/execute-actions';
 import { createRouter as busboyUploader } from './express/routers/multipart-uploads';
 import { createRouter as retrieveObject } from './express/routers/retrieve-object';
 import { createRouter as deleteObject } from './express/routers/delete-object';
 import morgan from 'morgan';
 
-export const createApp = (config: SeshatConfig): express.Express => {
+export const createApp = (config: Config): express.Express => {
   const app = express();
   const { middlewares } = config;
 

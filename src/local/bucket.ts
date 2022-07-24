@@ -2,7 +2,7 @@ import * as path from 'path';
 import LocalObject from './object';
 import { Readable } from 'stream';
 import AbstractBucket from '../abstract-bucket';
-import { SeshatObjectMeta } from '../types';
+import { ObjectMeta } from '../types';
 
 export default class LocalBucket extends AbstractBucket {
 
@@ -15,7 +15,7 @@ export default class LocalBucket extends AbstractBucket {
     return LocalObject.fromPath(path, this.path);
   }
 
-  async _put(stream: Readable, meta: SeshatObjectMeta) {
+  async _put(stream: Readable, meta: ObjectMeta) {
     this.ensureSecure(meta.name);
     return await LocalObject.write(meta.name, stream, this.path);
   }

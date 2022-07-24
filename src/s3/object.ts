@@ -1,8 +1,8 @@
 import { Readable, Writable } from 'stream';
-import { SeshatObject } from '../types';
+import { Object } from '../types';
 import { S3Client, HeadObjectCommandOutput, GetObjectCommand } from '@aws-sdk/client-s3';
 
-export default class S3Object implements SeshatObject {
+export default class S3Object implements Object {
 
   #s3client: S3Client;
   #bucket: string;

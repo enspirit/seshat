@@ -7,11 +7,11 @@ chai.use(chaiAsPromised);
 import { expect } from 'chai';
 import { ObjectNotFoundError, PrefixNotFoundError } from '../../src/errors';
 import { mockFileObject } from '../mocks/object';
-import { SeshatObject, SeshatBucket } from '../../src/types';
+import { Object, Bucket } from '../../src/types';
 
 describe('LocalBucket', () => {
 
-  let bucket: SeshatBucket;
+  let bucket: Bucket;
   beforeEach(() => {
     bucket = new LocalBucket(path.join(__dirname, '../../'));
   });
@@ -162,7 +162,7 @@ describe('LocalBucket', () => {
 
   describe('delete()', () => {
 
-    let createdObject: SeshatObject;
+    let createdObject: Object;
     beforeEach(async () => {
       const meta = { name: 'test.json', mimeType: mockFileObject.contentType };
       createdObject = await bucket.put(await mockFileObject.getReadableStream(), meta);

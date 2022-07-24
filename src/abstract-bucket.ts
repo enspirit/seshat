@@ -1,51 +1,51 @@
 import { Readable } from 'stream';
-import { SeshatObjectTransformerError } from './errors';
-import { SeshatBucket, SeshatBucketPolicy, SeshatObject, SeshatObjectMeta, SeshatObjectTransformer, SeshatObjectTransformerOutput } from './types';
+import { ObjectTransformerError } from './errors';
+import { Bucket, BucketPolicy, Object, ObjectMeta, ObjectTransformer, ObjectTransformerOutput } from './types';
 
-export default abstract class AbstractBucket implements SeshatBucket {
+export default abstract class AbstractBucket implements Bucket {
 
   constructor(
-    private policies: Array<SeshatBucketPolicy> = [],
-    private transformers: Array<SeshatObjectTransformer> = [],
+    private policies: Array<BucketPolicy> = [],
+    private transformers: Array<ObjectTransformer> = [],
   ) {
   }
 
-  async get(path: string): Promise<SeshatObject> {
-    await this.ensurePolicies((policy: SeshatBucketPolicy) => policy.get(path));
+  async get(path: string): Promise<Object> {
+    await this.ensurePolicies((policy: BucketPolicy) => policy.get(path));
     return this._get(path);
   }
 
-  abstract _get(path: string): Promise<SeshatObject>;
+  abstract _get(path: string): Promise<Object>;
 
-  async put(stream: Readable, meta: SeshatObjectMeta): Promise<SeshatObject> {
-    await this.ensurePolicies((policy: SeshatBucketPolicy) => policy.put(meta));
-    const output: SeshatObjectTransformerOutput = await this.transformers.reduce(async (p: Promise<SeshatObjectTransformerOutput>, t: SeshatObjectTransformer) => {
+  async put(stream: Readable, meta: ObjectMeta): Promise<Object> {
+    await this.ensurePolicies((policy: BucketPolicy) => policy.put(meta));
+    const output: ObjectTransformerOutput = await this.transformers.reduce(async (p: Promise<ObjectTransformerOutput>, t: ObjectTransformer) => {
       const { stream, meta } = await p;
       try {
         const result = await t.transform(stream, meta);
         return result;
       } catch (err) {
-        throw new SeshatObjectTransformerError(`Object transformer failed: ${t.constructor.name}`);
+        throw new ObjectTransformerError(`Object transformer failed: ${t.constructor.name}`);
       }
     }, Promise.resolve({ stream, meta }));
     return this._put(output.stream, output.meta);
   }
 
-  abstract _put(stream: Readable, meta: SeshatObjectMeta): Promise<SeshatObject>;
+  abstract _put(stream: Readable, meta: ObjectMeta): Promise<Object>;
 
   async delete(path: string): Promise<void> {
-    await this.ensurePolicies((policy: SeshatBucketPolicy) => policy.delete(path));
+    await this.ensurePolicies((policy: BucketPolicy) => policy.delete(path));
     return this._delete(path);
   }
 
   abstract _delete(path: string): Promise<void>;
 
-  async list(prefix?: string): Promise<SeshatObject[]> {
-    await this.ensurePolicies((policy: SeshatBucketPolicy) => policy.list(prefix));
+  async list(prefix?: string): Promise<Object[]> {
+    await this.ensurePolicies((policy: BucketPolicy) => policy.list(prefix));
     return this._list(prefix);
   }
 
-  abstract _list(prefix?: string): Promise<SeshatObject[]>;
+  abstract _list(prefix?: string): Promise<Object[]>;
 
   async exists(path: string) {
     try {
@@ -74,7 +74,7 @@ export default abstract class AbstractBucket implements SeshatBucket {
     }
   }
 
-  private async ensurePolicies(cb: (policy: SeshatBucketPolicy) => Promise<void>): Promise<void> {
+  private async ensurePolicies(cb: (policy: BucketPolicy) => Promise<void>): Promise<void> {
     for (const policy of this.policies) {
       await cb(policy);
     }

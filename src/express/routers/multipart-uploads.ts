@@ -1,9 +1,9 @@
 import path from 'path';
 import express, { Router, Request, Response, NextFunction } from 'express';
 import Busboy from 'busboy';
-import { SeshatConfig, SeshatObjectMeta, SeshatObject } from '../../types';
+import { Config, ObjectMeta, Object } from '../../types';
 
-export const createRouter = (config: SeshatConfig): Router => {
+export const createRouter = (config: Config): Router => {
 
   const { bucket } = config;
   const router = express();
@@ -25,7 +25,7 @@ export const createRouter = (config: SeshatConfig): Router => {
 
     const basePath = req.path;
     const busboy = Busboy({ headers: req.headers });
-    const promises: Array<Promise<SeshatObject>> = [];
+    const promises: Array<Promise<Object>> = [];
 
     busboy.on('error', (error: Error) => {
       return res.status(500).send({ error: error.message });
@@ -33,7 +33,7 @@ export const createRouter = (config: SeshatConfig): Router => {
 
     busboy.on('file', (name, file, info) => {
       const filepath = path.join(basePath, name);
-      const metadata: SeshatObjectMeta = {
+      const metadata: ObjectMeta = {
         name: filepath,
         mimeType: info.mimeType,
       };

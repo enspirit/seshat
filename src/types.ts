@@ -1,36 +1,36 @@
 import { Request } from 'express';
 import { Readable, Writable } from 'stream';
 
-export interface SeshatConfig {
-  bucket: SeshatBucket
-  actions?: SeshatAction[]
-  middlewares?: SeshatMiddlewareFactory[]
+export interface Config {
+  bucket: Bucket
+  actions?: Action[]
+  middlewares?: MiddlewareFactory[]
 }
 
-export interface SeshatObjectMeta {
+export interface ObjectMeta {
   name: string,
   mimeType: string
 }
 
-export interface SeshatBucket {
+export interface Bucket {
   exists(path: string): Promise<boolean>;
   fileExists(path: string): Promise<boolean>;
   dirExists(path: string): Promise<boolean>;
 
-  get(path: string): Promise<SeshatObject>;
-  put(stream: Readable, meta: SeshatObjectMeta): Promise<SeshatObject>;
+  get(path: string): Promise<Object>;
+  put(stream: Readable, meta: ObjectMeta): Promise<Object>;
   delete(path: string): Promise<void>;
-  list(prefix?: string): Promise<SeshatObject[]>;
+  list(prefix?: string): Promise<Object[]>;
 }
 
-export interface SeshatBucketPolicy {
+export interface BucketPolicy {
   get(path: string): Promise<void>
-  put(meta: SeshatObjectMeta): Promise<void>
+  put(meta: ObjectMeta): Promise<void>
   delete(path: string): Promise<void>
   list(prefix?: string): Promise<void>
 }
 
-export interface SeshatObject {
+export interface Object {
   name: string
   isFile: boolean
   isDirectory: boolean
@@ -43,30 +43,30 @@ export interface SeshatObject {
   getWritableStream(): Promise<Writable>
 }
 
-export interface SeshatObjectTransformerOutput {
+export interface ObjectTransformerOutput {
   stream: Readable
-  meta: SeshatObjectMeta
+  meta: ObjectMeta
 }
 
-export interface SeshatObjectTransformer {
-  transform(stream: Readable, meta: SeshatObjectMeta): Promise<SeshatObjectTransformerOutput>;
+export interface ObjectTransformer {
+  transform(stream: Readable, meta: ObjectMeta): Promise<ObjectTransformerOutput>;
 }
 
-export interface SeshatAction {
+export interface Action {
   name: string;
   options: { [key: string]: any };
 
   run(request: Request): Promise<any>;
 }
 
-export type SeshatMiddlewareFactory = (config: SeshatConfig, opts?: any) => any
+export type MiddlewareFactory = (config: Config, opts?: any) => any
 
 declare global {
   namespace Express {
     interface Request {
       seshat: {
-        bucket: SeshatBucket
-        object?: SeshatObject
+        bucket: Bucket
+        object?: Object
       }
     }
   }

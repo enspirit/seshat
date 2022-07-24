@@ -1,13 +1,13 @@
 import path = require('path');
 import { createApp } from './express';
 import LocalBucket from './local/bucket';
-import SeshatMiddlewares from './express/middlewares';
+import Middlewares from './express/middlewares';
 import { Request, Response, NextFunction } from 'express';
 
 import express from 'express';
 import S3Bucket from './s3/bucket';
 import { S3Client } from '@aws-sdk/client-s3';
-import SeshatObjectCompressor from './transformers/compressor';
+import ObjectCompressor from './transformers/compressor';
 
 const app = express();
 
@@ -17,7 +17,7 @@ const app = express();
  */
 app.use('/local', createApp({
   bucket: new LocalBucket(path.join(__dirname, '../')),
-  middlewares: SeshatMiddlewares,
+  middlewares: Middlewares,
 }));
 
 /**
@@ -35,16 +35,16 @@ const s3client = new S3Client({
 
 app.use('/s3', createApp({
   bucket: new S3Bucket({ s3client, bucket: 'my-s3-bucket' }),
-  middlewares: SeshatMiddlewares,
+  middlewares: Middlewares,
 }));
 
 /**
  * An example of a bucket compressing objects as .gz
  */
-const gzip = new SeshatObjectCompressor();
+const gzip = new ObjectCompressor();
 app.use('/gzip', createApp({
   bucket: new S3Bucket({ s3client, bucket: 'my-s3-bucket' }, [], [gzip]),
-  middlewares: SeshatMiddlewares,
+  middlewares: Middlewares,
 }));
 
 /**

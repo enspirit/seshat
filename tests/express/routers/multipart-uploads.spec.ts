@@ -4,7 +4,7 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import { createRouter } from '../../../src/express/routers/multipart-uploads';
 import mockBucket from '../../mocks/bucket';
-import { SeshatConfig } from '../../../src/types';
+import { Config } from '../../../src/types';
 chai.use(sinonChai);
 
 import express, { Application } from 'express';
@@ -13,7 +13,7 @@ import { Readable } from 'stream';
 
 describe('the multipart-uploads express router', () => {
 
-  let config: SeshatConfig;
+  let config: Config;
 
   let router;
   let app: Application;

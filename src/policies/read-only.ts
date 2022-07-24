@@ -1,7 +1,7 @@
 import { AccessDeniedError } from '../errors';
-import { SeshatBucketPolicy } from '../types';
+import { BucketPolicy } from '../types';
 
-const ReadOnlyPolicy: SeshatBucketPolicy = {
+const ReadOnlyPolicy: BucketPolicy = {
 
   async get(_path): Promise<void> {
   },

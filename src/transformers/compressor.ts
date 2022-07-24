@@ -1,11 +1,11 @@
 import { createGzip } from 'node:zlib';
 
 import { Readable } from 'stream';
-import { SeshatObjectMeta, SeshatObjectTransformer, SeshatObjectTransformerOutput } from '../types';
+import { ObjectMeta, ObjectTransformer, ObjectTransformerOutput } from '../types';
 
-export default class SeshatObjectCompressor implements SeshatObjectTransformer {
+export default class ObjectCompressor implements ObjectTransformer {
 
-  async transform(stream: Readable, meta: SeshatObjectMeta): Promise<SeshatObjectTransformerOutput> {
+  async transform(stream: Readable, meta: ObjectMeta): Promise<ObjectTransformerOutput> {
     const gzip = createGzip();
     const newMeta = {
       ...meta,

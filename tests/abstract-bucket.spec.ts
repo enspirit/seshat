@@ -6,24 +6,24 @@ chai.use(sinonChai);
 
 import AbstractBucket from '../src/abstract-bucket';
 import { Readable } from 'stream';
-import { SeshatBucketPolicy, SeshatObject, SeshatObjectMeta, SeshatObjectTransformer } from '../src/types';
+import { BucketPolicy, Object, ObjectMeta, ObjectTransformer } from '../src/types';
 import { mockFileObject } from './mocks/object';
 import { readOnlyPolicy, uploadOnlyPolicy } from './mocks/policies';
-import { SeshatObjectTransformerError } from '../src/errors';
+import { ObjectTransformerError } from '../src/errors';
 
 describe('the AbstractBucket class', () => {
 
   class ConcreteBucket extends AbstractBucket {
-    async _get(_path: string): Promise<SeshatObject> {
+    async _get(_path: string): Promise<Object> {
       return mockFileObject;
     }
-    async _put(_stream: Readable, _meta: SeshatObjectMeta): Promise<SeshatObject> {
+    async _put(_stream: Readable, _meta: ObjectMeta): Promise<Object> {
       return mockFileObject;
     }
     async _delete(_path: string): Promise<void> {
       return;
     }
-    async _list(_prefix?: string): Promise<SeshatObject[]> {
+    async _list(_prefix?: string): Promise<Object[]> {
       return [mockFileObject];
     }
   }
@@ -47,8 +47,8 @@ describe('the AbstractBucket class', () => {
   };
 
   let bucket: ConcreteBucket;
-  let policies: Array<SeshatBucketPolicy>;
-  let transformers: Array<SeshatObjectTransformer>;
+  let policies: Array<BucketPolicy>;
+  let transformers: Array<ObjectTransformer>;
   beforeEach(() => {
     policies = [readOnlyPolicy, uploadOnlyPolicy];
     transformers = [];
@@ -93,15 +93,15 @@ describe('the AbstractBucket class', () => {
 
     describe('when used with transformers', () => {
 
-      class DummyTransformer implements SeshatObjectTransformer {
+      class DummyTransformer implements ObjectTransformer {
 
-        async transform(stream: Readable, meta: SeshatObjectMeta) {
+        async transform(stream: Readable, meta: ObjectMeta) {
           return { stream, meta };
         }
 
       }
 
-      let transformer: SeshatObjectTransformer;
+      let transformer: ObjectTransformer;
       beforeEach(() => {
         transformer = new DummyTransformer();
         transformers.push(transformer);
@@ -115,14 +115,14 @@ describe('the AbstractBucket class', () => {
         expect(spy).to.be.calledOnceWith(stream, meta);
       });
 
-      it('catches transformer errors and wraps them into SeshatObjectTransformerError', async () => {
+      it('catches transformer errors and wraps them into ObjectTransformerError', async () => {
         const stub = sinon.stub(transformer, 'transform');
         const error = new Error('a transforming error occured');
         stub.rejects(error);
         const stream = await mockFileObject.getReadableStream();
         const meta = { name: 'test.pdf', mimeType: mockFileObject.contentType };
         const p = bucket.put(stream, meta);
-        return expect(p).to.be.rejectedWith(SeshatObjectTransformerError, /Object transformer failed: DummyTransformer/);
+        return expect(p).to.be.rejectedWith(ObjectTransformerError, /Object transformer failed: DummyTransformer/);
       });
 
     });

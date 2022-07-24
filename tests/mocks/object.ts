@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as fs from 'fs';
-import { SeshatObject } from '../../src/types';
+import { Object } from '../../src/types';
 
 export const mockFileObject = {
   name: 'file.txt',
@@ -16,7 +16,7 @@ export const mockFileObject = {
   async getWritableStream() {
     throw new Error('not implemented');
   },
-} as SeshatObject;
+} as Object;
 
 export const mockFolderObject = {
   name: 'folder',
@@ -32,4 +32,4 @@ export const mockFolderObject = {
   getWritableStream() {
     throw new Error('cannot get writable stream on folder');
   },
-} as SeshatObject;
+} as Object;

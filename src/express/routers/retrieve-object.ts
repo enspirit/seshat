@@ -1,5 +1,5 @@
 import express, { NextFunction, Request, Response, Router, RequestHandler } from 'express';
-import { SeshatConfig } from '../../types';
+import { Config } from '../../types';
 import { ObjectNotFoundError } from '../../errors';
 
 export interface RetrieveObjectConfig {
@@ -16,7 +16,7 @@ export const DefaultConfig: RetrieveObjectConfig = {
   },
 };
 
-export const createRouter = (seshatConfig: SeshatConfig, routerConfig: RetrieveObjectConfig = DefaultConfig): Router => {
+export const createRouter = (seshatConfig: Config, routerConfig: RetrieveObjectConfig = DefaultConfig): Router => {
   const router = express();
   const { bucket } = seshatConfig;
 

@@ -1,11 +1,11 @@
-import { SeshatBucketPolicy, SeshatObjectMeta } from '../../src/types';
+import { BucketPolicy, ObjectMeta } from '../../src/types';
 
-export const readOnlyPolicy: SeshatBucketPolicy = {
+export const readOnlyPolicy: BucketPolicy = {
 
   async get(_path: string): Promise<void> {
   },
 
-  async put(_meta: SeshatObjectMeta): Promise<void> {
+  async put(_meta: ObjectMeta): Promise<void> {
     throw new Error('read only bucket');
   },
 
@@ -18,12 +18,12 @@ export const readOnlyPolicy: SeshatBucketPolicy = {
 
 };
 
-export const uploadOnlyPolicy: SeshatBucketPolicy = {
+export const uploadOnlyPolicy: BucketPolicy = {
   async get(_path: string): Promise<void> {
     throw new Error('upload only bucket');
   },
 
-  async put(_meta: SeshatObjectMeta): Promise<void> {
+  async put(_meta: ObjectMeta): Promise<void> {
   },
 
   async delete(_path: string): Promise<void> {

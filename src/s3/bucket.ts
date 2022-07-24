@@ -1,6 +1,6 @@
 import { Readable } from 'stream';
 import AbstractBucket from '../abstract-bucket';
-import { SeshatBucketPolicy, SeshatObject, SeshatObjectMeta, SeshatObjectTransformer } from '../types';
+import { BucketPolicy, Object, ObjectMeta, ObjectTransformer } from '../types';
 import S3Object from './object';
 
 import { S3Client, HeadObjectCommand, ListObjectsV2Command, DeleteObjectCommand } from '@aws-sdk/client-s3';
@@ -18,8 +18,8 @@ export default class S3Bucket extends AbstractBucket {
 
   constructor(
     private options: S3BucketOptions,
-    policies: Array<SeshatBucketPolicy> = [],
-    transformers: Array<SeshatObjectTransformer> = [],
+    policies: Array<BucketPolicy> = [],
+    transformers: Array<ObjectTransformer> = [],
   ) {
     super(policies, transformers);
   }
@@ -32,7 +32,7 @@ export default class S3Bucket extends AbstractBucket {
     return this.options.bucket;
   }
 
-  async _get(path: string): Promise<SeshatObject> {
+  async _get(path: string): Promise<Object> {
     try {
       const object = await this.s3client.send(new HeadObjectCommand({
         Bucket: this.bucket,
@@ -47,7 +47,7 @@ export default class S3Bucket extends AbstractBucket {
     }
   }
 
-  async _put(stream: Readable, meta: SeshatObjectMeta): Promise<SeshatObject> {
+  async _put(stream: Readable, meta: ObjectMeta): Promise<Object> {
     const target = {
       Key: this.objectKey(meta.name),
       Bucket: this.bucket,
@@ -79,7 +79,7 @@ export default class S3Bucket extends AbstractBucket {
     }));
   }
 
-  async _list(prefix?: string | undefined): Promise<SeshatObject[]> {
+  async _list(prefix?: string | undefined): Promise<Object[]> {
     const res = await this.s3client.send(new ListObjectsV2Command({
       Bucket: this.bucket,
       Prefix: this.objectKey(prefix),
