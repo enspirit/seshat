@@ -6,6 +6,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
+    "build:watch": "tsc -w",
     "dev": "tsc-watch --onSuccess 'node ./dist/example.js'",
     "example": "npm run build && node ./dist/example.js",
     "test": "mocha -r ts-node/register tests/helpers.ts 'tests/**/*.spec.ts'",
