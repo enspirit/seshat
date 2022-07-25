@@ -1,5 +1,5 @@
 import { Express } from 'express';
-import { createApp, S3Bucket } from '../';
+import { createApp, S3Bucket } from '../src';
 import { ObjectCompressor } from '../src/transformers';
 import { s3client } from './s3';
 
