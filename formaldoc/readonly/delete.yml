@@ -1,38 +1,31 @@
 ---
 name: |-
-  POST /readonly/ - multipart upload
+  DELETE /readonly/
 
 url: |-
-  /readonly/
+  /readonly/object.json
 
 services:
 - method: |-
-    POST
+    DELETE
 
   description: |-
-    Checks that creating/modifying objects is refused by read-only policy
+    Checks that deleting objects is refused by read-only policy
 
   input_schema: |-
     {
     }
 
   output_schema: |-
-    [SeshatObject]
+    .
 
   error_schema: |-
     Error
-
-  postconditions:
-    - (x) Objects can be downloaded using their names
 
   counterexamples:
 
     - description: |-
         FOR: the bucket uses the read-only policy
-      file_upload:
-        param_name: some-todos.csv
-        path: ../fixtures/todos.csv
-        content_type: "text/csv"
       expected:
         status: 400
         content_type: application/json
