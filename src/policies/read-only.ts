@@ -1,7 +1,7 @@
 import { AccessDeniedError } from '../errors';
 import { BucketPolicy } from '../types';
 
-const ReadOnlyPolicy: BucketPolicy = {
+export const ReadOnlyPolicy: BucketPolicy = {
 
   async get(_path): Promise<void> {
   },
@@ -18,5 +18,3 @@ const ReadOnlyPolicy: BucketPolicy = {
   },
 
 };
-
-export default ReadOnlyPolicy;

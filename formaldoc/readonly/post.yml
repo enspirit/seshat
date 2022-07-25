@@ -1,0 +1,38 @@
+---
+name: |-
+  POST /readonly/ - multipart upload
+
+url: |-
+  /readonly/
+
+services:
+- method: |-
+    POST
+
+  description: |-
+    Allows creating files through real file uploads
+
+  input_schema: |-
+    {
+    }
+
+  output_schema: |-
+    [SeshatObject]
+
+  error_schema: |-
+    Error
+
+  postconditions:
+    - (x) Objects can be downloaded using their names
+
+  counterexamples:
+
+    - description: |-
+        FOR: the bucket uses the read-only policy
+      file_upload:
+        param_name: some-todos.csv
+        path: ../fixtures/todos.csv
+        content_type: "text/csv"
+      expected:
+        status: 400
+        content_type: application/json

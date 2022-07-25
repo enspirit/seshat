@@ -7,7 +7,7 @@ import mockBucket, { reset as resetMockBucket } from './mocks/bucket';
 import { mockFileObject } from './mocks/object';
 import { expect } from 'chai';
 import sinonChai from 'sinon-chai';
-import { ObjectNotFoundError } from '../src/errors';
+import { BucketPolicyError, ObjectNotFoundError } from '../src/errors';
 import sinon from 'sinon';
 import { Readable } from 'stream';
 chai.use(sinonChai);
@@ -72,6 +72,21 @@ describe('the express app', () => {
       stub.reset();
     });
 
+    it('returns proper status code and error when a policy fails', async () => {
+      const stub = mockBucket.get as sinon.SinonStub;
+      stub.rejects(new BucketPolicyError('access denied'));
+
+      await request(app)
+        .get('/file.txt')
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+        .expect({
+          error: 'access denied',
+        });
+
+      stub.reset();
+    });
+
   });
 
   describe('on POST /:path', () => {
@@ -120,6 +135,18 @@ describe('the express app', () => {
       );
     });
 
+    it('returns proper status code and error when a policy fails', async () => {
+      const stub = mockBucket.put = sinon.stub();
+      stub.rejects(new BucketPolicyError('access denied'));
+
+      await request(app)
+        .post('/')
+        .attach('package.json', path.join(__dirname, '../package.json'))
+        .expect(400);
+
+      stub.reset();
+    });
+
   });
 
   describe('on DELETE /:file', () => {
@@ -161,6 +188,21 @@ describe('the express app', () => {
       await request(app)
         .get('/file.txt')
         .expect(500);
+
+      stub.reset();
+    });
+
+    it('returns proper status code and error when a policy fails', async () => {
+      const stub = mockBucket.delete = sinon.stub();
+      stub.rejects(new BucketPolicyError('access denied'));
+
+      await request(app)
+        .delete('/file.txt')
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+        .expect({
+          error: 'access denied',
+        });
 
       stub.reset();
     });

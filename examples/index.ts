@@ -3,6 +3,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import localExample from './local';
 import s3example from './s3';
 import gzipExample from './gzip';
+import readOnlyExample from './readonly';
 
 const app = express();
 
@@ -11,7 +12,8 @@ const app = express();
   localExample,
   s3example,
   gzipExample,
-].forEach((example) => example(app));
+  readOnlyExample,
+].forEach((example) => example(app, process.env.ROOT_DIR || '../'));
 
 /**
  * Error logging

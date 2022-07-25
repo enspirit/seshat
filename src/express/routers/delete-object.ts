@@ -1,6 +1,5 @@
 import express, { Router } from 'express';
 import { Config } from '../../types';
-import { ObjectNotFoundError } from '../../errors';
 
 export const createRouter = (config: Config): Router => {
   const { bucket } = config;
@@ -9,16 +8,13 @@ export const createRouter = (config: Config): Router => {
   /**
    * Delete object
    */
-  router.delete('*', async (req, res) => {
+  router.delete('*', async (req, res, next) => {
     const fpath = req.path;
     try {
       await bucket.delete(fpath);
       res.sendStatus(204);
     } catch (err: any) {
-      if (err instanceof ObjectNotFoundError) {
-        return res.sendStatus(404);
-      }
-      return res.status(500).send(err.message);
+      next(err);
     }
   });
 

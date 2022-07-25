@@ -21,14 +21,14 @@ export const createRouter = (config: Config): Router => {
   /**
    * Create files
    */
-  router.post('*', isMultiPartFormDataRequest, async (req, res) => {
+  router.post('*', isMultiPartFormDataRequest, async (req, res, next) => {
 
     const basePath = req.path;
     const busboy = Busboy({ headers: req.headers });
     const promises: Array<Promise<Object>> = [];
 
     busboy.on('error', (error: Error) => {
-      return res.status(500).send({ error: error.message });
+      return next(error);
     });
 
     busboy.on('file', (name, file, info) => {
@@ -37,7 +37,11 @@ export const createRouter = (config: Config): Router => {
         name: filepath,
         contentType: info.mimeType,
       };
-      promises.push(bucket.put(file, metadata));
+      const p = bucket.put(file, metadata);
+      p.catch((err) => {
+        return next(err);
+      });
+      promises.push(p);
     });
 
     busboy.on('finish', async () => {

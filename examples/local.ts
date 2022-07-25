@@ -10,8 +10,10 @@ import { createApp, LocalBucket } from '../src';
  * of this project as the root of the bucket and exposing the
  * seshat API on /local.
  */
-export default (expressApp: Express) => {
+export default (expressApp: Express, seshatRootDir: string) => {
+
   expressApp.use('/local', createApp({
-    bucket: new LocalBucket(path.join(__dirname, '../')),
+    bucket: new LocalBucket(seshatRootDir),
   }));
+
 };

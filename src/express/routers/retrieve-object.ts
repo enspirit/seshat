@@ -58,7 +58,7 @@ export const createRouter = (seshatConfig: Config, routerConfig: RetrieveObjectC
   }
 
   /**
-   * Retrieve file actions
+   * Retrieve files
    */
   router.get('*', middlewares, async (req: Request, res: Response) => {
     const { object } = req.seshat;
@@ -67,23 +67,12 @@ export const createRouter = (seshatConfig: Config, routerConfig: RetrieveObjectC
         .status(404)
         .send({ error: `File not found: ${req.path}` });
     }
-    try {
-      res.set('Content-Type', object.meta.contentType);
-      if (object.meta.contentLength) {
-        res.set('Content-Length', object.meta.contentLength.toString());
-      }
-      const stream = await object.getReadableStream();
-      stream.pipe(res);
-    } catch (err: any) {
-
-      if (err instanceof ObjectNotFoundError) {
-        return res
-          .status(404)
-          .send({ error: `File not found: ${req.path}` });
-      }
-
-      return res.status(500).send(err.message);
+    res.set('Content-Type', object.meta.contentType);
+    if (object.meta.contentLength) {
+      res.set('Content-Length', object.meta.contentLength.toString());
     }
+    const stream = await object.getReadableStream();
+    stream.pipe(res);
   });
 
   return router;

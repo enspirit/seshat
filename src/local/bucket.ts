@@ -2,12 +2,16 @@ import * as path from 'path';
 import { LocalObject } from './object';
 import { Readable } from 'stream';
 import AbstractBucket from '../abstract-bucket';
-import { ObjectMeta } from '../types';
+import { BucketPolicy, ObjectMeta, ObjectTransformer } from '../types';
 
 export class LocalBucket extends AbstractBucket {
 
-  constructor(private path: string) {
-    super();
+  constructor(
+    private path: string,
+    policies: Array<BucketPolicy> = [],
+    transformers: Array<ObjectTransformer> = [],
+  ) {
+    super(policies, transformers);
   }
 
   async _get(path: string) {

@@ -7,8 +7,8 @@
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc -w",
-    "dev": "tsc-watch --onSuccess 'node ./dist/examples/index.js'",
-    "example": "node ./dist/examples/index.js",
+    "dev": "ROOT_DIR=$PWD tsc-watch --onSuccess 'node ./dist/examples/index.js'",
+    "example": "ROOT_DIR=$PWD node ./dist/examples/index.js",
     "test": "mocha -r ts-node/register tests/helpers.ts 'tests/**/*.spec.ts'",
     "test:watch": "mocha -r ts-node/register tests/helpers.ts 'tests/**/*.spec.ts' --watch --watch-files src/**/*.ts,tests/**/*.ts",
     "lint": "eslint src tests --ext ts",
