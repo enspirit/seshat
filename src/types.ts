@@ -48,7 +48,7 @@ export interface ObjectTransformerOutput {
   meta: ObjectMeta
 }
 
-export type ObjectTransformerType = 'Ingress';
+export type ObjectTransformerType = 'Ingress' | 'Egress' | 'Duplex';
 
 export interface ObjectTransformer {
 

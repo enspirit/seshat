@@ -91,44 +91,6 @@ describe('the AbstractBucket class', () => {
 
     });
 
-    describe('when used with transformers', () => {
-
-      class DummyTransformer implements ObjectTransformer {
-
-        type: ObjectTransformerType = 'Ingress';
-
-        async transform(stream: Readable, meta: ObjectMeta) {
-          return { stream, meta };
-        }
-
-      }
-
-      let transformer: ObjectTransformer;
-      beforeEach(() => {
-        transformer = new DummyTransformer();
-        transformers.push(transformer);
-      });
-
-      it('calls the transformers', async () => {
-        const spy = sinon.spy(transformer, 'transform');
-        const stream = await mockFileObject.getReadableStream();
-        const meta = { name: 'test.pdf', mimeType: mockFileObject.contentType };
-        await bucket.put(stream, meta);
-        expect(spy).to.be.calledOnceWith(stream, meta);
-      });
-
-      it('catches transformer errors and wraps them into ObjectTransformerError', async () => {
-        const stub = sinon.stub(transformer, 'transform');
-        const error = new Error('a transforming error occured');
-        stub.rejects(error);
-        const stream = await mockFileObject.getReadableStream();
-        const meta = { name: 'test.pdf', mimeType: mockFileObject.contentType };
-        const p = bucket.put(stream, meta);
-        return expect(p).to.be.rejectedWith(ObjectTransformerError, /Object transformer failed: DummyTransformer/);
-      });
-
-    });
-
   });
 
   describe('get()', () => {
@@ -215,6 +177,43 @@ describe('the AbstractBucket class', () => {
       });
 
     });
+
+  });
+
+  describe('when used with transformers', () => {
+
+    class DummyIngressTransformer implements ObjectTransformer {
+      type: ObjectTransformerType = 'Ingress';
+      async transform(stream: Readable, meta: ObjectMeta) {
+        return { stream, meta };
+      }
+    }
+
+    let ingress: ObjectTransformer;
+    beforeEach(() => {
+      ingress = new DummyIngressTransformer();
+      transformers.push(ingress);
+    });
+
+    describe('put()', () => {
+      it('calls the transformers', async () => {
+        const spy = sinon.spy(ingress, 'transform');
+        const stream = await mockFileObject.getReadableStream();
+        const meta = { name: 'test.pdf', mimeType: mockFileObject.contentType };
+        await bucket.put(stream, meta);
+        expect(spy).to.be.calledOnceWith(stream, meta);
+      });
+
+      it('catches transformer errors and wraps them into ObjectTransformerError', async () => {
+        const stub = sinon.stub(ingress, 'transform');
+        const error = new Error('a transforming error occured');
+        stub.rejects(error);
+        const stream = await mockFileObject.getReadableStream();
+        const meta = { name: 'test.pdf', mimeType: mockFileObject.contentType };
+        const p = bucket.put(stream, meta);
+        return expect(p).to.be.rejectedWith(ObjectTransformerError, /Object transformer failed: DummyIngressTransformer/);
+      });
+    })
 
   });
 
