@@ -213,7 +213,7 @@ describe('the AbstractBucket class', () => {
         const p = bucket.put(stream, meta);
         return expect(p).to.be.rejectedWith(ObjectTransformerError, /Object transformer failed: DummyIngressTransformer/);
       });
-    })
+    });
 
   });
 
