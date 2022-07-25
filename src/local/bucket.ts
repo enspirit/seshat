@@ -1,10 +1,10 @@
 import * as path from 'path';
-import LocalObject from './object';
+import { LocalObject } from './object';
 import { Readable } from 'stream';
 import AbstractBucket from '../abstract-bucket';
 import { ObjectMeta } from '../types';
 
-export default class LocalBucket extends AbstractBucket {
+export class LocalBucket extends AbstractBucket {
 
   constructor(private path: string) {
     super();

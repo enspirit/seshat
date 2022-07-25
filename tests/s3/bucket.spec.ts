@@ -1,6 +1,6 @@
 import { S3Client, ListObjectsV2Command, HeadObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 
-import S3Bucket from '../../src/s3/bucket';
+import { S3Bucket } from '../../src/';
 import { ObjectNotFoundError, PrefixNotFoundError } from '../../src/errors';
 
 import { expect, default as chai } from 'chai';

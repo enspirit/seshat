@@ -7,7 +7,7 @@ import * as fsPromises from 'fs/promises';
 import * as mime from 'mime-types';
 import { SeshatError, ObjectNotFoundError, PrefixNotFoundError } from '../errors';
 
-export default class LocalObject implements Object {
+export class LocalObject implements Object {
 
   #path: string;
   meta: ObjectMeta;

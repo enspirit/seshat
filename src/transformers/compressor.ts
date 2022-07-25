@@ -3,7 +3,7 @@ import { createGzip } from 'node:zlib';
 import { Readable } from 'stream';
 import { ObjectMeta, ObjectTransformer, ObjectTransformerOutput, ObjectTransformerType } from '../types';
 
-export default class ObjectCompressor implements ObjectTransformer {
+export class ObjectCompressor implements ObjectTransformer {
 
   type: ObjectTransformerType = 'Ingress';
 

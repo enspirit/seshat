@@ -1,7 +1,7 @@
 import { Readable } from 'stream';
 import AbstractBucket from '../abstract-bucket';
 import { BucketPolicy, Object, ObjectMeta, ObjectTransformer } from '../types';
-import S3Object from './object';
+import { S3Object } from './object';
 
 import { S3Client, HeadObjectCommand, ListObjectsV2Command, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage';
@@ -14,7 +14,7 @@ export interface S3BucketOptions {
   prefix?: string
 }
 
-export default class S3Bucket extends AbstractBucket {
+export class S3Bucket extends AbstractBucket {
 
   constructor(
     private options: S3BucketOptions,

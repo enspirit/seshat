@@ -2,7 +2,7 @@ import { Readable, Writable } from 'stream';
 import { Object, ObjectMeta } from '../types';
 import { S3Client, HeadObjectCommandOutput, GetObjectCommand } from '@aws-sdk/client-s3';
 
-export default class S3Object implements Object {
+export class S3Object implements Object {
 
   #s3client: S3Client;
   #bucket: string;

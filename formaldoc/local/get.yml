@@ -13,7 +13,7 @@
       Allows retrieving a file
 
     preconditions:
-      - The url must correspond to an existing object
+      - An object with that name exists on the bucket
 
     input_schema: |-
       {
@@ -33,7 +33,7 @@
       - description: |-
           FOR: the file exists
         params:
-          path: package.json
+          path: test.json
         expected:
           content_type: application/json
           status: 200

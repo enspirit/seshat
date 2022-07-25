@@ -9,7 +9,7 @@ import path from 'path';
 import fs from 'fs';
 
 import { streamToString } from '../helpers';
-import LocalObject from '../../src/local/object';
+import { LocalObject } from '../../src/';
 import { ObjectNotFoundError, PrefixNotFoundError } from '../../src/errors';
 
 describe('LocalObject', () => {

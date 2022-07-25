@@ -7,7 +7,7 @@ chai.use(chaiAsPromised);
 chai.use(sinonChai);
 
 import { GetObjectCommand, HeadObjectCommandOutput, S3Client } from '@aws-sdk/client-s3';
-import S3Object from '../../src/s3/object';
+import { S3Object } from '../../src/';
 
 describe('S3Object', () => {
 
