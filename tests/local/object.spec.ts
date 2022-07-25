@@ -90,9 +90,9 @@ describe('LocalObject', () => {
       return expect(p).to.be.rejectedWith(ObjectNotFoundError);
     });
 
-    it('rejects for unknown files', async () => {
+    it('rejects for directories', async () => {
       const p = LocalObject.delete(__dirname);
-      return expect(p).to.be.rejectedWith(/Path does not match single object/);
+      return expect(p).to.be.rejectedWith(ObjectNotFoundError);
     });
 
   });
@@ -148,12 +148,6 @@ describe('LocalObject', () => {
       const stream = await object.getReadableStream();
       const string = await streamToString(stream);
       expect(string).to.match(/name.*@enspirit\/seshat/);
-    });
-
-    it('rejects for objects that are not files', async () => {
-      const folder = await LocalObject.fromPath(__dirname);
-      const p = folder.getReadableStream();
-      await expect(p).to.be.rejectedWith(/object is not a file/);
     });
 
   });

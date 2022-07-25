@@ -56,24 +56,6 @@ export default abstract class AbstractBucket implements Bucket {
     }
   }
 
-  async fileExists(path: string) {
-    try {
-      const object = await this.get(path);
-      return object.isFile;
-    } catch (err) {
-      return false;
-    }
-  }
-
-  async dirExists(path: string) {
-    try {
-      const object = await this.get(path);
-      return object.isDirectory;
-    } catch (err) {
-      return false;
-    }
-  }
-
   private async ensurePolicies(cb: (policy: BucketPolicy) => Promise<void>): Promise<void> {
     for (const policy of this.policies) {
       await cb(policy);

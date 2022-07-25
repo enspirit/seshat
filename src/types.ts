@@ -14,8 +14,6 @@ export interface ObjectMeta {
 
 export interface Bucket {
   exists(path: string): Promise<boolean>;
-  fileExists(path: string): Promise<boolean>;
-  dirExists(path: string): Promise<boolean>;
 
   get(path: string): Promise<Object>;
   put(stream: Readable, meta: ObjectMeta): Promise<Object>;
@@ -32,8 +30,6 @@ export interface BucketPolicy {
 
 export interface Object {
   name: string
-  isFile: boolean
-  isDirectory: boolean
   ctime?: Date
   mtime?: Date
   contentType: string

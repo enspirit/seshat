@@ -33,7 +33,6 @@ describe('S3Object', () => {
     it('returns a valid S3Object', () => {
       object = S3Object.fromHeadOutput(s3client as S3Client, 'my-bucket', 'some/key.txt', headObjectOutput as HeadObjectCommandOutput);
       expect(object.name).to.equal('some/key.txt');
-      expect(object.isFile).to.equal(true);
     });
 
   });
@@ -51,7 +50,7 @@ describe('S3Object', () => {
         input: {
           Bucket: 'my-bucket',
           Key: 'some/key.txt',
-        }
+        },
       }));
     });
 

@@ -12,8 +12,6 @@ export default class LocalObject implements Object {
   #path: string;
 
   name: string;
-  isFile: boolean;
-  isDirectory: boolean;
   ctime: Date;
   mtime: Date;
   contentType: string;
@@ -22,8 +20,6 @@ export default class LocalObject implements Object {
   constructor(name: string, fpath: string, stats: fs.Stats) {
     this.name = path.normalize(name);
     this.#path = fpath;
-    this.isFile = stats.isFile();
-    this.isDirectory = stats.isDirectory();
     this.ctime = stats.ctime;
     this.mtime = stats.mtime;
     this.contentType = stats.isDirectory()
@@ -33,16 +29,10 @@ export default class LocalObject implements Object {
   }
 
   async getReadableStream(): Promise<Readable> {
-    if (!this.isFile) {
-      throw new Error('Unable to get a stream, object is not a file');
-    }
     return fs.createReadStream(this.#path);
   }
 
   async getWritableStream(): Promise<Writable> {
-    if (!this.isFile) {
-      throw new Error('Unable to get a stream, object is not a file');
-    }
     return fs.createWriteStream(this.#path);
   }
 
@@ -50,8 +40,14 @@ export default class LocalObject implements Object {
     try {
       const fullpath = basePath ? path.join(basePath, fpath) : fpath;
       const stats = await fsPromises.stat(fullpath);
+      if (stats.isDirectory()) {
+        throw new ObjectNotFoundError(`Object ${fpath} not found`);
+      }
       return new LocalObject(fpath, fullpath, stats);
     } catch (err: any) {
+      if (err instanceof SeshatError) {
+        throw err;
+      }
       if (err.code === 'ENOENT') {
         throw new ObjectNotFoundError(`Object ${fpath} not found`);
       }
@@ -62,10 +58,15 @@ export default class LocalObject implements Object {
   static async readdir(dirpath: string, basePath?: string): Promise<LocalObject[]> {
     try {
       const fullpath = basePath ? path.join(basePath, dirpath) : dirpath;
-      const objectPaths = await fsPromises.readdir(fullpath);
-      return Promise.all(objectPaths.map(fpath => {
-        return this.fromPath(path.join(dirpath, fpath), basePath);
-      }));
+      const objectPaths = await fsPromises.readdir(fullpath, { withFileTypes: true });
+      const promises = objectPaths
+        .filter((entry) => {
+          return !entry.isDirectory();
+        })
+        .map(entry => {
+          return this.fromPath(path.join(dirpath, entry.name), basePath);
+        });
+      return Promise.all(promises);
     } catch (err: any) {
       if (err.code === 'ENOENT') {
         throw new PrefixNotFoundError(`Unable to find objects with prefix ${dirpath}`);
@@ -75,10 +76,7 @@ export default class LocalObject implements Object {
   }
 
   static async delete(fpath: string, basePath?: string): Promise<void> {
-    const object = await this.fromPath(fpath, basePath);
-    if (object.isDirectory) {
-      throw new SeshatError('Path does not match single object.');
-    }
+    await this.fromPath(fpath, basePath);
     try {
       await fsPromises.unlink(fpath);
     } catch (err: any) {
