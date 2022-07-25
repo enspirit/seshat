@@ -4,6 +4,7 @@ import localExample from './local';
 import s3example from './s3';
 import gzipExample from './gzip';
 import readOnlyExample from './readonly';
+import renameExample from './rename';
 
 const app = express();
 
@@ -13,6 +14,7 @@ const app = express();
   s3example,
   gzipExample,
   readOnlyExample,
+  renameExample,
 ].forEach((example) => example(app, process.env.ROOT_DIR || '../'));
 
 /**

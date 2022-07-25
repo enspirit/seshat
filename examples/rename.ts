@@ -1,6 +1,6 @@
 import { Express } from 'express';
 import { createApp, LocalBucket } from '../src';
-import { ReadOnlyPolicy } from '../src';
+import { SecureRename } from '../src/transformers';
 
 /**
  * This simple example shows how a bucket can use policies to allow/disallow actions.
@@ -11,8 +11,8 @@ import { ReadOnlyPolicy } from '../src';
  */
 export default (expressApp: Express, seshatRootDir: string) => {
 
-  expressApp.use('/readonly', createApp({
-    bucket: new LocalBucket(seshatRootDir, [ReadOnlyPolicy]),
+  expressApp.use('/rename', createApp({
+    bucket: new LocalBucket(seshatRootDir, [], [new SecureRename()]),
   }));
 
 };

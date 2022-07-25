@@ -1,4 +1,3 @@
-import path from 'path';
 import { Express } from 'express';
 import { createApp, LocalBucket } from '../src';
 
