@@ -2,10 +2,10 @@
   "name": "@enspirit/seshat",
   "version": "2.0.0",
   "description": "Seshat v2",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "rm -r dist && tsc",
     "build:watch": "tsc -w",
     "dev": "ROOT_DIR=$PWD tsc-watch --onSuccess 'node ./dist/examples/index.js'",
     "example": "ROOT_DIR=$PWD node ./dist/examples/index.js",
@@ -18,11 +18,11 @@
   "author": "",
   "license": "ISC",
   "files": [
-    "dist"
+    "dist/src"
   ],
   "exports": {
-    ".": "./dist/index.js",
-    "./actions/core": "./dist/actions/core/index.js"
+    ".": "./dist/src/index.js",
+    "./actions/core": "./dist/src/actions/core/index.js"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.135.0",
