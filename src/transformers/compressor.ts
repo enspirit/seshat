@@ -11,7 +11,7 @@ export default class ObjectCompressor implements ObjectTransformer {
     const gzip = createGzip();
     const newMeta = {
       ...meta,
-      mimeType: 'application/gzip',
+      contentType: 'application/gzip',
       name: `${meta.name}.gz`,
     };
     stream.pipe(gzip);

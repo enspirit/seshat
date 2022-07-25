@@ -1,29 +1,37 @@
 import { Readable, Writable } from 'stream';
-import { Object } from '../types';
+import { Object, ObjectMeta } from '../types';
 import { S3Client, HeadObjectCommandOutput, GetObjectCommand } from '@aws-sdk/client-s3';
 
 export default class S3Object implements Object {
 
   #s3client: S3Client;
   #bucket: string;
+  meta: ObjectMeta;
 
   constructor(
     s3client: S3Client,
     bucket: string,
-    public name: string,
-    public contentType: string,
-    public contentLength: number,
-    public ctime?: Date,
-    public mtime?: Date,
+    name: string,
+    contentType: string,
+    contentLength: number,
+    ctime?: Date,
+    mtime?: Date,
   ) {
     this.#s3client = s3client;
     this.#bucket = bucket;
+    this.meta = {
+      name,
+      contentType,
+      contentLength,
+      ctime,
+      mtime,
+    };
   }
 
   async getReadableStream(): Promise<Readable> {
     const object = await this.#s3client.send(new GetObjectCommand({
       Bucket: this.#bucket,
-      Key: this.name,
+      Key: this.meta.name,
     }));
     // casting due to https://transang.me/modern-fetch-and-how-to-get-buffer-output-from-aws-sdk-v3-getobjectcommand/
     return object.Body as Readable;

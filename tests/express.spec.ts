@@ -41,11 +41,12 @@ describe('the express app', () => {
     it('returns proper status code and content-type when bucket has object', () => {
       const stub = mockBucket.get as sinon.SinonStub;
       stub.resolves(mockFileObject);
+      const contentLength = mockFileObject.meta?.contentLength?.toString() as string;
 
       return request(app)
         .get('/file.txt')
-        .expect('Content-Type', mockFileObject.contentType)
-        .expect('Content-Length', mockFileObject.contentLength.toString())
+        .expect('Content-Type', mockFileObject.meta.contentType)
+        .expect('Content-Length', contentLength)
         .expect(200);
     });
 
@@ -83,7 +84,7 @@ describe('the express app', () => {
 
       await expect(mockBucket.put).to.be.calledOnceWith(
         sinon.match.instanceOf(Readable),
-        { name: '/package.json', mimeType: 'application/json' },
+        { name: '/package.json', contentType: 'application/json' },
       );
     });
 
@@ -95,6 +96,9 @@ describe('the express app', () => {
 
       expect(res.body).to.be.an('array');
       expect(res.body).to.have.length(1);
+      const [object] = res.body;
+      expect(object.name).to.equal(mockFileObject.meta.name);
+      expect(object.contentType).to.equal(mockFileObject.meta.contentType);
     });
 
     it('properly writes the objects on bucket (multiple files)', async () => {
@@ -108,11 +112,11 @@ describe('the express app', () => {
       expect(mockBucket.put).to.be.calledTwice;
       await expect(mockBucket.put).to.be.calledWith(
         sinon.match.instanceOf(Readable),
-        { name: '/package.json', mimeType: 'application/json' },
+        { name: '/package.json', contentType: 'application/json' },
       );
       await expect(mockBucket.put).to.be.calledWith(
         sinon.match.instanceOf(Readable),
-        { name: '/tsconfig.json', mimeType: 'application/json' },
+        { name: '/tsconfig.json', contentType: 'application/json' },
       );
     });
 

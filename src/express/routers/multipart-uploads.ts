@@ -35,14 +35,14 @@ export const createRouter = (config: Config): Router => {
       const filepath = path.join(basePath, name);
       const metadata: ObjectMeta = {
         name: filepath,
-        mimeType: info.mimeType,
+        contentType: info.mimeType,
       };
       promises.push(bucket.put(file, metadata));
     });
 
     busboy.on('finish', async () => {
       const objects = await Promise.all(promises);
-      res.status(200).send(objects);
+      res.status(200).send(objects.map(o => o.meta));
     });
 
     req.pipe(busboy);

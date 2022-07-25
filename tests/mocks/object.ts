@@ -3,11 +3,13 @@ import * as fs from 'fs';
 import { Object } from '../../src/types';
 
 export const mockFileObject = {
-  name: 'file.txt',
-  ctime: new Date(),
-  mtime: new Date(),
-  contentLength: 22,
-  contentType: 'plain/text',
+  meta: {
+    name: 'file.txt',
+    ctime: new Date(),
+    mtime: new Date(),
+    contentLength: 22,
+    contentType: 'plain/text',
+  },
   async getReadableStream() {
     return fs.createReadStream(path.join(__dirname, '../../package.json'));
   },

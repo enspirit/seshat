@@ -68,8 +68,10 @@ export const createRouter = (seshatConfig: Config, routerConfig: RetrieveObjectC
         .send({ error: `File not found: ${req.path}` });
     }
     try {
-      res.set('Content-Type', object.contentType);
-      res.set('Content-Length', object.contentLength.toString());
+      res.set('Content-Type', object.meta.contentType);
+      if (object.meta.contentLength) {
+        res.set('Content-Length', object.meta.contentLength.toString());
+      }
       const stream = await object.getReadableStream();
       stream.pipe(res);
     } catch (err: any) {

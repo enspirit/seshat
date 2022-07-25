@@ -1,5 +1,5 @@
 import { Readable, Writable } from 'stream';
-import { Object } from '../types';
+import { Object, ObjectMeta } from '../types';
 
 import * as path from 'path';
 import * as fs from 'fs';
@@ -10,22 +10,19 @@ import { SeshatError, ObjectNotFoundError, PrefixNotFoundError } from '../errors
 export default class LocalObject implements Object {
 
   #path: string;
-
-  name: string;
-  ctime: Date;
-  mtime: Date;
-  contentType: string;
-  contentLength: number;
+  meta: ObjectMeta;
 
   constructor(name: string, fpath: string, stats: fs.Stats) {
-    this.name = path.normalize(name);
     this.#path = fpath;
-    this.ctime = stats.ctime;
-    this.mtime = stats.mtime;
-    this.contentType = stats.isDirectory()
-      ? 'directory'
-      : mime.lookup(fpath) || 'application/octet-stream';
-    this.contentLength = stats.size;
+    this.meta = {
+      name: path.normalize(name),
+      ctime: stats.ctime,
+      mtime: stats.mtime,
+      contentType: stats.isDirectory()
+        ? 'directory'
+        : mime.lookup(fpath) || 'application/octet-stream',
+      contentLength: stats.size,
+    };
   }
 
   async getReadableStream(): Promise<Readable> {

@@ -113,8 +113,8 @@ describe('S3Bucket', () => {
 
     it('returns a valid S3Object', async () => {
       const object = await bucket.get('package.json');
-      expect(object.name).to.equal('package.json');
-      expect(object.contentType).to.equal('application/json');
+      expect(object.meta.name).to.equal('package.json');
+      expect(object.meta.contentType).to.equal('application/json');
     });
 
     it('rejects properly when object does not exist', async () => {
@@ -134,7 +134,7 @@ describe('S3Bucket', () => {
   //     // s3client.on(UploadPartCommand).resolves({ ETag: '1' });
   //   });
 
-  //   const metadata = { mimeType: 'application/json' };
+  //   const metadata = { contentType: 'application/json' };
 
   //   it('uses the s3client properly', async () => {
   //     const readableStream = mockFileObject.getReadableStream();
@@ -146,7 +146,7 @@ describe('S3Bucket', () => {
   //     //   ContentType: 'application/json',
   //     //   Body: readableStream,
   //     //   Metadata: {
-  //     //     mimeType: 'application/json',
+  //     //     contentType: 'application/json',
   //     //   },
   //     // });
   //   });
@@ -240,8 +240,8 @@ describe('S3Bucket', () => {
         const objects = await bucket.list();
         expect(objects).to.have.length(2);
         const [index, example] = objects;
-        expect(index.name).to.equal('index.js');
-        expect(example.name).to.equal('example.js');
+        expect(index.meta.name).to.equal('index.js');
+        expect(example.meta.name).to.equal('example.js');
       });
 
     });

@@ -26,7 +26,7 @@ describe('LocalObject', () => {
       const promise = LocalObject.fromPath(fpath);
       expect(promise).to.eventually.be.an.instanceof(LocalObject);
       const object = await promise;
-      expect(object.name).to.equal(fpath);
+      expect(object.meta.name).to.equal(fpath);
     });
 
     it('rejects for invalid path', async () => {
@@ -40,7 +40,7 @@ describe('LocalObject', () => {
         const promise = LocalObject.fromPath('object.spec.ts', __dirname);
         expect(promise).to.eventually.be.an.instanceof(LocalObject);
         const object = await promise;
-        expect(object.name).to.equal('object.spec.ts');
+        expect(object.meta.name).to.equal('object.spec.ts');
       });
 
     });
@@ -53,7 +53,7 @@ describe('LocalObject', () => {
       const promise = LocalObject.readdir(path.join(__dirname));
       expect(promise).to.eventually.be.an('array');
       const objects = await promise;
-      const thisTestFile = objects.find(o => o.name.indexOf('local/object.spec.ts') >= 0);
+      const thisTestFile = objects.find(o => o.meta.name.indexOf('local/object.spec.ts') >= 0);
       // eslint-disable-next-line no-unused-expressions
       return expect(thisTestFile).to.exist;
     });
@@ -69,7 +69,7 @@ describe('LocalObject', () => {
         const promise = LocalObject.readdir('./', __dirname);
         expect(promise).to.eventually.be.an('array');
         const objects = await promise;
-        const thisTestFile = objects.find(o => o.name === 'object.spec.ts');
+        const thisTestFile = objects.find(o => o.meta.name === 'object.spec.ts');
         // eslint-disable-next-line no-unused-expressions
         return expect(thisTestFile).to.exist;
       });
@@ -120,7 +120,7 @@ describe('LocalObject', () => {
     it('returns a valid object', async () => {
       const obj = await LocalObject.write(testFile, readStream);
 
-      expect(obj.name).to.equal('/tmp/test.txt');
+      expect(obj.meta.name).to.equal('/tmp/test.txt');
     });
 
     it('creates new files properly', async () => {
@@ -135,7 +135,7 @@ describe('LocalObject', () => {
       it('returns valid objects with only relative object names', async () => {
         const obj = await LocalObject.write('test.txt', readStream, '/tmp');
 
-        expect(obj.name).to.equal('test.txt');
+        expect(obj.meta.name).to.equal('test.txt');
       });
 
     });

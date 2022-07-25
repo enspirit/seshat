@@ -8,8 +8,12 @@ export interface Config {
 }
 
 export interface ObjectMeta {
-  name: string,
-  mimeType: string
+  name: string
+  contentType: string
+
+  ctime?: Date
+  mtime?: Date
+  contentLength?: number
 }
 
 export interface Bucket {
@@ -29,12 +33,7 @@ export interface BucketPolicy {
 }
 
 export interface Object {
-  name: string
-  ctime?: Date
-  mtime?: Date
-  contentType: string
-  contentLength: number
-
+  meta: ObjectMeta
   getReadableStream(): Promise<Readable>
   getWritableStream(): Promise<Writable>
 }

@@ -48,13 +48,22 @@ export default class S3Bucket extends AbstractBucket {
   }
 
   async _put(stream: Readable, meta: ObjectMeta): Promise<Object> {
+    // Some of the metadata can be stored in standard s3 properties
+
+    const { contentType, name, ...rest } = meta;
+    const metadata = Object.entries(rest)
+      .reduce((obj, [key, value]) => {
+        obj[key] = value.toString();
+        return obj;
+      }, {} as {[key: string]: string});
+
     const target = {
-      Key: this.objectKey(meta.name),
+      Key: this.objectKey(name),
       Bucket: this.bucket,
-      ContentType: meta.mimeType,
+      ContentType: contentType,
       Body: stream,
       Metadata: {
-        ...meta,
+        ...metadata,
       },
     };
 
