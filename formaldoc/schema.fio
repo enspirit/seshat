@@ -2,8 +2,6 @@
 
 SeshatObject = {
   name: String
-  isFile: Boolean
-  isDirectory: Boolean
   ctime: Date
   mtime: Date
   contentType: String
