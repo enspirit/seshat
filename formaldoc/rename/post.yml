@@ -1,9 +1,9 @@
 ---
 name: |-
-  POST /s3/ - multipart upload
+  POST /rename/ - multipart upload
 
 url: |-
-  /s3/
+  /rename/
 
 services:
 - method: |-
@@ -29,6 +29,8 @@ services:
 
     - description: |-
         when requested with a single file
+      tags:
+        - only
       file_upload:
         param_name: some-todos.csv
         path: ../fixtures/todos.csv
@@ -37,4 +39,4 @@ services:
         status: 200
         content_type: application/json
       assert:
-        - "pathFD('0', :name => '/some-todos.csv')"
+        - "notMatch('0/name', /some-todos.csv/)"
