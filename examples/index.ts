@@ -5,6 +5,7 @@ import s3example from './s3';
 import gzipExample from './gzip';
 import readOnlyExample from './readonly';
 import renameExample from './rename';
+import thumbnailsExample from './thumbnails';
 
 const app = express();
 
@@ -15,6 +16,7 @@ const app = express();
   gzipExample,
   readOnlyExample,
   renameExample,
+  thumbnailsExample,
 ].forEach((example) => example(app, process.env.ROOT_DIR || '../'));
 
 /**

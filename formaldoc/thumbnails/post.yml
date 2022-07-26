@@ -1,0 +1,53 @@
+---
+name: |-
+  POST /thumbnails/
+
+url: |-
+  /thumbnails/
+
+services:
+- method: |-
+    POST
+
+  description: |-
+    Allows uploading an image that gets resized to thumbnail dimensions (png)
+
+  input_schema: |-
+    {
+    }
+
+  output_schema: |-
+    [SeshatObject]
+
+  error_schema: |-
+    Error
+
+  postconditions:
+    - (x) Objects can be downloaded using their names
+    - (x) The image is resized properly
+
+  examples:
+
+    - description: |-
+        FOR: the file is an image
+      file_upload:
+        param_name: seshat.jpg
+        path: ../fixtures/seshat.jpg
+        content_type: "image/jpeg"
+      expected:
+        status: 200
+        content_type: application/json
+      assert:
+        - "notMatch('0', :name => '/seshat.png')"
+
+  counterexamples:
+
+    - description: |-
+        FOR: the file is not an image
+      file_upload:
+        param_name: seshat.jpg
+        path: ../fixtures/test.json
+        content_type: "application/json"
+      expected:
+        status: 400
+        content_type: application/json

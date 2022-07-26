@@ -2,7 +2,7 @@ import * as path from 'path';
 import { LocalObject } from './object';
 import { Readable } from 'stream';
 import AbstractBucket from '../abstract-bucket';
-import { BucketConfig, BucketPolicy, ObjectMeta, ObjectTransformer } from '../types';
+import { BucketConfig, ObjectMeta } from '../types';
 
 export interface LocalBucketConfig extends BucketConfig {
   path: string
