@@ -6,6 +6,7 @@ import gzipExample from './gzip';
 import readOnlyExample from './readonly';
 import renameExample from './rename';
 import thumbnailsExample from './thumbnails';
+import thumbnailsOnTheFlyExample from './thumbnails-on-the-fly';
 
 const app = express();
 
@@ -17,6 +18,7 @@ const app = express();
   readOnlyExample,
   renameExample,
   thumbnailsExample,
+  thumbnailsOnTheFlyExample,
 ].forEach((example) => example(app, process.env.ROOT_DIR || '../'));
 
 /**

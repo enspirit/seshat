@@ -18,9 +18,7 @@ export interface SharpOptions {
 
 export class SharpTransformer implements ObjectTransformer {
 
-  type: ObjectTransformerType = 'Ingress';
-
-  constructor(private options: SharpOptions) {
+  constructor(private options: SharpOptions, public type: ObjectTransformerType = 'Ingress') {
   }
 
   async transform(stream: Readable, meta: ObjectMeta): Promise<ObjectTransformerOutput> {
@@ -41,7 +39,11 @@ export class SharpTransformer implements ObjectTransformer {
       contentType: mime.lookup(output.format) || 'application/octet-stream',
       name: objectName,
     };
+    // It's a streaming transformation, we cannot know the final size
+    delete newMeta.contentLength;
+
     stream.pipe(transformer);
+
     return { meta: newMeta, stream: transformer };
   }
 

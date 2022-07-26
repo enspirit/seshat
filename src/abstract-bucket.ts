@@ -26,22 +26,36 @@ export default abstract class AbstractBucket implements Bucket {
 
   async get(path: string): Promise<Object> {
     await this.ensurePolicies((policy: BucketPolicy) => policy.get(path));
-    return this._get(path);
+    const { body: stream, meta } = await this._get(path);
+    const output: ObjectTransformerOutput = await this.transformers
+      .filter(t => ['Egress', 'Duplex'].includes(t.type))
+      .reduce(async (p: Promise<ObjectTransformerOutput>, t: ObjectTransformer) => {
+        const { stream, meta } = await p;
+        try {
+          const result = await t.transform(stream, meta);
+          return result;
+        } catch (err) {
+          throw new ObjectTransformerError(`Object transformer failed: ${t.constructor.name}`);
+        }
+      }, Promise.resolve({ stream, meta }));
+    return { body: output.stream, meta: output.meta };
   }
 
   abstract _get(path: string): Promise<Object>;
 
   async put(stream: Readable, meta: ObjectMeta): Promise<Object> {
     await this.ensurePolicies((policy: BucketPolicy) => policy.put(meta));
-    const output: ObjectTransformerOutput = await this.transformers.reduce(async (p: Promise<ObjectTransformerOutput>, t: ObjectTransformer) => {
-      const { stream, meta } = await p;
-      try {
-        const result = await t.transform(stream, meta);
-        return result;
-      } catch (err) {
-        throw new ObjectTransformerError(`Object transformer failed: ${t.constructor.name}`);
-      }
-    }, Promise.resolve({ stream, meta }));
+    const output: ObjectTransformerOutput = await this.transformers
+      .filter(t => ['Ingress', 'Duplex'].includes(t.type))
+      .reduce(async (p: Promise<ObjectTransformerOutput>, t: ObjectTransformer) => {
+        const { stream, meta } = await p;
+        try {
+          const result = await t.transform(stream, meta);
+          return result;
+        } catch (err) {
+          throw new ObjectTransformerError(`Object transformer failed: ${t.constructor.name}`);
+        }
+      }, Promise.resolve({ stream, meta }));
     return this._put(output.stream, output.meta);
   }
 

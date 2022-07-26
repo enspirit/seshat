@@ -3,6 +3,22 @@ import { BucketPolicy, BucketPolicyError, createApp, ObjectMeta, S3Bucket } from
 import { SharpTransformer } from '../src/transformers/sharp';
 import { s3client } from './s3';
 
+export const imagesOnlyPolicy: BucketPolicy = {
+  async head(_path: string) {
+  },
+  async get(_path: string) {
+  },
+  async put(meta: ObjectMeta) {
+    if (!meta.contentType.startsWith('image/')) {
+      throw new BucketPolicyError('Only images are allowed in this bucket.');
+    }
+  },
+  async delete(_path: string) {
+  },
+  async list(_prefix?: string) {
+  },
+};
+
 /**
  * This example combines a custom policy that only allows image files and
  * a transformer that resize the images to a thumbnail-like size.
@@ -10,22 +26,6 @@ import { s3client } from './s3';
  * (bucket based on an s3 bucket)
  */
 export default (expressApp: Express, _seshatRootDir: string) => {
-
-  const imagesOnlyPolicy: BucketPolicy = {
-    async head(_path: string) {
-    },
-    async get(_path: string) {
-    },
-    async put(meta: ObjectMeta) {
-      if (!meta.contentType.startsWith('image/')) {
-        throw new BucketPolicyError('Only images are allowed in this bucket.');
-      }
-    },
-    async delete(_path: string) {
-    },
-    async list(_prefix?: string) {
-    },
-  };
 
   const imageResizer = new SharpTransformer({
     output: {
