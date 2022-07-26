@@ -12,7 +12,7 @@ import { createApp, LocalBucket } from '../src';
 export default (expressApp: Express, seshatRootDir: string) => {
 
   expressApp.use('/local', createApp({
-    bucket: new LocalBucket(seshatRootDir),
+    bucket: new LocalBucket({ path: seshatRootDir }),
   }));
 
 };

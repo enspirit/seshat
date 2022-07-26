@@ -52,7 +52,10 @@ describe('the AbstractBucket class', () => {
   beforeEach(() => {
     policies = [readOnlyPolicy, uploadOnlyPolicy];
     transformers = [];
-    bucket = new ConcreteBucket(Object.values(policies), transformers);
+    bucket = new ConcreteBucket({
+      policies: Object.values(policies),
+      transformers,
+    });
     withAllPoliciesSucceeding();
   });
 

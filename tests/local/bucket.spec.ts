@@ -13,7 +13,7 @@ describe('LocalBucket', () => {
 
   let bucket: Bucket;
   beforeEach(() => {
-    bucket = new LocalBucket(path.join(__dirname, '../../'));
+    bucket = new LocalBucket({ path: path.join(__dirname, '../../') });
   });
 
   describe('list()', () => {

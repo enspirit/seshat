@@ -13,7 +13,7 @@ const gzip = new ObjectCompressor();
 export default (expressApp: Express, _seshatRootDir: string) => {
 
   expressApp.use('/gzip', createApp({
-    bucket: new S3Bucket({ s3client, bucket: 'my-s3-bucket' }, [], [gzip]),
+    bucket: new S3Bucket({ s3client, bucket: 'my-s3-bucket', transformers: [gzip] }),
   }));
 
 };

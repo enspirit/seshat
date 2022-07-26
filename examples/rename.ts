@@ -12,7 +12,7 @@ import { SecureRename } from '../src/transformers';
 export default (expressApp: Express, seshatRootDir: string) => {
 
   expressApp.use('/rename', createApp({
-    bucket: new LocalBucket(seshatRootDir, [], [new SecureRename()]),
+    bucket: new LocalBucket({ path: seshatRootDir, transformers: [new SecureRename()] }),
   }));
 
 };

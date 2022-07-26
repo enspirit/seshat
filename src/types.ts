@@ -15,6 +15,11 @@ export interface ObjectMeta {
   contentLength?: number
 }
 
+export interface BucketConfig {
+  policies?: Array<BucketPolicy>
+  transformers?: Array<ObjectTransformer>
+}
+
 export interface Bucket {
   exists(path: string): Promise<boolean>;
 

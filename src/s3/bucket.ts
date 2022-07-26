@@ -1,6 +1,6 @@
 import { Readable } from 'stream';
 import AbstractBucket from '../abstract-bucket';
-import { BucketPolicy, Object, ObjectMeta, ObjectTransformer } from '../types';
+import { BucketConfig, Object, ObjectMeta } from '../types';
 import { S3Object } from './object';
 
 import { S3Client, HeadObjectCommand, ListObjectsV2Command, DeleteObjectCommand } from '@aws-sdk/client-s3';
@@ -8,7 +8,7 @@ import { Upload } from '@aws-sdk/lib-storage';
 
 import { ObjectNotFoundError, PrefixNotFoundError } from '../errors';
 
-export interface S3BucketOptions {
+export interface S3BucketConfig extends BucketConfig {
   bucket: string,
   s3client: S3Client,
   prefix?: string
@@ -16,20 +16,17 @@ export interface S3BucketOptions {
 
 export class S3Bucket extends AbstractBucket {
 
+  private s3client: S3Client;
+  private bucket: string;
+  private prefix?: string;
+
   constructor(
-    private options: S3BucketOptions,
-    policies: Array<BucketPolicy> = [],
-    transformers: Array<ObjectTransformer> = [],
+    config: S3BucketConfig,
   ) {
-    super(policies, transformers);
-  }
-
-  private get s3client() {
-    return this.options.s3client;
-  }
-
-  private get bucket() {
-    return this.options.bucket;
+    super(config);
+    this.s3client = config.s3client;
+    this.bucket = config.bucket;
+    this.prefix = config.prefix;
   }
 
   async _get(path: string): Promise<Object> {
@@ -111,10 +108,10 @@ export class S3Bucket extends AbstractBucket {
    */
 
   private objectKey(path?: string): string {
-    return (this.options.prefix || '') + (path || '');
+    return (this.prefix || '') + (path || '');
   }
 
   private seshatKey(key: string): string {
-    return key.substring((this.options.prefix || '').length);
+    return key.substring((this.prefix || '').length);
   }
 }

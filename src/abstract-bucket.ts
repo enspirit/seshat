@@ -1,13 +1,20 @@
 import { Readable } from 'stream';
 import { ObjectTransformerError } from './errors';
-import { Bucket, BucketPolicy, Object, ObjectMeta, ObjectTransformer, ObjectTransformerOutput } from './types';
+import { Bucket, BucketPolicy, Object, ObjectMeta, ObjectTransformer, ObjectTransformerOutput, BucketConfig } from './types';
 
 export default abstract class AbstractBucket implements Bucket {
 
   constructor(
-    private policies: Array<BucketPolicy> = [],
-    private transformers: Array<ObjectTransformer> = [],
+    private config: BucketConfig,
   ) {
+  }
+
+  get policies() {
+    return this.config.policies || [];
+  }
+
+  get transformers() {
+    return this.config.transformers || [];
   }
 
   async get(path: string): Promise<Object> {

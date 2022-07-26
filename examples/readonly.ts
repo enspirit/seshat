@@ -12,7 +12,7 @@ import { ReadOnlyPolicy } from '../src';
 export default (expressApp: Express, seshatRootDir: string) => {
 
   expressApp.use('/readonly', createApp({
-    bucket: new LocalBucket(seshatRootDir, [ReadOnlyPolicy]),
+    bucket: new LocalBucket({ path: seshatRootDir, policies: [ReadOnlyPolicy] }),
   }));
 
 };
