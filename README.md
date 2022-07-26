@@ -30,5 +30,5 @@ Please have a look at the [examples/](examples/) folder, you'll find simples exa
 * [serving files from an S3 bucket](examples/s3.ts)
 * [use policies to make a bucket read-only](examples/readonly.ts)
 * [rename objects as they are uploaded](examples/rename.ts)
-* [compress objects as they are uploaded](examples/compress.ts)
+* [compress objects as they are uploaded](examples/gzip.ts)
 * [create thumbnails from uploaded images](examples/thumbnails.ts)
