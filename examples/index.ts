@@ -3,6 +3,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import localExample from './local';
 import s3example from './s3';
 import gzipExample from './gzip';
+import authenticationExample from './authentication';
 import readOnlyExample from './readonly';
 import renameExample from './rename';
 import thumbnailsExample from './thumbnails';
@@ -15,6 +16,7 @@ const app = express();
   localExample,
   s3example,
   gzipExample,
+  authenticationExample,
   readOnlyExample,
   renameExample,
   thumbnailsExample,

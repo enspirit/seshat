@@ -1,0 +1,62 @@
+---
+  name: |-
+    GET /authentication/{path}
+
+  url: |-
+    /authentication/{path}
+
+  services:
+  - method: |-
+      GET
+
+    description: |-
+      Allows retrieving a file
+
+    preconditions:
+      - An object with that name exists on the bucket
+
+    input_schema: |-
+      {
+        path: String
+      }
+
+    output_schema: |-
+      {
+        ...: String | .
+      }
+
+    error_schema: |-
+      Error
+
+    examples:
+
+      - description: |-
+          FOR: the token is valid
+        params:
+          path: test.json
+        headers:
+          Authorization: Bearer a-very-special-secret
+        expected:
+          content_type: application/json
+          status: 200
+        assert:
+        - "pathFD('', :name => '@enspirit/seshat')"
+
+    counterexamples:
+
+      - description: |-
+          FOR: the token is missing
+        params:
+          path: test.json
+        expected:
+          status: 401
+
+      - description: |-
+          FOR: the token is wrong
+        params:
+          path: test.json
+        headers:
+          Authorization: Bearer an-invalid-token
+        expected:
+          status: 401
+

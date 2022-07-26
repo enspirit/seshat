@@ -32,7 +32,9 @@ Please have a look at the [examples/](examples/) folder, you'll find simples exa
 
 * [serving files from a local storage](examples/local.ts)
 * [serving files from an S3 bucket](examples/s3.ts)
+* [use middlewares to ensure requests come from valid users](examples/authentication.ts)
 * [use policies to make a bucket read-only](examples/readonly.ts)
 * [rename objects as they are uploaded](examples/rename.ts)
 * [compress objects as they are uploaded](examples/gzip.ts)
 * [create thumbnails from uploaded images](examples/thumbnails.ts)
+* [create thumbnails on-the-fly when recovering files](examples/thumbnails-on-the-fly.ts.ts)
