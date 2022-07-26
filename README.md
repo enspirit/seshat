@@ -10,7 +10,7 @@ Seshat provides a way to interact with storage (be it local, gcs, s3, ...) using
 
 # How?
 
-Seshat provides express-based middlewares and routers that can be used in any [express](https://expressjs.com/) app in order to serve/accept files.
+Seshat provides a series of middlewares and routers that can be used in any [express](https://expressjs.com/) app in order to serve/accept files.
 
 # Vocabulary
 
