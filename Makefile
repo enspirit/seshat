@@ -1,6 +1,9 @@
-ci: npm.install tests.unit bundler.install up waitforseshat tests.integration
+ci: npm.install npm.lint tests.unit bundler.install up waitforseshat tests.integration
 
 npm.install:
+	@npm install
+
+npm.lint:
 	@npm install
 
 bundler.install:
