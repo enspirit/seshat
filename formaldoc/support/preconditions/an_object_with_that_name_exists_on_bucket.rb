@@ -10,7 +10,7 @@ class AnObjectWithThatNameExistsOnBucket
 
   def instrument
     return if test_case.counterexample
-    
+
     url, _ = test_case.specification.instantiate_url(test_case.params)
 
     filename = File.basename(url)
@@ -32,7 +32,6 @@ class AnObjectWithThatNameExistsOnBucket
     }
     url = client.config.host + folder + '/'
     response = HTTP[{}].post(url, http_opts)
-    puts response
   end
 
   def fmt_mime_type(filename)
