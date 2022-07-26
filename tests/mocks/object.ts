@@ -10,10 +10,7 @@ export const mockFileObject = {
     contentLength: 22,
     contentType: 'plain/text',
   },
-  async getReadableStream() {
+  get body() {
     return fs.createReadStream(path.join(__dirname, '../../package.json'));
-  },
-  async getWritableStream() {
-    throw new Error('not implemented');
   },
 } as Object;

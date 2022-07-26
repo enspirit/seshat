@@ -27,7 +27,7 @@ export interface Bucket {
   get(path: string): Promise<Object>;
   put(stream: Readable, meta: ObjectMeta): Promise<Object>;
   delete(path: string): Promise<void>;
-  list(prefix?: string): Promise<Object[]>;
+  list(prefix?: string): Promise<ObjectMeta[]>;
 }
 
 export interface BucketPolicy {
@@ -40,7 +40,7 @@ export interface BucketPolicy {
 
 export interface Object {
   meta: ObjectMeta
-  getReadableStream(): Promise<Readable>
+  body: Readable;
 }
 
 export interface ObjectTransformerOutput {

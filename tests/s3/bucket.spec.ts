@@ -1,4 +1,4 @@
-import { S3Client, ListObjectsV2Command, HeadObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, ListObjectsV2Command, HeadObjectCommand, DeleteObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
 
 import { S3Bucket } from '../../src/';
 import { ObjectNotFoundError, PrefixNotFoundError } from '../../src/errors';
@@ -33,6 +33,7 @@ describe('S3Bucket', () => {
     mockLibStorageUpload(s3client);
 
     s3client.on(HeadObjectCommand).resolves(mockObjectA);
+    s3client.on(GetObjectCommand).resolves(mockObjectA);
 
     bucket = new S3Bucket({
       bucket: bucketName,
@@ -102,7 +103,7 @@ describe('S3Bucket', () => {
 
     it('uses the s3client properly', async () => {
       await bucket.get('package.json');
-      await expect(s3client.send).to.have.been.calledOnceWith(sinon.match.instanceOf(HeadObjectCommand));
+      await expect(s3client.send).to.have.been.calledOnceWith(sinon.match.instanceOf(GetObjectCommand));
       await expect(s3client.send).to.have.been.calledOnceWith(sinon.match({
         input: {
           Bucket: 'seshat-bucket',
@@ -120,7 +121,7 @@ describe('S3Bucket', () => {
     it('rejects properly when object does not exist', async () => {
       const error = new Error('NotFound') as any;
       error.name = 'NotFound';
-      s3client.on(HeadObjectCommand).rejects(error);
+      s3client.on(GetObjectCommand).rejects(error);
       const p = bucket.get('package.json');
       await expect(p).to.be.rejectedWith(ObjectNotFoundError, /Object package.json not found/);
     });
@@ -236,12 +237,12 @@ describe('S3Bucket', () => {
         }));
       });
 
-      it('returns s3object with proper names (prefix is removed)', async () => {
-        const objects = await bucket.list();
-        expect(objects).to.have.length(2);
-        const [index, example] = objects;
-        expect(index.meta.name).to.equal('index.js');
-        expect(example.meta.name).to.equal('example.js');
+      it('returns s3object meta with proper names (prefix is removed)', async () => {
+        const metas = await bucket.list();
+        expect(metas).to.have.length(2);
+        const [index, example] = metas;
+        expect(index.name).to.equal('index.js');
+        expect(example.name).to.equal('example.js');
       });
 
     });

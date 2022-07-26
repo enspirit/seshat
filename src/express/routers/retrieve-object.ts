@@ -72,8 +72,7 @@ export const createRouter = (seshatConfig: Config, routerConfig: RetrieveObjectC
     if (object.meta.contentLength) {
       res.set('Content-Length', object.meta.contentLength.toString());
     }
-    const stream = await object.getReadableStream();
-    stream.pipe(res);
+    object.body.pipe(res);
   });
 
   return router;

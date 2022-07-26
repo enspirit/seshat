@@ -1,4 +1,4 @@
-import { Readable, Writable } from 'stream';
+import { Readable } from 'stream';
 import { Object, ObjectMeta } from '../types';
 
 import * as path from 'path';
@@ -9,38 +9,22 @@ import { SeshatError, ObjectNotFoundError, PrefixNotFoundError } from '../errors
 
 export class LocalObject implements Object {
 
-  #path: string;
   meta: ObjectMeta;
+  body: Readable;
 
-  constructor(name: string, fpath: string, stats: fs.Stats) {
-    this.#path = fpath;
-    this.meta = {
-      name: path.normalize(name),
-      ctime: stats.ctime,
-      mtime: stats.mtime,
-      contentType: stats.isDirectory()
-        ? 'directory'
-        : mime.lookup(fpath) || 'application/octet-stream',
-      contentLength: stats.size,
-    };
+  constructor(meta: ObjectMeta, body: Readable) {
+    this.meta = meta;
+    this.body = body;
   }
 
-  async getReadableStream(): Promise<Readable> {
-    return fs.createReadStream(this.#path);
-  }
-
-  async getWritableStream(): Promise<Writable> {
-    return fs.createWriteStream(this.#path);
-  }
-
-  static async fromPath(fpath: string, basePath?: string): Promise<LocalObject> {
+  static async metaFromPath(fpath: string, basePath?: string): Promise<ObjectMeta> {
     try {
       const fullpath = basePath ? path.join(basePath, fpath) : fpath;
       const stats = await fsPromises.stat(fullpath);
       if (stats.isDirectory()) {
         throw new ObjectNotFoundError(`Object ${fpath} not found`);
       }
-      return new LocalObject(fpath, fullpath, stats);
+      return this.metaFromStats(fpath, fullpath, stats);
     } catch (err: any) {
       if (err instanceof SeshatError) {
         throw err;
@@ -52,7 +36,25 @@ export class LocalObject implements Object {
     }
   }
 
-  static async readdir(dirpath: string, basePath?: string): Promise<LocalObject[]> {
+  static metaFromStats(name: string, fpath: string, stats: fs.Stats): ObjectMeta {
+    return {
+      name: path.normalize(name),
+      ctime: stats.ctime,
+      mtime: stats.mtime,
+      contentType: stats.isDirectory()
+        ? 'directory'
+        : mime.lookup(fpath) || 'application/octet-stream',
+      contentLength: stats.size,
+    };
+  }
+
+  static async fromPath(fpath: string, basePath?: string): Promise<LocalObject> {
+    const meta = await this.metaFromPath(fpath, basePath);
+    const fullpath = basePath ? path.join(basePath, fpath) : fpath;
+    return new LocalObject(meta, fs.createReadStream(fullpath));
+  }
+
+  static async readdir(dirpath: string, basePath?: string): Promise<ObjectMeta[]> {
     try {
       const fullpath = basePath ? path.join(basePath, dirpath) : dirpath;
       const objectPaths = await fsPromises.readdir(fullpath, { withFileTypes: true });
@@ -61,7 +63,7 @@ export class LocalObject implements Object {
           return !entry.isDirectory();
         })
         .map(entry => {
-          return this.fromPath(path.join(dirpath, entry.name), basePath);
+          return this.metaFromPath(path.join(dirpath, entry.name), basePath);
         });
       return Promise.all(promises);
     } catch (err: any) {

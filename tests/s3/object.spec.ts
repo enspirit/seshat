@@ -1,59 +1,42 @@
 import { expect } from 'chai';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
 
-import { GetObjectCommand, HeadObjectCommandOutput, S3Client } from '@aws-sdk/client-s3';
-import { S3Object } from '../../src/';
+import { GetObjectCommandOutput, HeadObjectCommandOutput } from '@aws-sdk/client-s3';
+import { S3Object, S3ObjectMeta } from '../../src/';
 
 describe('S3Object', () => {
 
-  let objectOutput: any;
-  let s3client: Partial<S3Client>;
   const headObjectOutput: Partial<HeadObjectCommandOutput> = {
     ContentType: 'plain/text',
   };
+  const getObjectOutput: Partial<GetObjectCommandOutput> = {
+    ContentType: 'plain/text',
+  };
   let object: S3Object;
+  let meta: S3ObjectMeta;
 
   beforeEach(() => {
-    objectOutput = {
-      createReadStream: sinon.stub(),
-      createWriteStream: sinon.stub(),
-    };
-    s3client = {
-      send: sinon.stub().returns(objectOutput),
-    };
   });
 
-  describe('.fromHeadOutput', () => {
+  describe('.metaFromCommandOutput', () => {
+
+    it('returns a valid S3ObjectMeta', () => {
+      meta = S3Object.metaFromCommandOutput('my-bucket', 'some/key.txt', headObjectOutput as HeadObjectCommandOutput);
+      expect(meta.name).to.equal('some/key.txt');
+    });
+
+  });
+
+  describe('.fromGetObjectCommandOutput', () => {
 
     it('returns a valid S3Object', () => {
-      object = S3Object.fromHeadOutput(s3client as S3Client, 'my-bucket', 'some/key.txt', headObjectOutput as HeadObjectCommandOutput);
+      object = S3Object.fromGetObjectCommandOutput('my-bucket', 'some/key.txt', getObjectOutput as GetObjectCommandOutput);
       expect(object.meta.name).to.equal('some/key.txt');
     });
 
   });
-
-  describe('.getReadableStream', () => {
-
-    beforeEach(() => {
-      object = S3Object.fromHeadOutput(s3client as S3Client, 'my-bucket', 'some/key.txt', headObjectOutput as HeadObjectCommandOutput);
-    });
-
-    it('uses the s3client properly', () => {
-      object.getReadableStream();
-      expect(s3client.send).to.be.calledOnceWith(sinon.match.instanceOf(GetObjectCommand));
-      expect(s3client.send).to.be.calledOnceWith(sinon.match({
-        input: {
-          Bucket: 'my-bucket',
-          Key: 'some/key.txt',
-        },
-      }));
-    });
-
-  });
-
 });

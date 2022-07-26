@@ -26,8 +26,8 @@ describe('the AbstractBucket class', () => {
     async _delete(_path: string): Promise<void> {
       return;
     }
-    async _list(_prefix?: string): Promise<Object[]> {
-      return [mockFileObject];
+    async _list(_prefix?: string): Promise<ObjectMeta[]> {
+      return [mockFileObject.meta];
     }
   }
 
@@ -73,7 +73,7 @@ describe('the AbstractBucket class', () => {
     it('calls the _put() method of the concrete subclass', async () => {
       const spy = sinon.spy(bucket, '_put');
       const meta = { name: 'test.pdf', contentType: mockFileObject.meta.contentType };
-      const stream = await mockFileObject.getReadableStream();
+      const stream = await mockFileObject.body;
       await bucket.put(stream, meta);
       expect(spy).to.be.calledOnceWith(stream, meta);
     });
@@ -82,7 +82,7 @@ describe('the AbstractBucket class', () => {
       const err = new Error('oops');
       const spy = sinon.stub(bucket, '_put').rejects(err);
       const meta = { name: 'test.pdf', contentType: mockFileObject.meta.contentType };
-      const p = bucket.put(await mockFileObject.getReadableStream(), meta);
+      const p = bucket.put(await mockFileObject.body, meta);
       await expect(p).to.be.eventually.rejectedWith(err);
       spy.reset();
     });
@@ -93,7 +93,7 @@ describe('the AbstractBucket class', () => {
         const err = new Error('failed-policy');
         (readOnlyPolicy.put as SinonStub).rejects(err);
         const meta = { name: 'test.pdf', contentType: mockFileObject.meta.contentType };
-        const p = bucket.put(await mockFileObject.getReadableStream(), meta);
+        const p = bucket.put(await mockFileObject.body, meta);
         await expect(p).to.be.eventually.rejectedWith(err);
       });
 
@@ -206,7 +206,7 @@ describe('the AbstractBucket class', () => {
     describe('put()', () => {
       it('calls the transformers', async () => {
         const spy = sinon.spy(ingress, 'transform');
-        const stream = await mockFileObject.getReadableStream();
+        const stream = await mockFileObject.body;
         const meta = { name: 'test.pdf', contentType: mockFileObject.meta.contentType };
         await bucket.put(stream, meta);
         expect(spy).to.be.calledOnceWith(stream, meta);
@@ -216,7 +216,7 @@ describe('the AbstractBucket class', () => {
         const stub = sinon.stub(ingress, 'transform');
         const error = new Error('a transforming error occured');
         stub.rejects(error);
-        const stream = await mockFileObject.getReadableStream();
+        const stream = await mockFileObject.body;
         const meta = { name: 'test.pdf', contentType: mockFileObject.meta.contentType };
         const p = bucket.put(stream, meta);
         return expect(p).to.be.rejectedWith(ObjectTransformerError, /Object transformer failed: DummyIngressTransformer/);

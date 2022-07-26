@@ -1,22 +1,19 @@
 import { expect } from 'chai';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import { readFileSync, writeFileSync } from 'fs';
+import { writeFileSync } from 'fs';
 chai.use(chaiAsPromised);
 
 import { Readable } from 'stream';
 import path from 'path';
 import fs from 'fs';
 
-import { streamToString } from '../helpers';
 import { LocalObject } from '../../src/';
 import { ObjectNotFoundError, PrefixNotFoundError } from '../../src/errors';
 
 describe('LocalObject', () => {
 
-  let object: LocalObject;
   beforeEach(async () => {
-    object = await LocalObject.fromPath(path.join(__dirname, '../../package.json'));
   });
 
   describe('.fromPath', () => {
@@ -49,11 +46,11 @@ describe('LocalObject', () => {
 
   describe('.readdir', () => {
 
-    it('returns a valid list of objects for folder', async () => {
+    it('returns a valid list of objects metas for folder', async () => {
       const promise = LocalObject.readdir(path.join(__dirname));
       expect(promise).to.eventually.be.an('array');
-      const objects = await promise;
-      const thisTestFile = objects.find(o => o.meta.name.indexOf('local/object.spec.ts') >= 0);
+      const metas = await promise;
+      const thisTestFile = metas.find(m => m.name.indexOf('local/object.spec.ts') >= 0);
       // eslint-disable-next-line no-unused-expressions
       return expect(thisTestFile).to.exist;
     });
@@ -65,11 +62,11 @@ describe('LocalObject', () => {
 
     describe('when provided with a basePath', () => {
 
-      it('returns valid objects with only relative object names', async () => {
+      it('returns valid objects metas with only relative object names', async () => {
         const promise = LocalObject.readdir('./', __dirname);
         expect(promise).to.eventually.be.an('array');
-        const objects = await promise;
-        const thisTestFile = objects.find(o => o.meta.name === 'object.spec.ts');
+        const metas = await promise;
+        const thisTestFile = metas.find(m => m.name === 'object.spec.ts');
         // eslint-disable-next-line no-unused-expressions
         return expect(thisTestFile).to.exist;
       });
@@ -99,7 +96,7 @@ describe('LocalObject', () => {
 
   describe('.write', () => {
 
-    // ensure file does not exist
+    // ensure file does not exists
     const ensureRm = (path: string) => {
       try {
         fs.unlinkSync(path);
@@ -141,30 +138,4 @@ describe('LocalObject', () => {
     });
 
   });
-
-  describe('#getReadableStream', () => {
-
-    it('works as expected', async () => {
-      const stream = await object.getReadableStream();
-      const string = await streamToString(stream);
-      expect(string).to.match(/name.*@enspirit\/seshat/);
-    });
-
-  });
-
-  describe('#getWritableStream', () => {
-
-    it('works as expected', async () => {
-      writeFileSync('/tmp/test.txt', '');
-      const object = await LocalObject.fromPath('/tmp/test.txt');
-      const stream = await object.getWritableStream();
-      stream.write('hello world');
-      stream.end();
-      await new Promise(resolve => stream.on('finish', resolve));
-      const content = readFileSync('/tmp/test.txt');
-      expect(content.toString()).to.equal('hello world');
-    });
-
-  });
-
 });

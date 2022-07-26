@@ -19,15 +19,15 @@ describe('LocalBucket', () => {
   describe('list()', () => {
 
     it('resolves the correct list of objects (no param)', async () => {
-      const objects = await bucket.list();
-      const packageJson = objects.find(o => o.meta.name === 'package.json');
+      const metas = await bucket.list();
+      const packageJson = metas.find(m => m.name === 'package.json');
       // eslint-disable-next-line no-unused-expressions
       expect(packageJson).to.exist;
     });
 
     it('resolves the correct list of objects (src/)', async () => {
-      const objects = await bucket.list('src/');
-      const indexTs = objects.find(o => o.meta.name === 'src/index.ts');
+      const metas = await bucket.list('src/');
+      const indexTs = metas.find(m => m.name === 'src/index.ts');
       // eslint-disable-next-line no-unused-expressions
       expect(indexTs).to.exist;
     });
@@ -98,20 +98,20 @@ describe('LocalBucket', () => {
 
     it('resolves with the object created', async () => {
       const meta = { name: 'tmp/test.json', contentType: mockFileObject.meta.contentType };
-      const object = await bucket.put(await mockFileObject.getReadableStream(), meta);
+      const object = await bucket.put(mockFileObject.body, meta);
       expect(object.meta.name).to.equal('tmp/test.json');
       expect(object.meta.contentType).to.equal('application/json');
     });
 
     it('rejects if path goes out of bucket', async () => {
       const meta = { name: '../../../file.txt', contentType: mockFileObject.meta.contentType };
-      const promise = bucket.put(await mockFileObject.getReadableStream(), meta);
+      const promise = bucket.put(mockFileObject.body, meta);
       return expect(promise).to.be.rejectedWith(/Relative paths are not allowed/);
     });
 
     it('accepts relative path while they remain in bucket', async () => {
       const meta = { name: 'tmp/subfolder/../index.json', contentType: mockFileObject.meta.contentType };
-      const promise = bucket.put(await mockFileObject.getReadableStream(), meta);
+      const promise = bucket.put(mockFileObject.body, meta);
       await expect(promise).to.not.be.rejected;
       const object = await promise;
       expect(object.meta.name).to.equal('tmp/index.json');
@@ -124,7 +124,7 @@ describe('LocalBucket', () => {
     let createdObject: Object;
     beforeEach(async () => {
       const meta = { name: 'tmp/test.json', contentType: mockFileObject.meta.contentType };
-      createdObject = await bucket.put(await mockFileObject.getReadableStream(), meta);
+      createdObject = await bucket.put(mockFileObject.body, meta);
     });
 
     it('deletes the file properly', async () => {

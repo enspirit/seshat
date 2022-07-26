@@ -54,12 +54,12 @@ export default abstract class AbstractBucket implements Bucket {
 
   abstract _delete(path: string): Promise<void>;
 
-  async list(prefix?: string): Promise<Object[]> {
+  async list(prefix?: string): Promise<ObjectMeta[]> {
     await this.ensurePolicies((policy: BucketPolicy) => policy.list(prefix));
     return this._list(prefix);
   }
 
-  abstract _list(prefix?: string): Promise<Object[]>;
+  abstract _list(prefix?: string): Promise<ObjectMeta[]>;
 
   async exists(path: string) {
     try {
