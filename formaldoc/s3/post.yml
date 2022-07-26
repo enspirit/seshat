@@ -1,9 +1,9 @@
 ---
 name: |-
-  POST /rename/ - multipart upload
+  POST /s3/ - multipart upload
 
 url: |-
-  /rename/
+  /s3/
 
 services:
 - method: |-
@@ -37,4 +37,4 @@ services:
         status: 200
         content_type: application/json
       assert:
-        - "notMatch('0', :name => '/some-todos.csv')"
+        - "pathFD('0', :name => '/some-todos.csv')"

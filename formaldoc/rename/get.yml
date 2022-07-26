@@ -1,9 +1,9 @@
 ---
   name: |-
-    GET /s3/{path}
+    GET /rename/{path}
 
   url: |-
-    /s3/{path}
+    /rename/{path}
 
   services:
   - method: |-

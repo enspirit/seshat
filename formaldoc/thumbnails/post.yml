@@ -38,7 +38,7 @@ services:
         status: 200
         content_type: application/json
       assert:
-        - "notMatch('0', :name => '/seshat.png')"
+        - "pathFD('0', :name => 'seshat.png', :contentType => 'image/png')"
 
   counterexamples:
 
