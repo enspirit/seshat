@@ -31,7 +31,8 @@ class AnObjectWithThatNameExistsOnBucket
       }
     }
     url = client.config.host + folder + '/'
-    response = HTTP[{}].post(url, http_opts)
+    response = HTTP[test_case.headers.dup].post(url, http_opts)
+    raise "Unable to upload file for precondition" unless response.status == 200
   end
 
   def fmt_mime_type(filename)
