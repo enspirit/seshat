@@ -12,12 +12,9 @@ import morgan from 'morgan';
 
 export const createApp = (config: Config): express.Express => {
   const app = express();
-  const { middlewares } = config;
 
   // Logging
   app.use(morgan('tiny'));
-
-  (middlewares || []).forEach((mw) => app.use(mw(config)));
 
   app.use(executeActions(config));
   app.use(busboyUploader(config));

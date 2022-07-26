@@ -4,7 +4,6 @@ import { Readable, Writable } from 'stream';
 export interface Config {
   bucket: Bucket
   actions?: Action[]
-  middlewares?: MiddlewareFactory[]
 }
 
 export interface ObjectMeta {
