@@ -49,12 +49,13 @@ export interface ObjectTransformerOutput {
 }
 
 export type ObjectTransformerType = 'Ingress' | 'Egress' | 'Duplex';
+export type ObjectTransformerMode = 'Ingress' | 'Egress';
 
 export interface ObjectTransformer {
 
   type: ObjectTransformerType;
 
-  transform(stream: Readable, meta: ObjectMeta): Promise<ObjectTransformerOutput>;
+  transform(stream: Readable, meta: ObjectMeta, mode: ObjectTransformerMode): Promise<ObjectTransformerOutput>;
 
 }
 

@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import { Readable } from 'stream';
-import { ObjectMeta, ObjectTransformer, ObjectTransformerOutput, ObjectTransformerType } from '../types';
+import { ObjectMeta, ObjectTransformer, ObjectTransformerMode, ObjectTransformerOutput, ObjectTransformerType } from '../types';
 
 const uniqueName = (length = 16): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -21,7 +21,7 @@ export class SecureRename implements ObjectTransformer {
 
   type: ObjectTransformerType = 'Ingress';
 
-  async transform(stream: Readable, meta: ObjectMeta): Promise<ObjectTransformerOutput> {
+  async transform(stream: Readable, meta: ObjectMeta, _mode: ObjectTransformerMode): Promise<ObjectTransformerOutput> {
     const name = await uniqueName();
     const metadata = {
       ...meta,

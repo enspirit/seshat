@@ -2,7 +2,7 @@ import sharp from 'sharp';
 import mime from 'mime-types';
 import path from 'path';
 import { Readable } from 'stream';
-import { ObjectMeta, ObjectTransformer, ObjectTransformerOutput, ObjectTransformerType } from '../types';
+import { ObjectMeta, ObjectTransformer, ObjectTransformerMode, ObjectTransformerOutput, ObjectTransformerType } from '../types';
 
 export interface SharpOptions {
   output: {
@@ -21,7 +21,7 @@ export class SharpTransformer implements ObjectTransformer {
   constructor(private options: SharpOptions, public type: ObjectTransformerType = 'Ingress') {
   }
 
-  async transform(stream: Readable, meta: ObjectMeta): Promise<ObjectTransformerOutput> {
+  async transform(stream: Readable, meta: ObjectMeta, _mode: ObjectTransformerMode): Promise<ObjectTransformerOutput> {
     const { output, resize } = this.options;
     const fileinfo = path.parse(meta.name);
 

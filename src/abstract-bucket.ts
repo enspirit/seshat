@@ -32,7 +32,7 @@ export default abstract class AbstractBucket implements Bucket {
       .reduce(async (p: Promise<ObjectTransformerOutput>, t: ObjectTransformer) => {
         const { stream, meta } = await p;
         try {
-          const result = await t.transform(stream, meta);
+          const result = await t.transform(stream, meta, 'Egress');
           return result;
         } catch (err) {
           throw new ObjectTransformerError(`Object transformer failed: ${t.constructor.name}`);
@@ -50,7 +50,7 @@ export default abstract class AbstractBucket implements Bucket {
       .reduce(async (p: Promise<ObjectTransformerOutput>, t: ObjectTransformer) => {
         const { stream, meta } = await p;
         try {
-          const result = await t.transform(stream, meta);
+          const result = await t.transform(stream, meta, 'Ingress');
           return result;
         } catch (err) {
           throw new ObjectTransformerError(`Object transformer failed: ${t.constructor.name}`);
