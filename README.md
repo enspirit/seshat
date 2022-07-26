@@ -1,5 +1,9 @@
 # Seshat
 
+:warning: This is a complete rewrite of Seshat in typescript. If you're looking for the v1, [please head to the v1 branch](https://github.com/enspirit/seshat/tree/v1) :warning:
+
+---
+
 Seshat provides a way to interact with storage (be it local, gcs, s3, ...) using HTTP while providing ways to implement things such as:
 
 * access-control (not everyone can do the same things on objects)
