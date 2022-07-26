@@ -21,9 +21,9 @@ export const createRouter = (config: Config): Router => {
   /**
    * Create files
    */
-  router.post('*', isMultiPartFormDataRequest, async (req, res, next) => {
+  router.post('/*', isMultiPartFormDataRequest, async (req, res, next) => {
 
-    const basePath = req.path;
+    const basePath = req.path.substring(1);
     const busboy = Busboy({ headers: req.headers });
     const promises: Array<Promise<Object>> = [];
 

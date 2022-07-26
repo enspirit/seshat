@@ -8,8 +8,8 @@ export const createRouter = (config: Config): Router => {
   /**
    * Delete object
    */
-  router.delete('*', async (req, res, next) => {
-    const fpath = req.path;
+  router.delete('/*', async (req, res, next) => {
+    const fpath = req.path.substring(1);
     try {
       await bucket.delete(fpath);
       res.sendStatus(204);

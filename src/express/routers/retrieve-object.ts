@@ -31,7 +31,8 @@ export const createRouter = (seshatConfig: Config, routerConfig: RetrieveObjectC
       bucket,
     };
     try {
-      req.seshat.object = await bucket.get(req.path);
+      const path = req.path.substring(1);
+      req.seshat.object = await bucket.get(path);
     } catch (err) {
       if (!(err instanceof ObjectNotFoundError)) {
         next(err);
@@ -60,7 +61,7 @@ export const createRouter = (seshatConfig: Config, routerConfig: RetrieveObjectC
   /**
    * Retrieve files
    */
-  router.get('*', middlewares, async (req: Request, res: Response) => {
+  router.get('/*', middlewares, async (req: Request, res: Response) => {
     const { object } = req.seshat;
     if (!object) {
       return res

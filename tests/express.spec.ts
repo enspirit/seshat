@@ -30,12 +30,12 @@ describe('the express app', () => {
 
     it('gets the correct object from the bucket (file)', async () => {
       await request(app).get('/file.txt');
-      expect(mockBucket.get).to.be.calledOnceWith('/file.txt');
+      expect(mockBucket.get).to.be.calledOnceWith('file.txt');
     });
 
     it('gets the correct object from the bucket (file in subfolder)', async () => {
       await request(app).get('/subfolder/another.pdf');
-      return expect(mockBucket.get).to.be.calledOnceWith('/subfolder/another.pdf');
+      return expect(mockBucket.get).to.be.calledOnceWith('subfolder/another.pdf');
     });
 
     it('returns proper status code and content-type when bucket has object', () => {
@@ -99,7 +99,7 @@ describe('the express app', () => {
 
       await expect(mockBucket.put).to.be.calledOnceWith(
         sinon.match.instanceOf(Readable),
-        { name: '/package.json', contentType: 'application/json' },
+        { name: 'package.json', contentType: 'application/json' },
       );
     });
 
@@ -127,11 +127,11 @@ describe('the express app', () => {
       expect(mockBucket.put).to.be.calledTwice;
       await expect(mockBucket.put).to.be.calledWith(
         sinon.match.instanceOf(Readable),
-        { name: '/package.json', contentType: 'application/json' },
+        { name: 'package.json', contentType: 'application/json' },
       );
       await expect(mockBucket.put).to.be.calledWith(
         sinon.match.instanceOf(Readable),
-        { name: '/tsconfig.json', contentType: 'application/json' },
+        { name: 'tsconfig.json', contentType: 'application/json' },
       );
     });
 
@@ -153,12 +153,12 @@ describe('the express app', () => {
     it('deletes the correct object from the bucket (file)', async () => {
       await request(app)
         .delete('/file.txt');
-      expect(mockBucket.delete).to.be.calledOnceWith('/file.txt');
+      expect(mockBucket.delete).to.be.calledOnceWith('file.txt');
     });
 
     it('deletes the correct object from the bucket (subfolder file)', async () => {
       await request(app).delete('/subfolder/file.txt');
-      expect(mockBucket.delete).to.be.calledOnceWith('/subfolder/file.txt');
+      expect(mockBucket.delete).to.be.calledOnceWith('subfolder/file.txt');
     });
 
     it('returns proper status code when bucket has object', () => {

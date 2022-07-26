@@ -63,7 +63,7 @@ describe('the multipart-uploads express router', () => {
             .attach('test.ts', __filename);
           return expect(spy).to.be.calledOnceWith(
             sinon.match.instanceOf(Readable),
-            sinon.match({ name: '/test.ts' }),
+            sinon.match({ name: 'test.ts' }),
           );
         });
       });
@@ -84,7 +84,7 @@ describe('the multipart-uploads express router', () => {
             .attach('test.ts', __filename);
           await expect(spy).to.be.calledOnceWith(
             sinon.match.instanceOf(Readable),
-            sinon.match({ name: '/subfolder/test.ts' }),
+            sinon.match({ name: 'subfolder/test.ts' }),
           );
         });
 
@@ -111,11 +111,11 @@ describe('the multipart-uploads express router', () => {
           await expect(spy).to.be.calledTwice;
           await expect(spy).to.be.calledWith(
             sinon.match.instanceOf(Readable),
-            sinon.match({ name: '/test.ts' }),
+            sinon.match({ name: 'test.ts' }),
           );
           await expect(spy).to.be.calledWith(
             sinon.match.instanceOf(Readable),
-            sinon.match({ name: '/another.ts' }),
+            sinon.match({ name: 'another.ts' }),
           );
         });
 
@@ -143,12 +143,12 @@ describe('the multipart-uploads express router', () => {
 
           await expect(spy).to.be.calledWith(
             sinon.match.instanceOf(Readable),
-            sinon.match({ name: '/subfolder/test.ts' }),
+            sinon.match({ name: 'subfolder/test.ts' }),
           );
 
           await expect(spy).to.be.calledWith(
             sinon.match.instanceOf(Readable),
-            sinon.match({ name: '/subfolder/another.ts' }),
+            sinon.match({ name: 'subfolder/another.ts' }),
           );
 
         });

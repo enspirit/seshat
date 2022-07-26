@@ -33,10 +33,13 @@ export class SharpTransformer implements ObjectTransformer {
     }
     transformer.toFormat(output.format, output.options);
 
+    const filename = `${fileinfo.name}.${output.format}`;
+    const objectName = fileinfo.dir ? path.join(fileinfo.dir, filename) : filename;
+
     const newMeta = {
       ...meta,
       contentType: mime.lookup(output.format) || 'application/octet-stream',
-      name: `${fileinfo.name}.${output.format}`,
+      name: objectName,
     };
     stream.pipe(transformer);
     return { meta: newMeta, stream: transformer };
