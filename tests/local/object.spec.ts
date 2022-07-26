@@ -77,7 +77,7 @@ describe('LocalObject', () => {
 
   describe('.delete', () => {
 
-    it('resolves for existing files', async () => {
+    it.skip('resolves for existing files', async () => {
       writeFileSync('/tmp/test.txt', 'test');
       await LocalObject.delete('/tmp/test.txt');
     });
