@@ -3,11 +3,11 @@ name: Running tests
 on:
   push:
     branches:
-    - seshat-v2
-#   pull_request:
-#     branches:
-#       - master
-#   workflow_call:
+    - master
+  pull_request:
+    branches:
+      - master
+  workflow_call:
 
 jobs:
   tests:
