@@ -17,6 +17,13 @@ export default abstract class AbstractBucket implements Bucket {
     return this.config.transformers || [];
   }
 
+  async head(path: string): Promise<ObjectMeta> {
+    await this.ensurePolicies((policy: BucketPolicy) => policy.head(path));
+    return this._head(path);
+  }
+
+  abstract _head(path: string): Promise<ObjectMeta>;
+
   async get(path: string): Promise<Object> {
     await this.ensurePolicies((policy: BucketPolicy) => policy.get(path));
     return this._get(path);

@@ -3,6 +3,9 @@ import { BucketPolicy } from '../types';
 
 export const ReadOnlyPolicy: BucketPolicy = {
 
+  async head(_path): Promise<void> {
+  },
+
   async get(_path): Promise<void> {
   },
 

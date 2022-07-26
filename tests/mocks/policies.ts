@@ -2,6 +2,9 @@ import { BucketPolicy, ObjectMeta } from '../../src/types';
 
 export const readOnlyPolicy: BucketPolicy = {
 
+  async head(_path: string): Promise<void> {
+  },
+
   async get(_path: string): Promise<void> {
   },
 
@@ -19,6 +22,10 @@ export const readOnlyPolicy: BucketPolicy = {
 };
 
 export const uploadOnlyPolicy: BucketPolicy = {
+  async head(_path: string): Promise<void> {
+    throw new Error('upload only bucket');
+  },
+
   async get(_path: string): Promise<void> {
     throw new Error('upload only bucket');
   },

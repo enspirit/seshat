@@ -19,6 +19,12 @@ export class LocalBucket extends AbstractBucket {
     this.path = config.path;
   }
 
+  async _head(path: string) {
+    this.ensureSecure(path);
+    const obj = await LocalObject.fromPath(path, this.path);
+    return obj.meta;
+  }
+
   async _get(path: string) {
     this.ensureSecure(path);
     return LocalObject.fromPath(path, this.path);

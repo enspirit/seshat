@@ -29,6 +29,22 @@ export class S3Bucket extends AbstractBucket {
     this.prefix = config.prefix;
   }
 
+  async _head(path: string): Promise<ObjectMeta> {
+    try {
+      const object = await this.s3client.send(new HeadObjectCommand({
+        Bucket: this.bucket,
+        Key: this.objectKey(path),
+      }));
+      const obj = await S3Object.fromHeadOutput(this.s3client, this.bucket, path, object);
+      return obj.meta;
+    } catch (err: any) {
+      if (err.name === 'NotFound') {
+        throw new ObjectNotFoundError(`Object ${path} not found`);
+      }
+      throw err;
+    }
+  }
+
   async _get(path: string): Promise<Object> {
     try {
       const object = await this.s3client.send(new HeadObjectCommand({

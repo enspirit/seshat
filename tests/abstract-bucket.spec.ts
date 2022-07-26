@@ -17,6 +17,9 @@ describe('the AbstractBucket class', () => {
     async _get(_path: string): Promise<Object> {
       return mockFileObject;
     }
+    async _head(_path: string): Promise<ObjectMeta> {
+      return mockFileObject.meta;
+    }
     async _put(_stream: Readable, _meta: ObjectMeta): Promise<Object> {
       return mockFileObject;
     }
@@ -30,6 +33,7 @@ describe('the AbstractBucket class', () => {
 
   const withAllPoliciesSucceeding = () => {
     policies.forEach((policy) => {
+      sinon.stub(policy, 'head').resolves();
       sinon.stub(policy, 'get').resolves();
       sinon.stub(policy, 'put').resolves();
       sinon.stub(policy, 'delete').resolves();
@@ -39,6 +43,7 @@ describe('the AbstractBucket class', () => {
 
   const restorePoliciesDefaults = () => {
     policies.forEach((policy) => {
+      (policy.head as SinonStub).restore();
       (policy.get as SinonStub).restore();
       (policy.put as SinonStub).restore();
       (policy.delete as SinonStub).restore();

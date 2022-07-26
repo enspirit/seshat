@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { Readable, Writable } from 'stream';
+import { Readable } from 'stream';
 
 export interface Config {
   bucket: Bucket
@@ -23,6 +23,7 @@ export interface BucketConfig {
 export interface Bucket {
   exists(path: string): Promise<boolean>;
 
+  head(path: string): Promise<ObjectMeta>;
   get(path: string): Promise<Object>;
   put(stream: Readable, meta: ObjectMeta): Promise<Object>;
   delete(path: string): Promise<void>;
@@ -30,6 +31,7 @@ export interface Bucket {
 }
 
 export interface BucketPolicy {
+  head(path: string): Promise<void>
   get(path: string): Promise<void>
   put(meta: ObjectMeta): Promise<void>
   delete(path: string): Promise<void>
@@ -39,7 +41,6 @@ export interface BucketPolicy {
 export interface Object {
   meta: ObjectMeta
   getReadableStream(): Promise<Readable>
-  getWritableStream(): Promise<Writable>
 }
 
 export interface ObjectTransformerOutput {

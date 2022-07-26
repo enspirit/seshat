@@ -12,6 +12,8 @@ import { s3client } from './s3';
 export default (expressApp: Express, _seshatRootDir: string) => {
 
   const imagesOnlyPolicy: BucketPolicy = {
+    async head(_path: string) {
+    },
     async get(_path: string) {
     },
     async put(meta: ObjectMeta) {

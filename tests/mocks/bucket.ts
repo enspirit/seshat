@@ -26,6 +26,7 @@ interface MockBucket {
   exists: SinonStub,
   fileExists: SinonStub,
   dirExists: SinonStub,
+  head: SinonStub,
   get: SinonStub,
   list: SinonStub,
   delete: SinonStub,
@@ -40,6 +41,8 @@ const mockBucket: MockBucket = {
   dirExists: sinon.stub().resolves(true),
 
   get: sinon.stub().resolves(mockFileObject),
+
+  head: sinon.stub().resolves(mockFileObject.meta),
 
   list: sinon.stub().resolves([mockFileObject]),
 
