@@ -8,6 +8,7 @@ import readOnlyExample from './readonly';
 import renameExample from './rename';
 import thumbnailsExample from './thumbnails';
 import thumbnailsOnTheFlyExample from './thumbnails-on-the-fly';
+import { version } from '../src';
 
 const app = express();
 
@@ -32,5 +33,5 @@ app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
 });
 
 app.listen(3000, () => {
-  console.log('Seshat is running on http://localhost:3000');
+  console.log(`Seshat ${version} is running on http://localhost:3000`);
 });

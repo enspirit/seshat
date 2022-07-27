@@ -1,3 +1,4 @@
+export { version } from '../package.json';
 export * from './errors';
 export * from './express';
 export * from './types';
