@@ -22,7 +22,26 @@ export interface BucketConfig {
   transformers?: Array<ObjectTransformer>
 }
 
-export interface Bucket {
+export type BucketEvent = {
+  stored: (meta: ObjectMeta) => void,
+  deleted: (path: string) => void,
+};
+
+export interface BucketEmitter {
+  // matches EventEmitter.on
+  on<U extends keyof BucketEvent>(event: U, listener: BucketEvent[U]): this;
+
+  // matches EventEmitter.off
+  off<U extends keyof BucketEvent>(event: U, listener: BucketEvent[U]): this;
+
+  // matches EventEmitter.emit
+  emit<U extends keyof BucketEvent>(
+      event: U,
+      ...args: Parameters<BucketEvent[U]>
+  ): boolean;
+}
+
+export interface Bucket extends BucketEmitter {
   exists(path: string): Promise<boolean>;
 
   head(path: string): Promise<ObjectMeta>;
@@ -30,6 +49,7 @@ export interface Bucket {
   put(stream: Readable, meta: ObjectMeta): Promise<Object>;
   delete(path: string): Promise<void>;
   list(prefix?: string): Promise<ObjectMeta[]>;
+
 }
 
 export interface BucketPolicy {

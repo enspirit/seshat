@@ -1,12 +1,16 @@
+import EventEmitter from 'events';
 import { Readable } from 'stream';
 import { ObjectTransformerError } from './errors';
-import { Bucket, BucketPolicy, Object, ObjectMeta, ObjectTransformer, ObjectTransformerOutput, BucketConfig, ObjectTransformerMode } from './types';
+import { Bucket, BucketPolicy, Object, ObjectMeta, ObjectTransformer, ObjectTransformerOutput, BucketConfig, ObjectTransformerMode, BucketEmitter, BucketEvent } from './types';
 
-export default abstract class AbstractBucket implements Bucket {
+export default abstract class AbstractBucket implements Bucket, BucketEmitter {
+
+  private emitter: EventEmitter;
 
   constructor(
     private config: BucketConfig,
   ) {
+    this.emitter = new EventEmitter();
   }
 
   get policies() {
@@ -36,14 +40,17 @@ export default abstract class AbstractBucket implements Bucket {
   async put(stream: Readable, meta: ObjectMeta): Promise<Object> {
     await this.ensurePolicies((policy: BucketPolicy) => policy.put(meta));
     const output: ObjectTransformerOutput = await this.transform(stream, meta, 'Ingress');
-    return this._put(output.stream, output.meta);
+    const object = await this._put(output.stream, output.meta);
+    process.nextTick(() => this.emit('stored', meta));
+    return object;
   }
 
   abstract _put(stream: Readable, meta: ObjectMeta): Promise<Object>;
 
   async delete(path: string): Promise<void> {
     await this.ensurePolicies((policy: BucketPolicy) => policy.delete(path));
-    return this._delete(path);
+    await this._delete(path);
+    process.nextTick(() => this.emit('deleted', path));
   }
 
   abstract _delete(path: string): Promise<void>;
@@ -82,6 +89,20 @@ export default abstract class AbstractBucket implements Bucket {
           throw new ObjectTransformerError(`Object transformer failed: ${t.constructor.name}`);
         }
       }, Promise.resolve({ stream, meta }));
+  }
+
+  on<U extends keyof BucketEvent>(event: U, listener: BucketEvent[U]): this {
+    this.emitter.on(event, listener);
+    return this;
+  }
+
+  off<U extends keyof BucketEvent>(event: U, listener: BucketEvent[U]): this {
+    this.emitter.off(event, listener);
+    return this;
+  }
+
+  emit<U extends keyof BucketEvent>(event: U, ...args: Parameters<BucketEvent[U]>): boolean {
+    return this.emitter.emit(event, ...args);
   }
 
 }

@@ -51,12 +51,33 @@ describe('the AbstractBucket class', () => {
     });
   };
 
+  const expectListenerToBeCalledWith = (listener: SinonStub, ...args: any[]) => {
+    return new Promise<void>((resolve) => {
+      process.nextTick(() => {
+        expect(listener).to.be.calledOnceWith(...args);
+        resolve();
+      });
+    });
+  };
+
+  const expectListenerToNotBeCalled = (listener: SinonStub) => {
+    return new Promise<void>((resolve) => {
+      process.nextTick(() => {
+        // eslint-disable-next-line no-unused-expressions
+        expect(listener).to.not.be.called;
+        resolve();
+      });
+    });
+  };
+
   let bucket: ConcreteBucket;
   let policies: Array<BucketPolicy>;
   let transformers: Array<ObjectTransformer>;
   let mockFileObject: Object;
+  let meta: ObjectMeta;
   beforeEach(() => {
     mockFileObject = getMockFileObject();
+    meta = { name: 'test.pdf', contentType: mockFileObject.meta.contentType };
     policies = [readOnlyPolicy, uploadOnlyPolicy];
     transformers = [];
     bucket = new ConcreteBucket({
@@ -74,8 +95,8 @@ describe('the AbstractBucket class', () => {
 
     it('calls the _put() method of the concrete subclass', async () => {
       const spy = sinon.spy(bucket, '_put');
-      const meta = { name: 'test.pdf', contentType: mockFileObject.meta.contentType };
-      const stream = await mockFileObject.body;
+
+      const stream = mockFileObject.body;
       await bucket.put(stream, meta);
       expect(spy).to.be.calledOnceWith(stream, meta);
     });
@@ -83,20 +104,65 @@ describe('the AbstractBucket class', () => {
     it('lets errors from _put() bubble up', async () => {
       const err = new Error('oops');
       const spy = sinon.stub(bucket, '_put').rejects(err);
-      const meta = { name: 'test.pdf', contentType: mockFileObject.meta.contentType };
-      const p = bucket.put(await mockFileObject.body, meta);
+
+      const p = bucket.put(mockFileObject.body, meta);
       await expect(p).to.be.eventually.rejectedWith(err);
       spy.reset();
     });
 
+    describe('when subscribing to the stored event', () => {
+
+      it('calls the listener when a file is successfully stored', async () => {
+        const listener = sinon.stub().resolves();
+        bucket.on('stored', listener);
+        await bucket.put(mockFileObject.body, meta);
+        await expectListenerToBeCalledWith(listener, meta);
+      });
+
+      it('implements truly async events', async () => {
+        const listener = sinon.stub().resolves();
+        bucket.on('stored', listener);
+        await bucket.put(mockFileObject.body, meta);
+        // eslint-disable-next-line no-unused-expressions
+        expect(listener).to.not.be.called;
+      });
+
+      it('does not call the event listener when storing object fails', async () => {
+        const _put = sinon.stub(bucket, '_put').rejects(new Error('oops'));
+        const listener = sinon.stub().resolves();
+        bucket.on('stored', listener);
+        try {
+          await bucket.put(mockFileObject.body, meta);
+        } catch (err) {
+          //
+        }
+        await expectListenerToNotBeCalled(listener);
+      });
+
+    });
+
     describe('when used with failling policy', () => {
 
-      it('lets the policy error bubble up', async () => {
-        const err = new Error('failed-policy');
+      let err: Error;
+      beforeEach(() => {
+        err = new Error('failed-policy');
         (readOnlyPolicy.put as SinonStub).rejects(err);
-        const meta = { name: 'test.pdf', contentType: mockFileObject.meta.contentType };
-        const p = bucket.put(await mockFileObject.body, meta);
+      });
+
+      it('lets the policy error bubble up', async () => {
+        const p = bucket.put(mockFileObject.body, meta);
         await expect(p).to.be.eventually.rejectedWith(err);
+      });
+
+      it('does not call the event listeners', async () => {
+        const listener = sinon.stub().resolves();
+        bucket.on('stored', listener);
+        try {
+          await bucket.put(mockFileObject.body, meta);
+        } catch (err) {
+          //
+        }
+        await expectListenerToNotBeCalled(listener);
       });
 
     });
@@ -179,15 +245,60 @@ describe('the AbstractBucket class', () => {
 
     describe('when used with failling policy', () => {
 
-      it('lets the policy error bubble up', async () => {
-        const err = new Error('failed-policy');
+      let err: Error;
+      beforeEach(() => {
+        err = new Error('failed-policy');
         (readOnlyPolicy.delete as SinonStub).rejects(err);
+      });
+
+      it('lets the policy error bubble up', async () => {
         const p = bucket.delete('/tmp/test.pdf');
         await expect(p).to.be.eventually.rejectedWith(err);
       });
 
+      it('does not call the event listeners', async () => {
+        const listener = sinon.stub().resolves();
+        bucket.on('deleted', listener);
+        try {
+          await bucket.delete('/tmp/test.pdf');
+        } catch (err) {
+          //
+        }
+        await expectListenerToNotBeCalled(listener);
+      });
+
     });
 
+    describe('when subscribing to the deleted event', () => {
+
+      it('calls the listener when a file is successfully deleted', async () => {
+        const listener = sinon.stub().resolves();
+        bucket.on('deleted', listener);
+        await bucket.delete('/tmp/test.pdf');
+        await expectListenerToBeCalledWith(listener, '/tmp/test.pdf');
+      });
+
+      it('implements truly async events', async () => {
+        const listener = sinon.stub().resolves();
+        bucket.on('deleted', listener);
+        await bucket.delete('tmp/test.pdf');
+        // eslint-disable-next-line no-unused-expressions
+        expect(listener).to.not.be.called;
+      });
+
+      it('does not call the event listener when deleting object fails', async () => {
+        const _put = sinon.stub(bucket, '_delete').rejects(new Error('oops'));
+        const listener = sinon.stub().resolves();
+        bucket.on('deleted', listener);
+        try {
+          await bucket.delete('/tmp/test.pdf');
+        } catch (err) {
+          //
+        }
+        await expectListenerToNotBeCalled(listener);
+      });
+
+    });
   });
 
   describe('when used with transformers', () => {
@@ -208,8 +319,8 @@ describe('the AbstractBucket class', () => {
     describe('put()', () => {
       it('calls the transformers', async () => {
         const spy = sinon.spy(ingress, 'transform');
-        const stream = await mockFileObject.body;
-        const meta = { name: 'test.pdf', contentType: mockFileObject.meta.contentType };
+        const stream = mockFileObject.body;
+
         await bucket.put(stream, meta);
         expect(spy).to.be.calledOnceWith(stream, meta);
       });
@@ -218,8 +329,8 @@ describe('the AbstractBucket class', () => {
         const stub = sinon.stub(ingress, 'transform');
         const error = new Error('a transforming error occured');
         stub.rejects(error);
-        const stream = await mockFileObject.body;
-        const meta = { name: 'test.pdf', contentType: mockFileObject.meta.contentType };
+        const stream = mockFileObject.body;
+
         const p = bucket.put(stream, meta);
         return expect(p).to.be.rejectedWith(ObjectTransformerError, /Object transformer failed: DummyIngressTransformer/);
       });

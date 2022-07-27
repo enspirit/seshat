@@ -13,6 +13,9 @@ interface MockBucket {
   list: SinonStub,
   delete: SinonStub,
   put: SinonSpy
+  on: SinonSpy
+  off: SinonSpy
+  emit: SinonSpy
 }
 
 export const getMockBucket = (): MockBucket => {
@@ -41,5 +44,10 @@ export const getMockBucket = (): MockBucket => {
     delete: sinon.stub().resolves(),
 
     put: sinon.spy(fakeBucket, 'put'),
+
+    // EventEmitter
+    on: sinon.stub().resolves(),
+    off: sinon.stub().resolves(),
+    emit: sinon.stub().resolves(),
   };
 };
