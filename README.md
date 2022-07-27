@@ -1,6 +1,8 @@
 # Seshat
 
-:warning: This is a complete rewrite of Seshat in typescript. If you're looking for the v1, [please head to the v1 branch](https://github.com/enspirit/seshat/tree/v1) :warning:
+:warning: This is a complete rewrite of Seshat. If you're looking for the v1, [please head to the v1 branch](https://github.com/enspirit/seshat/tree/v1) :warning:
+
+See the [Breaking Changes](#breaking-changes) section for incompatibilities between v1 & v2.
 
 ---
 
@@ -28,7 +30,7 @@ A **Bucket** is a storage place where **Objects** can be written. In Seshat, a B
 
 # Examples
 
-Please have a look at the [examples/](examples/) folder, you'll find simples examples showcasing:
+Please have a look at the [examples/](examples/) folder, you'll find simple examples showcasing:
 
 * [serving files from a local storage](examples/local.ts)
 * [serving files from an S3 bucket](examples/s3.ts)
@@ -38,3 +40,12 @@ Please have a look at the [examples/](examples/) folder, you'll find simples exa
 * [compress objects as they are uploaded](examples/gzip.ts)
 * [create thumbnails from uploaded images](examples/thumbnails.ts)
 * [create thumbnails on-the-fly when recovering files](examples/thumbnails-on-the-fly.ts.ts)
+
+# Breaking Changes
+
+## http protocol
+
+Seshat v2's HTTP layer has some breaking changes compared to v1:
+### POST
+
+* v1 supported multiple file uploads via `multipart/form-data` but never returned anything else than a `204` status code with a `Location` header with the first object's public url. v2 returns an actual JSON payload with an array of object metadata.
