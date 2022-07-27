@@ -32,7 +32,6 @@ describe('LocalBucket', () => {
   describe('head()', () => {
 
     it('returns the valid metadata', async () => {
-      console.log('-------->', process.env.NODE_ENV);
       const metadata = { name: 'tmp/objectnamewithoutextension', contentType: 'application/json', foo: 'bar' };
       await bucket.put(mockFileObject.body, metadata);
       const meta = await bucket.head(metadata.name);
