@@ -1,12 +1,14 @@
+import EventEmitter from 'events';
 import { Readable } from 'stream';
 import { ObjectTransformerError } from './errors';
-import { Bucket, BucketPolicy, Object, ObjectMeta, ObjectTransformer, ObjectTransformerOutput, BucketConfig, ObjectTransformerMode } from './types';
+import { Bucket, BucketPolicy, Object, ObjectMeta, ObjectTransformer, ObjectTransformerOutput, BucketConfig, ObjectTransformerMode, BucketEvents } from './types';
 
-export default abstract class AbstractBucket implements Bucket {
+export default abstract class AbstractBucket extends EventEmitter implements Bucket {
 
   constructor(
     private config: BucketConfig,
   ) {
+    super();
   }
 
   get policies() {

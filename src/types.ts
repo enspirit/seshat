@@ -1,5 +1,6 @@
 import { Request } from 'express';
 import { Readable } from 'stream';
+import { EventEmitter } from 'events';
 
 export interface Config {
   bucket: Bucket
@@ -22,7 +23,19 @@ export interface BucketConfig {
   transformers?: Array<ObjectTransformer>
 }
 
-export interface Bucket {
+type BucketEventMap = Record<string, any>;
+type BucketEventKey<T extends BucketEventMap> = string & keyof T;
+type BucketEventReceiver<T> = (params: T) => void;
+interface BucketEventEmitter<T extends BucketEventMap> {
+  on<K extends BucketEventKey<T>>
+    (eventName: K, fn: BucketEventReceiver<T[K]>): void;
+  off<K extends BucketEventKey<T>>
+    (eventName: K, fn: BucketEventReceiver<T[K]>): void;
+  emit<K extends BucketEventKey<T>>
+    (eventName: K, params: T[K]): void;
+}
+
+export declare interface Bucket {
   exists(path: string): Promise<boolean>;
 
   head(path: string): Promise<ObjectMeta>;
@@ -30,6 +43,7 @@ export interface Bucket {
   put(stream: Readable, meta: ObjectMeta): Promise<Object>;
   delete(path: string): Promise<void>;
   list(prefix?: string): Promise<ObjectMeta[]>;
+
 }
 
 export interface BucketPolicy {
