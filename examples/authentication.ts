@@ -14,7 +14,7 @@ export default (expressApp: Express, _seshatRootDir: string) => {
 
   const ensureAuthenticated = (req: Request, res: Response, next: NextFunction) => {
     if (req.headers?.authorization !== 'Bearer a-very-special-secret') {
-      return res.send(401);
+      return res.sendStatus(401);
     }
     next();
   };

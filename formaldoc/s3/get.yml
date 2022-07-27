@@ -17,7 +17,8 @@
 
     input_schema: |-
       {
-        path: String
+        path     :  String
+        download :? String|Nil
       }
 
     output_schema: |-
@@ -36,6 +37,32 @@
           path: test.json
         expected:
           content_type: application/json
+          status: 200
+        assert:
+        - "pathFD('', :name => '@enspirit/seshat')"
+
+      - description: |-
+          FOR: we can force a download as attachment (without rename)
+        params:
+          path: test.json
+          download: # equivalent to ?download
+        expected:
+          content_type: application/json
+          headers:
+            content-disposition: attachment; filename=test.json
+          status: 200
+        assert:
+        - "pathFD('', :name => '@enspirit/seshat')"
+
+      - description: |-
+          FOR: we can force a download as attachment (without rename)
+        params:
+          path: test.json
+          download: 'newname.json' # equivalent to ?download=newname.json
+        expected:
+          content_type: application/json
+          headers:
+            content-disposition: attachment; filename=newname.json
           status: 200
         assert:
         - "pathFD('', :name => '@enspirit/seshat')"
