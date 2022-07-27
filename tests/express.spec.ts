@@ -125,7 +125,7 @@ describe('the express app', () => {
           .get('/file.txt?download')
           .expect('Content-Type', mockFileObject.meta.contentType)
           .expect('Content-Length', contentLength)
-          .expect('Content-Disposition', 'attachment; filename=file.txt')
+          .expect('Content-Disposition', 'attachment; filename=tmp/file.txt')
           .expect(200);
       });
 

@@ -21,8 +21,7 @@ export class LocalBucket extends AbstractBucket {
 
   async _head(path: string) {
     this.ensureSecure(path);
-    const obj = await LocalObject.fromPath(path, this.path);
-    return obj.meta;
+    return await LocalObject.metaFromPath(path, this.path);
   }
 
   async _get(path: string) {
@@ -32,7 +31,7 @@ export class LocalBucket extends AbstractBucket {
 
   async _put(stream: Readable, meta: ObjectMeta) {
     this.ensureSecure(meta.name);
-    return await LocalObject.write(meta.name, stream, this.path);
+    return await LocalObject.write(meta, stream, this.path);
   }
 
   async _list(prefix: string = '') {

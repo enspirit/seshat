@@ -24,7 +24,7 @@ export class LocalObject implements Object {
       if (stats.isDirectory()) {
         throw new ObjectNotFoundError(`Object ${fpath} not found`);
       }
-      return this.metaFromStats(fpath, fullpath, stats);
+      return await this.metaFromStats(fpath, fullpath, stats);
     } catch (err: any) {
       if (err instanceof SeshatError) {
         throw err;
@@ -36,7 +36,17 @@ export class LocalObject implements Object {
     }
   }
 
-  static metaFromStats(name: string, fpath: string, stats: fs.Stats): ObjectMeta {
+  static async metaFromStats(name: string, fpath: string, stats: fs.Stats): Promise<ObjectMeta> {
+    const loadMeta = async () => {
+      try {
+        const meta = (await fs.promises.readFile(`${fpath}.seshat`)).toString();
+        return JSON.parse(meta);
+      } catch (err) {
+        return {};
+      }
+    };
+
+    const meta = await loadMeta();
     return {
       name: path.normalize(name),
       ctime: stats.ctime,
@@ -45,6 +55,7 @@ export class LocalObject implements Object {
         ? 'directory'
         : mime.lookup(fpath) || 'application/octet-stream',
       contentLength: stats.size,
+      ...meta,
     };
   }
 
@@ -86,11 +97,25 @@ export class LocalObject implements Object {
     }
   }
 
-  static async write(fpath: string, stream: Readable, basePath?: string): Promise<LocalObject> {
+  static async write(meta: ObjectMeta, stream: Readable, basePath?: string): Promise<LocalObject> {
+    const fpath = meta.name;
     const fullpath = basePath ? path.join(basePath, fpath) : fpath;
-    const fileStream = fs.createWriteStream(fullpath);
-    stream.pipe(fileStream);
-    await new Promise(resolve => fileStream.on('finish', resolve));
+    const metadataPath = `${fullpath}.seshat`;
+
+    const writeFile = async () => {
+      const fileStream = fs.createWriteStream(fullpath);
+      stream.pipe(fileStream);
+      await new Promise(resolve => fileStream.on('finish', resolve));
+    };
+
+    const writeMeta = async () => {
+      const { name: _name, ...rest } = meta;
+
+      return fs.promises.writeFile(metadataPath, JSON.stringify(rest));
+    };
+
+    await Promise.all([writeFile(), writeMeta()]);
+
     return this.fromPath(fpath, basePath);
   }
 }

@@ -5,7 +5,7 @@ import { Object } from '../../src/types';
 export const getMockFileObject = (): Object => {
   return {
     meta: {
-      name: 'file.txt',
+      name: 'tmp/file.txt',
       ctime: new Date(),
       mtime: new Date(),
       contentLength: 22,

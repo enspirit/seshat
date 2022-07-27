@@ -19,6 +19,19 @@ describe('LocalBucket', () => {
     bucket = new LocalBucket({ path: path.join(__dirname, '../../') });
   });
 
+  describe('head()', () => {
+
+    it('returns the valid metadata', async () => {
+      const metadata = { name: 'tmp/objectnamewithoutextension', contentType: 'application/json', foo: 'bar' };
+      await bucket.put(mockFileObject.body, metadata);
+      const meta = await bucket.head(metadata.name);
+      expect(meta.name).to.equal(metadata.name);
+      expect(meta.contentType).to.equal(metadata.contentType);
+      expect(meta.foo).to.equal('bar');
+    });
+
+  });
+
   describe('list()', () => {
 
     it('resolves the correct list of objects (no param)', async () => {
@@ -77,6 +90,15 @@ describe('LocalBucket', () => {
       expect(object.meta.name).to.equal('src/index.ts');
     });
 
+    it('returns the valid metadata', async () => {
+      const metadata = { name: 'tmp/objectnamewithoutextension', contentType: 'application/json', foo: 'bar' };
+      await bucket.put(mockFileObject.body, metadata);
+      const object = await bucket.get(metadata.name);
+      expect(object.meta.name).to.equal(metadata.name);
+      expect(object.meta.contentType).to.equal(metadata.contentType);
+      expect(object.meta.foo).to.equal('bar');
+    });
+
   });
 
   describe('exists()', () => {
@@ -99,11 +121,19 @@ describe('LocalBucket', () => {
 
   describe('put()', () => {
 
+    const ensureFileUnlink = (fpath: string) => {
+      try {
+        fs.unlinkSync(fpath);
+      } catch (_e) {
+        // e
+      }
+    };
+
     it('resolves with the object created', async () => {
-      const meta = { name: 'tmp/test.json', contentType: mockFileObject.meta.contentType };
+      const meta = { name: mockFileObject.meta.name, contentType: mockFileObject.meta.contentType };
       const object = await bucket.put(mockFileObject.body, meta);
-      expect(object.meta.name).to.equal('tmp/test.json');
-      expect(object.meta.contentType).to.equal('application/json');
+      expect(object.meta.name).to.equal('tmp/file.txt');
+      expect(object.meta.contentType).to.equal('plain/text');
     });
 
     it('rejects if path goes out of bucket', async () => {
@@ -120,6 +150,24 @@ describe('LocalBucket', () => {
       expect(object.meta.name).to.equal('tmp/index.json');
     });
 
+    it('stores the file on disk', async () => {
+      // ensure the file does not exist already
+      const fpath = path.join(__dirname, '../../tmp/test.json');
+      ensureFileUnlink(fpath);
+      const meta = { name: 'tmp/test.json', contentType: mockFileObject.meta.contentType };
+      await bucket.put(mockFileObject.body, meta);
+      expect(fs.existsSync(fpath)).to.equal(true);
+    });
+
+    it('stores meta information next to the original file', async () => {
+      // ensure the metadata file does not exist already
+      const fpath = path.join(__dirname, '../../tmp/test.json.seshat');
+      ensureFileUnlink(fpath);
+      const meta = { name: 'tmp/test.json', contentType: mockFileObject.meta.contentType };
+      await bucket.put(mockFileObject.body, meta);
+      expect(fs.existsSync(fpath)).to.equal(true);
+    });
+
   });
 
   describe('#delete()', () => {
@@ -134,6 +182,9 @@ describe('LocalBucket', () => {
       // it does not exist
       const promise = bucket.get('tmp/test.json');
       await expect(promise).to.be.rejectedWith(ObjectNotFoundError);
+    });
+
+    it.skip('deletes the metadata file', async () => {
     });
 
     it('rejects when file not found', async () => {

@@ -106,6 +106,8 @@ describe('LocalObject', () => {
     };
 
     const testFile = '/tmp/test.txt';
+    const metadata = { name: testFile, contentType: 'application/json' };
+
     let readStream: Readable;
     beforeEach(() => {
       ensureRm(testFile);
@@ -115,13 +117,13 @@ describe('LocalObject', () => {
     });
 
     it('returns a valid object', async () => {
-      const obj = await LocalObject.write(testFile, readStream);
+      const obj = await LocalObject.write(metadata, readStream);
 
       expect(obj.meta.name).to.equal('/tmp/test.txt');
     });
 
     it('creates new files properly', async () => {
-      await LocalObject.write(testFile, readStream);
+      await LocalObject.write(metadata, readStream);
 
       const content = fs.readFileSync(testFile).toString();
       expect(content).to.equal('hello world');
@@ -130,7 +132,8 @@ describe('LocalObject', () => {
     describe('when provided with a basePath', () => {
 
       it('returns valid objects with only relative object names', async () => {
-        const obj = await LocalObject.write('test.txt', readStream, '/tmp');
+        const metadata = { name: 'test.txt', contentType: 'text/plain' };
+        const obj = await LocalObject.write(metadata, readStream, '/tmp');
 
         expect(obj.meta.name).to.equal('test.txt');
       });
