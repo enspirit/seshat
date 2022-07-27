@@ -25,6 +25,7 @@ export class SecureRename implements ObjectTransformer {
     const name = await uniqueName();
     const metadata = {
       ...meta,
+      originalname: meta.name,
       name,
     };
     return { meta: metadata, stream };

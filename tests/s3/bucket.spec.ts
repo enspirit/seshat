@@ -1,6 +1,6 @@
-import { S3Client, ListObjectsV2Command, HeadObjectCommand, DeleteObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, ListObjectsV2Command, HeadObjectCommand, DeleteObjectCommand, GetObjectCommand, CreateMultipartUploadCommand, PutObjectCommand } from '@aws-sdk/client-s3';
 
-import { S3Bucket } from '../../src/';
+import { ObjectMeta, S3Bucket } from '../../src/';
 import { ObjectNotFoundError, PrefixNotFoundError } from '../../src/errors';
 
 import { expect, default as chai } from 'chai';
@@ -11,12 +11,16 @@ chai.use(chaiAsPromised);
 chai.use(sinonChai);
 import { mockClient } from 'aws-sdk-client-mock';
 import { mockLibStorageUpload } from 'aws-sdk-client-mock/libStorage';
+import { mockFileObject } from '../mocks/object';
 
 describe('S3Bucket', () => {
 
   const mockObjectA = {
     Key: 'package.json',
     ContentType: 'application/json',
+    Metadata: {
+      foo: 'bar',
+    },
   };
 
   const mockObjectB = {
@@ -24,16 +28,18 @@ describe('S3Bucket', () => {
     ContentType: 'plain/text',
   };
 
-  let s3client: any;
+  let s3mock: any;
+  let s3client: S3Client;
   let bucket: S3Bucket;
   const bucketName = 'seshat-bucket';
 
   beforeEach(async () => {
-    s3client = mockClient(S3Client);
-    mockLibStorageUpload(s3client);
+    s3mock = mockClient(S3Client);
+    s3client = new S3Client({ region: 'eu-west1' });
+    mockLibStorageUpload(s3mock);
 
-    s3client.on(HeadObjectCommand).resolves(mockObjectA);
-    s3client.on(GetObjectCommand).resolves(mockObjectA);
+    s3mock.on(HeadObjectCommand).resolves(mockObjectA);
+    s3mock.on(GetObjectCommand).resolves(mockObjectA);
 
     bucket = new S3Bucket({
       bucket: bucketName,
@@ -44,7 +50,7 @@ describe('S3Bucket', () => {
   describe('list()', () => {
 
     beforeEach(async () => {
-      s3client.on(ListObjectsV2Command).resolves({ Contents: [mockObjectA, mockObjectB] });
+      s3mock.on(ListObjectsV2Command).resolves({ Contents: [mockObjectA, mockObjectB] });
     });
 
     it('uses the s3client properly (list object and head for each object)', async () => {
@@ -92,7 +98,7 @@ describe('S3Bucket', () => {
     });
 
     it('rejects properly if the prefix does not exist', async () => {
-      s3client.on(ListObjectsV2Command).resolves({ Contents: [] });
+      s3mock.on(ListObjectsV2Command).resolves({ Contents: [] });
       const p = bucket.list('/something/that/does/not/exist');
       await expect(p).to.be.rejectedWith(PrefixNotFoundError);
     });
@@ -118,48 +124,69 @@ describe('S3Bucket', () => {
       expect(object.meta.contentType).to.equal('application/json');
     });
 
+    it('includes extra object meta when present', async () => {
+      const object = await bucket.get('package.json');
+      expect(object.meta.name).to.equal('package.json');
+      expect(object.meta.contentType).to.equal('application/json');
+      expect(object.meta.foo).to.equal('bar');
+    });
+
     it('rejects properly when object does not exist', async () => {
       const error = new Error('NotFound') as any;
       error.name = 'NotFound';
-      s3client.on(GetObjectCommand).rejects(error);
+      s3mock.on(GetObjectCommand).rejects(error);
       const p = bucket.get('package.json');
       await expect(p).to.be.rejectedWith(ObjectNotFoundError, /Object package.json not found/);
     });
 
   });
 
-  // describe.only('put()', () => {
+  describe('put()', () => {
 
-  //   beforeEach(async () => {
-  //     // s3client.on(CreateMultipartUploadCommand).resolves({ UploadId: '1' });
-  //     // s3client.on(UploadPartCommand).resolves({ ETag: '1' });
-  //   });
+    let metadata: ObjectMeta;
+    beforeEach(async () => {
+      // s3mock.on(CreateMultipartUploadCommand).resolves({ UploadId: '1' });
+      // s3mock.on(UploadPartCommand).resolves({ ETag: '1' });
+      metadata = { name: 'test.json', contentType: 'application/json' };
+    });
 
-  //   const metadata = { contentType: 'application/json' };
+    it('uses the s3client properly (simple upload)', async () => {
+      await bucket.put(mockFileObject.body, metadata);
+      await expect(s3client.send).to.be.calledWith(sinon.match.instanceOf(PutObjectCommand));
+      await expect(s3client.send).to.be.calledWith(sinon.match({
+        input: {
+          Bucket: 'seshat-bucket',
+          Key: 'test.json',
+          ContentType: 'application/json',
+          Metadata: {
+          },
+        },
+      }));
+    });
 
-  //   it('uses the s3client properly', async () => {
-  //     const readableStream = mockFileObject.getReadableStream();
-  //     await bucket.put('test.json', await readableStream, metadata);
-  //     await expect(s3client.send).to.be.calledWith(sinon.match.instanceOf(CreateMultipartUploadCommand));
-  //     // await expect(s3client.send).to.be.calledOnceWith({
-  //     //   Bucket: 'seshat-bucket',
-  //     //   Key: 'test.json',
-  //     //   ContentType: 'application/json',
-  //     //   Body: readableStream,
-  //     //   Metadata: {
-  //     //     contentType: 'application/json',
-  //     //   },
-  //     // });
-  //   });
+    it('stores additional metadata props accordingly', async () => {
+      metadata.foo = 'bar';
+      await bucket.put(mockFileObject.body, metadata);
+      await expect(s3client.send).to.be.calledWith(sinon.match.instanceOf(PutObjectCommand));
+      await expect(s3client.send).to.be.calledWith(sinon.match({
+        input: {
+          Bucket: 'seshat-bucket',
+          Key: 'test.json',
+          ContentType: 'application/json',
+          Metadata: {
+            foo: 'bar',
+          },
+        },
+      }));
+    });
 
-  //   // it('returns a valid S3Object', async () => {
-  //   //   const readableStream = mockFileObject.getReadableStream();
-  //   //   const object = await bucket.put('test.json', readableStream, metadata);
-  //   //   expect(object.name).to.equal('test.json');
-  //   //   expect(object.contentType).to.equal('application/json');
-  //   // });
+    it('returns a valid S3Object', async () => {
+      const object = await bucket.put(mockFileObject.body, metadata);
+      expect(object.meta.name).to.equal('test.json');
+      expect(object.meta.contentType).to.equal('application/json');
+    });
 
-  // });
+  });
 
   describe('delete()', () => {
 
@@ -184,7 +211,7 @@ describe('S3Bucket', () => {
     it('rejects properly when object does not exist', async () => {
       const error = new Error('NotFound') as any;
       error.name = 'NotFound';
-      s3client.on(HeadObjectCommand).rejects(error);
+      s3mock.on(HeadObjectCommand).rejects(error);
       const p = bucket.delete('test.json');
       await expect(p).to.be.rejectedWith(ObjectNotFoundError, /Object test.json not found/);
     });
@@ -206,7 +233,7 @@ describe('S3Bucket', () => {
         s3client,
         prefix: 'src/',
       });
-      s3client.on(ListObjectsV2Command).resolves({ Contents: objectsInSubfolder });
+      s3mock.on(ListObjectsV2Command).resolves({ Contents: objectsInSubfolder });
     });
 
     describe('list()', () => {

@@ -6,6 +6,7 @@ SeshatObject = {
   mtime: Date
   contentType: String
   contentLength: Integer
+  ...: String | Integer | Date
 }
 
 Error = {

@@ -31,7 +31,7 @@ export class S3Object implements Object {
   }
 
   static metaFromCommandOutput(bucket: string, name: string, output: HeadObjectCommandOutput | GetObjectCommandOutput): S3ObjectMeta {
-    return new S3ObjectMeta(
+    const meta = new S3ObjectMeta(
       bucket,
       name,
       output.ContentType || 'application/octet-stream',
@@ -39,6 +39,14 @@ export class S3Object implements Object {
       output.LastModified,
       output.ContentLength || 0,
     );
+    if (!output.Metadata) {
+      return meta;
+    }
+    return Object.entries(output.Metadata)
+      .reduce((meta: ObjectMeta, [key, value]: [string, string]): ObjectMeta => {
+        meta[key] = value;
+        return meta;
+      }, meta) as S3ObjectMeta;
   }
 
   static fromGetObjectCommandOutput(bucket: string, name: string, output: GetObjectCommandOutput) {

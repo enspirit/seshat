@@ -13,6 +13,8 @@ export interface ObjectMeta {
   ctime?: Date
   mtime?: Date
   contentLength?: number
+
+  [key: string]: any
 }
 
 export interface BucketConfig {
