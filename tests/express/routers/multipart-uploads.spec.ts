@@ -3,12 +3,12 @@ import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import { createRouter } from '../../../src/express/routers/multipart-uploads';
-import mockBucket from '../../mocks/bucket';
-import { Config } from '../../../src/types';
+import { getMockBucket } from '../../mocks/bucket';
+import { Bucket, Config } from '../../../src/types';
 chai.use(sinonChai);
 
 import express, { Application } from 'express';
-import { mockFileObject } from '../../mocks/object';
+import { getMockFileObject } from '../../mocks/object';
 import { Readable } from 'stream';
 
 describe('the multipart-uploads express router', () => {
@@ -17,7 +17,9 @@ describe('the multipart-uploads express router', () => {
 
   let router;
   let app: Application;
+  let mockBucket: Bucket;
   beforeEach(() => {
+    mockBucket = getMockBucket();
     config = {
       bucket: mockBucket,
     };
@@ -25,7 +27,7 @@ describe('the multipart-uploads express router', () => {
 
     mockBucket.put = async (stream, _metadata) => {
       stream.resume();
-      return mockFileObject;
+      return getMockFileObject();
     };
 
     app = express();

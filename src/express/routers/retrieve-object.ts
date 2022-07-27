@@ -12,7 +12,7 @@ export interface RetrieveObjectConfig {
 export const DefaultConfig: RetrieveObjectConfig = {
   downloadAs: {
     enabled: true,
-    queryParam: 'downloadAs',
+    queryParam: 'download',
   },
 };
 
@@ -45,7 +45,11 @@ export const createRouter = (seshatConfig: Config, routerConfig: RetrieveObjectC
    * Allows a user to download a file as an attachment with different name
    */
   const downloadAs: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
-    const filename = req.query[routerConfig.downloadAs.queryParam];
+    if (!Object.hasOwnProperty.call(req.query, routerConfig.downloadAs.queryParam)) {
+      return next();
+    }
+
+    const filename = req.query[routerConfig.downloadAs.queryParam] || req.seshat.object?.meta.name;
     if (filename) {
       res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
     }

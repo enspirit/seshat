@@ -3,27 +3,28 @@ import { createApp } from '../src/express';
 import request from 'supertest';
 import chai from 'chai';
 import path from 'path';
-import mockBucket, { reset as resetMockBucket } from './mocks/bucket';
-import { mockFileObject } from './mocks/object';
+import { getMockBucket } from './mocks/bucket';
+import { getMockFileObject } from './mocks/object';
 import { expect } from 'chai';
 import sinonChai from 'sinon-chai';
 import { BucketPolicyError, ObjectNotFoundError } from '../src/errors';
 import sinon from 'sinon';
 import { Readable } from 'stream';
+import { Bucket, Object } from '../src';
 chai.use(sinonChai);
 
 describe('the express app', () => {
 
   let app: Application, config;
+  let mockFileObject: Object;
+  let mockBucket: Bucket;
   beforeEach(() => {
+    mockFileObject = getMockFileObject();
+    mockBucket = getMockBucket();
     config = {
       bucket: mockBucket,
     };
     app = createApp(config);
-  });
-
-  beforeEach(() => {
-    resetMockBucket();
   });
 
   describe('on GET /:path', () => {
@@ -85,6 +86,49 @@ describe('the express app', () => {
         });
 
       stub.reset();
+    });
+
+    describe('when used with the special download? query param', () => {
+
+      it('sets the Content-Disposition header accordingly', () => {
+        const stub = mockBucket.get as sinon.SinonStub;
+        stub.resolves(mockFileObject);
+        const contentLength = mockFileObject.meta?.contentLength?.toString() as string;
+
+        return request(app)
+          .get('/file.txt?download')
+          .expect('Content-Type', mockFileObject.meta.contentType)
+          .expect('Content-Length', contentLength)
+          .expect('Content-Disposition', /attachment/)
+          .expect(200);
+      });
+
+      it('uses the provided value as filename', () => {
+        const stub = mockBucket.get as sinon.SinonStub;
+        stub.resolves(mockFileObject);
+        const contentLength = mockFileObject.meta?.contentLength?.toString() as string;
+
+        return request(app)
+          .get('/file.txt?download=foo.bar')
+          .expect('Content-Type', mockFileObject.meta.contentType)
+          .expect('Content-Length', contentLength)
+          .expect('Content-Disposition', 'attachment; filename=foo.bar')
+          .expect(200);
+      });
+
+      it('defaults to object name when not provided with value', () => {
+        const stub = mockBucket.get as sinon.SinonStub;
+        stub.resolves(mockFileObject);
+        const contentLength = mockFileObject.meta?.contentLength?.toString() as string;
+
+        return request(app)
+          .get('/file.txt?download')
+          .expect('Content-Type', mockFileObject.meta.contentType)
+          .expect('Content-Length', contentLength)
+          .expect('Content-Disposition', 'attachment; filename=file.txt')
+          .expect(200);
+      });
+
     });
 
   });

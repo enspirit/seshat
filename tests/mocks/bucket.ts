@@ -1,26 +1,8 @@
-import { mockFileObject } from './object';
+import { getMockFileObject } from './object';
 import { Readable } from 'stream';
 import * as fs from 'fs';
 import { SinonStub, SinonSpy, default as sinon } from 'sinon';
-import { Bucket, Object, ObjectMeta } from '../../src/types';
-
-export const reset = () => {
-  mockBucket.exists.resetHistory();
-  mockBucket.fileExists.resetHistory();
-  mockBucket.dirExists.resetHistory();
-  mockBucket.get.resetHistory();
-  mockBucket.list.resetHistory();
-  mockBucket.delete.resetHistory();
-  mockBucket.put.resetHistory();
-};
-
-const fakeBucket = {
-  put: async (readable: Readable, _meta: ObjectMeta): Promise<Object> => {
-    const devNull = fs.createWriteStream('/dev/null');
-    readable.pipe(devNull);
-    return mockFileObject;
-  },
-};
+import { Object, ObjectMeta } from '../../src/types';
 
 interface MockBucket {
   exists: SinonStub,
@@ -33,22 +15,31 @@ interface MockBucket {
   put: SinonSpy
 }
 
-const mockBucket: MockBucket = {
-  exists: sinon.stub().resolves(true),
+export const getMockBucket = (): MockBucket => {
 
-  fileExists: sinon.stub().resolves(true),
+  const fakeBucket = {
+    put: async (readable: Readable, _meta: ObjectMeta): Promise<Object> => {
+      const devNull = fs.createWriteStream('/dev/null');
+      readable.pipe(devNull);
+      return getMockFileObject();
+    },
+  };
 
-  dirExists: sinon.stub().resolves(true),
+  return {
+    exists: sinon.stub().resolves(true),
 
-  get: sinon.stub().resolves(mockFileObject),
+    fileExists: sinon.stub().resolves(true),
 
-  head: sinon.stub().resolves(mockFileObject.meta),
+    dirExists: sinon.stub().resolves(true),
 
-  list: sinon.stub().resolves([mockFileObject]),
+    get: sinon.stub().resolves(getMockFileObject()),
 
-  delete: sinon.stub().resolves(),
+    head: sinon.stub().resolves(getMockFileObject().meta),
 
-  put: sinon.spy(fakeBucket, 'put'),
+    list: sinon.stub().resolves([getMockFileObject()]),
+
+    delete: sinon.stub().resolves(),
+
+    put: sinon.spy(fakeBucket, 'put'),
+  };
 };
-
-export default mockBucket as Bucket;

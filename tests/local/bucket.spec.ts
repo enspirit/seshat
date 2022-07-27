@@ -7,13 +7,15 @@ chai.use(chaiAsPromised);
 
 import { expect } from 'chai';
 import { ObjectNotFoundError, PrefixNotFoundError } from '../../src/errors';
-import { mockFileObject } from '../mocks/object';
-import { Bucket } from '../../src/types';
+import { getMockFileObject } from '../mocks/object';
+import { Bucket, Object } from '../../src/types';
 
 describe('LocalBucket', () => {
 
   let bucket: Bucket;
+  let mockFileObject: Object;
   beforeEach(() => {
+    mockFileObject = getMockFileObject();
     bucket = new LocalBucket({ path: path.join(__dirname, '../../') });
   });
 

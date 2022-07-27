@@ -21,14 +21,22 @@ export class SecureRename implements ObjectTransformer {
 
   type: ObjectTransformerType = 'Ingress';
 
-  async transform(stream: Readable, meta: ObjectMeta, _mode: ObjectTransformerMode): Promise<ObjectTransformerOutput> {
-    const name = await uniqueName();
-    const metadata = {
-      ...meta,
-      originalname: meta.name,
-      name,
-    };
-    return { meta: metadata, stream };
+  async transform(stream: Readable, meta: ObjectMeta, mode: ObjectTransformerMode): Promise<ObjectTransformerOutput> {
+    if (mode === 'Ingress') {
+      const name = await uniqueName();
+      const metadata = {
+        ...meta,
+        originalname: meta.name,
+        name,
+      };
+      return { meta: metadata, stream };
+    } else {
+      const metadata = {
+        ...meta,
+        name: meta.originalname,
+      };
+      return { stream, meta: metadata };
+    }
   }
 
 }

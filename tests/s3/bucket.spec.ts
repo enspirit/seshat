@@ -1,6 +1,6 @@
 import { S3Client, ListObjectsV2Command, HeadObjectCommand, DeleteObjectCommand, GetObjectCommand, CreateMultipartUploadCommand, PutObjectCommand } from '@aws-sdk/client-s3';
 
-import { ObjectMeta, S3Bucket } from '../../src/';
+import { Object, ObjectMeta, S3Bucket } from '../../src/';
 import { ObjectNotFoundError, PrefixNotFoundError } from '../../src/errors';
 
 import { expect, default as chai } from 'chai';
@@ -11,7 +11,7 @@ chai.use(chaiAsPromised);
 chai.use(sinonChai);
 import { mockClient } from 'aws-sdk-client-mock';
 import { mockLibStorageUpload } from 'aws-sdk-client-mock/libStorage';
-import { mockFileObject } from '../mocks/object';
+import { getMockFileObject } from '../mocks/object';
 
 describe('S3Bucket', () => {
 
@@ -31,9 +31,11 @@ describe('S3Bucket', () => {
   let s3mock: any;
   let s3client: S3Client;
   let bucket: S3Bucket;
+  let mockFileObject: Object;
   const bucketName = 'seshat-bucket';
 
   beforeEach(async () => {
+    mockFileObject = getMockFileObject();
     s3mock = mockClient(S3Client);
     s3client = new S3Client({ region: 'eu-west1' });
     mockLibStorageUpload(s3mock);

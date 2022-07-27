@@ -7,7 +7,7 @@ chai.use(sinonChai);
 import AbstractBucket from '../src/abstract-bucket';
 import { Readable } from 'stream';
 import { BucketPolicy, Object, ObjectMeta, ObjectTransformer, ObjectTransformerType } from '../src/types';
-import { mockFileObject } from './mocks/object';
+import { getMockFileObject } from './mocks/object';
 import { readOnlyPolicy, uploadOnlyPolicy } from './mocks/policies';
 import { ObjectTransformerError } from '../src/errors';
 
@@ -54,7 +54,9 @@ describe('the AbstractBucket class', () => {
   let bucket: ConcreteBucket;
   let policies: Array<BucketPolicy>;
   let transformers: Array<ObjectTransformer>;
+  let mockFileObject: Object;
   beforeEach(() => {
+    mockFileObject = getMockFileObject();
     policies = [readOnlyPolicy, uploadOnlyPolicy];
     transformers = [];
     bucket = new ConcreteBucket({
