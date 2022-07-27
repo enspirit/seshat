@@ -16,25 +16,27 @@ const uniqueName = (length = 16): Promise<string> => {
     });
   });
 };
-
 export class SecureRename implements ObjectTransformer {
 
-  type: ObjectTransformerType = 'Ingress';
+  type: ObjectTransformerType = 'Duplex';
 
   async transform(stream: Readable, meta: ObjectMeta, mode: ObjectTransformerMode): Promise<ObjectTransformerOutput> {
     if (mode === 'Ingress') {
       const name = await uniqueName();
-      const metadata = {
+      const metadata: ObjectMeta = {
         ...meta,
         originalname: meta.name,
         name,
       };
+
       return { meta: metadata, stream };
     } else {
-      const metadata = {
+      const metadata: ObjectMeta = {
         ...meta,
         name: meta.originalname,
       };
+      delete metadata.originalname;
+
       return { stream, meta: metadata };
     }
   }
