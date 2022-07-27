@@ -1,4 +1,4 @@
-import { S3Client, ListObjectsV2Command, HeadObjectCommand, DeleteObjectCommand, GetObjectCommand, CreateMultipartUploadCommand, PutObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, ListObjectsV2Command, HeadObjectCommand, DeleteObjectCommand, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
 
 import { Object, ObjectMeta, S3Bucket } from '../../src/';
 import { ObjectNotFoundError, PrefixNotFoundError } from '../../src/errors';
