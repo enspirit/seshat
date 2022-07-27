@@ -1,6 +1,6 @@
 import { Readable } from 'stream';
 import { ObjectTransformerError } from './errors';
-import { Bucket, BucketPolicy, Object, ObjectMeta, ObjectTransformer, ObjectTransformerOutput, BucketConfig } from './types';
+import { Bucket, BucketPolicy, Object, ObjectMeta, ObjectTransformer, ObjectTransformerOutput, BucketConfig, ObjectTransformerMode } from './types';
 
 export default abstract class AbstractBucket implements Bucket {
 
@@ -27,17 +27,7 @@ export default abstract class AbstractBucket implements Bucket {
   async get(path: string): Promise<Object> {
     await this.ensurePolicies((policy: BucketPolicy) => policy.get(path));
     const { body: stream, meta } = await this._get(path);
-    const output: ObjectTransformerOutput = await this.transformers
-      .filter(t => ['Egress', 'Duplex'].includes(t.type))
-      .reduce(async (p: Promise<ObjectTransformerOutput>, t: ObjectTransformer) => {
-        const { stream, meta } = await p;
-        try {
-          const result = await t.transform(stream, meta, 'Egress');
-          return result;
-        } catch (err) {
-          throw new ObjectTransformerError(`Object transformer failed: ${t.constructor.name}`);
-        }
-      }, Promise.resolve({ stream, meta }));
+    const output: ObjectTransformerOutput = await this.transform(stream, meta, 'Egress');
     return { body: output.stream, meta: output.meta };
   }
 
@@ -45,17 +35,7 @@ export default abstract class AbstractBucket implements Bucket {
 
   async put(stream: Readable, meta: ObjectMeta): Promise<Object> {
     await this.ensurePolicies((policy: BucketPolicy) => policy.put(meta));
-    const output: ObjectTransformerOutput = await this.transformers
-      .filter(t => ['Ingress', 'Duplex'].includes(t.type))
-      .reduce(async (p: Promise<ObjectTransformerOutput>, t: ObjectTransformer) => {
-        const { stream, meta } = await p;
-        try {
-          const result = await t.transform(stream, meta, 'Ingress');
-          return result;
-        } catch (err) {
-          throw new ObjectTransformerError(`Object transformer failed: ${t.constructor.name}`);
-        }
-      }, Promise.resolve({ stream, meta }));
+    const output: ObjectTransformerOutput = await this.transform(stream, meta, 'Ingress');
     return this._put(output.stream, output.meta);
   }
 
@@ -88,6 +68,20 @@ export default abstract class AbstractBucket implements Bucket {
     for (const policy of this.policies) {
       await cb(policy);
     }
+  }
+
+  private async transform(stream: Readable, meta: ObjectMeta, mode: ObjectTransformerMode): Promise<ObjectTransformerOutput> {
+    return this.transformers
+      .filter(t => [mode, 'Duplex'].includes(t.type))
+      .reduce(async (p: Promise<ObjectTransformerOutput>, t: ObjectTransformer) => {
+        const { stream, meta } = await p;
+        try {
+          const result = await t.transform(stream, meta, mode);
+          return result;
+        } catch (err) {
+          throw new ObjectTransformerError(`Object transformer failed: ${t.constructor.name}`);
+        }
+      }, Promise.resolve({ stream, meta }));
   }
 
 }
