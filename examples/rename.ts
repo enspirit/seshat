@@ -1,6 +1,7 @@
 import { Express } from 'express';
-import { createApp, LocalBucket } from '../src';
+import { createApp, S3Bucket } from '../src';
 import { SecureRename } from '../src/transformers';
+import { s3client } from './s3';
 
 /**
  * This simple example shows how a bucket can use policies to allow/disallow actions.
@@ -9,10 +10,10 @@ import { SecureRename } from '../src/transformers';
  *
  * (bucket based on a local folder serving the root folder of this project)
  */
-export default (expressApp: Express, seshatRootDir: string) => {
+export default (expressApp: Express, _seshatRootDir: string) => {
 
   expressApp.use('/rename', createApp({
-    bucket: new LocalBucket({ path: seshatRootDir, transformers: [new SecureRename()] }),
+    bucket: new S3Bucket({ s3client, bucket: 'my-s3-bucket', transformers: [new SecureRename()] }),
   }));
 
 };
