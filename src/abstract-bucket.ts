@@ -57,7 +57,7 @@ export default abstract class AbstractBucket implements Bucket {
 
   async exists(path: string) {
     try {
-      await this.get(path);
+      await this.head(path);
       return true;
     } catch (err) {
       return false;
