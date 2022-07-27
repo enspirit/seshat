@@ -17,6 +17,7 @@ jobs:
         with:
           ruby-version: 2.7
       - run: make ci
+      - run: npm ci
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

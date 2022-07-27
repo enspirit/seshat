@@ -12,7 +12,8 @@
     "test": "mocha -r ts-node/register tests/helpers.ts 'tests/**/*.spec.ts'",
     "test:watch": "mocha -r ts-node/register tests/helpers.ts 'tests/**/*.spec.ts' --watch --watch-files src/**/*.ts,tests/**/*.ts",
     "lint": "eslint src tests --ext ts",
-    "preversion": "npm run build"
+    "preversion": "npm run build",
+    "prepublish": "npm run build"
   },
   "keywords": [],
   "author": "",
