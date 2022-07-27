@@ -19,9 +19,20 @@ describe('LocalBucket', () => {
     bucket = new LocalBucket({ path: path.join(__dirname, '../../') });
   });
 
+  describe('its constructor', () => {
+
+    it('does not let users use it in production environment', () => {
+      process.env.NODE_ENV = 'production';
+      expect(() => new LocalBucket({ path: '/tmp' })).to.throw(/LocalBucket is not supposed to be used in production environments./);
+      delete process.env.NODE_ENV;
+    });
+
+  });
+
   describe('head()', () => {
 
     it('returns the valid metadata', async () => {
+      console.log('-------->', process.env.NODE_ENV);
       const metadata = { name: 'tmp/objectnamewithoutextension', contentType: 'application/json', foo: 'bar' };
       await bucket.put(mockFileObject.body, metadata);
       const meta = await bucket.head(metadata.name);

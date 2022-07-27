@@ -17,6 +17,9 @@ export class LocalBucket extends AbstractBucket {
   ) {
     super(config);
     this.path = config.path;
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('LocalBucket is not supposed to be used in production environments.');
+    }
   }
 
   async _head(path: string) {
