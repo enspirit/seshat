@@ -1,6 +1,5 @@
 import { Request } from 'express';
 import { Readable } from 'stream';
-import { EventEmitter } from 'events';
 
 export interface Config {
   bucket: Bucket
@@ -23,19 +22,26 @@ export interface BucketConfig {
   transformers?: Array<ObjectTransformer>
 }
 
-type BucketEventMap = Record<string, any>;
-type BucketEventKey<T extends BucketEventMap> = string & keyof T;
-type BucketEventReceiver<T> = (params: T) => void;
-interface BucketEventEmitter<T extends BucketEventMap> {
-  on<K extends BucketEventKey<T>>
-    (eventName: K, fn: BucketEventReceiver<T[K]>): void;
-  off<K extends BucketEventKey<T>>
-    (eventName: K, fn: BucketEventReceiver<T[K]>): void;
-  emit<K extends BucketEventKey<T>>
-    (eventName: K, params: T[K]): void;
+export type BucketEvent = {
+  stored: (path: string, meta: ObjectMeta) => void,
+  deleted: (path: string) => void,
+};
+
+export interface BucketEmitter {
+  // matches EventEmitter.on
+  on<U extends keyof BucketEvent>(event: U, listener: BucketEvent[U]): this;
+
+  // matches EventEmitter.off
+  off<U extends keyof BucketEvent>(event: U, listener: BucketEvent[U]): this;
+
+  // matches EventEmitter.emit
+  emit<U extends keyof BucketEvent>(
+      event: U,
+      ...args: Parameters<BucketEvent[U]>
+  ): boolean;
 }
 
-export declare interface Bucket {
+export interface Bucket extends BucketEmitter {
   exists(path: string): Promise<boolean>;
 
   head(path: string): Promise<ObjectMeta>;
