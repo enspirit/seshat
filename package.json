@@ -19,7 +19,8 @@
   "author": "",
   "license": "ISC",
   "files": [
-    "dist/src"
+    "dist/src",
+    "dist/package.json"
   ],
   "exports": {
     ".": "./dist/src/index.js",

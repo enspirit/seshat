@@ -1,4 +1,8 @@
-export { version } from '../package.json';
+import * as pack from '../package.json';
+
+const { version } = pack;
+export { version };
+
 export * from './errors';
 export * from './express';
 export * from './types';
