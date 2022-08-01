@@ -47,7 +47,7 @@ export class SecureRename implements ObjectTransformer {
       const generated = await this.nameGenerator();
       const info = path.parse(meta.name);
       let name = this.options.keepPrefix ? path.join(info.dir, generated) : generated;
-      name = this.options.keepExtension ? `${name}.${info.ext}` : name;
+      name = this.options.keepExtension ? `${name}${info.ext}` : name;
       const metadata: ObjectMeta = {
         ...meta,
         originalname: meta.name,
