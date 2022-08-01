@@ -29,8 +29,6 @@ services:
 
     - description: |-
         when requested with a single file
-      tags:
-        - only
       file_upload:
         param_name: some-todos.csv
         path: ../fixtures/todos.csv
