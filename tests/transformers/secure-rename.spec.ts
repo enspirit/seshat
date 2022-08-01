@@ -17,10 +17,13 @@ describe('SecureRename', () => {
 
   describe('when used in Ingress mode', () => {
 
-    const metadata: ObjectMeta = {
-      name: 'test.json',
-      contentType: 'application/json',
-    };
+    let metadata: ObjectMeta;
+    beforeEach(() => {
+      metadata = {
+        name: 'test.json',
+        contentType: 'application/json',
+      };
+    });
 
     describe('.transform', () => {
 
@@ -37,6 +40,34 @@ describe('SecureRename', () => {
       it('adds the original name to the object metadata', async () => {
         const output: ObjectTransformerOutput = await transformer.transform(mockFileObject.body, metadata, 'Ingress');
         expect(output.meta.originalname).to.equal(metadata.name);
+      });
+
+      it('does keep prefix when configured to do so', async () => {
+        metadata.name = 'prefix/subprefix/test.csv';
+        transformer = new SecureRename({ keepPrefix: true });
+        const output: ObjectTransformerOutput = await transformer.transform(mockFileObject.body, metadata, 'Ingress');
+        expect(output.meta.name).to.include('prefix/subprefix/');
+      });
+
+      it('does hide the prefix when configured to do so', async () => {
+        transformer = new SecureRename({ keepPrefix: false });
+        metadata.name = 'prefix/subprefix/test.csv';
+        const output: ObjectTransformerOutput = await transformer.transform(mockFileObject.body, metadata, 'Ingress');
+        expect(output.meta.name).to.not.include('prefix/subprefix/');
+      });
+
+      it('does keep extension when configured to do so', async () => {
+        metadata.name = 'prefix/subprefix/test.csv';
+        transformer = new SecureRename({ keepExtension: true });
+        const output: ObjectTransformerOutput = await transformer.transform(mockFileObject.body, metadata, 'Ingress');
+        expect(output.meta.name.endsWith('.csv')).to.equal(true);
+      });
+
+      it('does hide the prefix when configured to do so', async () => {
+        transformer = new SecureRename({ keepExtension: false });
+        metadata.name = 'prefix/subprefix/test.csv';
+        const output: ObjectTransformerOutput = await transformer.transform(mockFileObject.body, metadata, 'Ingress');
+        expect(output.meta.name.endsWith('.csv')).to.equal(false);
       });
 
     });
