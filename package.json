@@ -1,6 +1,6 @@
 {
   "name": "@enspirit/seshat",
-  "version": "2.0.8",
+  "version": "2.0.9",
   "description": "Seshat v2",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
