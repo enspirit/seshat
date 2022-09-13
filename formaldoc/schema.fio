@@ -1,12 +1,12 @@
 @import webspicy/scalars
 
 SeshatObject = {
-  name: String
-  ctime: Date
-  mtime: Date
-  contentType: String
-  contentLength: Integer
-  ...: String | Integer | Date
+  name          :  String
+  contentType   :  String
+  ctime         :? Date
+  mtime         :? Date
+  contentLength :? Integer
+  ...           :  String | Integer | Date
 }
 
 Error = {
