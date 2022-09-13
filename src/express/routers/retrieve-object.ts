@@ -24,6 +24,11 @@ export const createRouter = (seshatConfig: Config, routerConfig: RetrieveObjectC
    * Expose the object on the request
    */
   const exposeObject: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+    const isPrefix = req.path[req.path.length - 1] === '/';
+    if (isPrefix) {
+      return next('route');
+    }
+
     if (req.seshat && req.seshat.object) {
       return next();
     }
@@ -65,8 +70,9 @@ export const createRouter = (seshatConfig: Config, routerConfig: RetrieveObjectC
   /**
    * Retrieve files
    */
-  router.get('/*', middlewares, async (req: Request, res: Response) => {
+  router.get('/*', middlewares, async (req: Request, res: Response, next: NextFunction) => {
     const { object } = req.seshat;
+
     if (!object) {
       return res
         .status(404)

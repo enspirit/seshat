@@ -7,6 +7,7 @@ import { createRouter as executeActions } from './express/routers/execute-action
 import { createRouter as busboyUploader } from './express/routers/multipart-uploads';
 import { createRouter as retrieveObject } from './express/routers/retrieve-object';
 import { createRouter as deleteObject } from './express/routers/delete-object';
+import { createRouter as listObjects } from './express/routers/list-objects';
 
 import morgan from 'morgan';
 
@@ -20,6 +21,7 @@ export const createApp = (config: Config): express.Express => {
   app.use(busboyUploader(config));
   app.use(deleteObject(config));
   app.use(retrieveObject(config));
+  app.use(listObjects(config));
 
   app.use(errorHandler);
 
