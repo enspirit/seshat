@@ -36,7 +36,7 @@ export class LocalObject implements Object {
     }
   }
 
-  static async metaFromDir(fpath: string, basePath?: string): Promise<ObjectMeta> {
+  static async metaFromDir(fpath: string, _basePath?: string): Promise<ObjectMeta> {
     return {
       name: path.normalize(fpath),
       contentType: 'seshat/prefix',
