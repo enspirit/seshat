@@ -36,6 +36,13 @@ export class LocalObject implements Object {
     }
   }
 
+  static async metaFromDir(fpath: string, basePath?: string): Promise<ObjectMeta> {
+    return {
+      name: path.normalize(fpath),
+      contentType: 'seshat/prefix',
+    };
+  }
+
   static async metaFromStats(name: string, fpath: string, stats: fs.Stats): Promise<ObjectMeta> {
     const loadMeta = async () => {
       try {
@@ -70,11 +77,10 @@ export class LocalObject implements Object {
       const fullpath = basePath ? path.join(basePath, dirpath) : dirpath;
       const objectPaths = await fsPromises.readdir(fullpath, { withFileTypes: true });
       const promises = objectPaths
-        .filter((entry) => {
-          return !entry.isDirectory();
-        })
         .map(entry => {
-          return this.metaFromPath(path.join(dirpath, entry.name), basePath);
+          return entry.isDirectory()
+            ? this.metaFromDir(path.join(dirpath, entry.name), basePath)
+            : this.metaFromPath(path.join(dirpath, entry.name), basePath);
         });
       return Promise.all(promises);
     } catch (err: any) {
