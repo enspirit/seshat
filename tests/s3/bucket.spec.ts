@@ -266,12 +266,12 @@ describe('S3Bucket', () => {
         }));
       });
 
-      it('returns s3object meta with proper names (prefix is removed)', async () => {
+      it('returns s3object meta, sorted, and with proper names (prefix is removed)', async () => {
         const metas = await bucket.list();
         expect(metas).to.have.length(2);
-        const [index, example] = metas;
-        expect(index.name).to.equal('index.js');
+        const [example, index] = metas;
         expect(example.name).to.equal('example.js');
+        expect(index.name).to.equal('index.js');
       });
 
     });

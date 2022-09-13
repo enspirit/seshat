@@ -105,13 +105,29 @@ export class S3Bucket extends AbstractBucket {
       Prefix: this.objectKey(prefix),
       Delimiter: '/',
     }));
-    if (!res.Contents || res.Contents?.length === 0) {
-      throw new PrefixNotFoundError(`Unable to find objects with prefix ${prefix}`);
-    }
+
+    // Prefixes
+    const prefixes = (res.CommonPrefixes || []).map((entry) => {
+      return {
+        name: entry.Prefix as string,
+        contentType: 'seshat/prefix',
+      };
+    });
+
+    // Objects
     const promises = (res.Contents || []).map((object) => {
       return this._head(this.seshatKey(object.Key as string));
     });
-    return Promise.all(promises);
+    const objects = await Promise.all(promises);
+
+    // Combine both prefixes & objects
+    const results = [...objects, ...prefixes];
+    if (!results.length) {
+      throw new PrefixNotFoundError(`Unable to find objects with prefix ${prefix}`);
+    }
+
+    // Sorted by name
+    return results.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
   }
 
   /**
