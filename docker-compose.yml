@@ -10,6 +10,7 @@ services:
     volumes:
       - ./src:/home/app/src
       - ./examples:/home/app/examples
+      - ./tmp:/home/app/tmp
 
   minio:
     image: minio/minio

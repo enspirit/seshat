@@ -92,7 +92,7 @@ export class LocalObject implements Object {
   }
 
   static async delete(fpath: string, basePath?: string): Promise<void> {
-    await this.fromPath(fpath, basePath);
+    await this.metaFromPath(fpath, basePath);
     try {
       await fsPromises.unlink(fpath);
     } catch (err: any) {
