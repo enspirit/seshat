@@ -92,9 +92,10 @@ export class LocalObject implements Object {
   }
 
   static async delete(fpath: string, basePath?: string): Promise<void> {
+    const fullpath = basePath ? path.join(basePath, fpath) : fpath;
     await this.metaFromPath(fpath, basePath);
     try {
-      await fsPromises.unlink(fpath);
+      await fsPromises.unlink(fullpath);
     } catch (err: any) {
       if (err.code === 'ENOENT') {
         throw new ObjectNotFoundError(`Object ${fpath} not found`);
