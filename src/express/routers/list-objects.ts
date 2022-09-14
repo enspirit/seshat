@@ -1,4 +1,5 @@
 import express, { NextFunction, Request, Response, Router } from 'express';
+import { PrefixNotFoundError } from '../../errors';
 import { Config } from '../../types';
 
 export interface ListObjectsConfig {
@@ -19,8 +20,15 @@ export const createRouter = (seshatConfig: Config, _routerConfig: ListObjectsCon
     if (prefix[prefix.length - 1] !== '/') {
       return next('route');
     }
-    const objects = await bucket.list(prefix);
-    res.send(objects);
+    try {
+      const objects = await bucket.list(prefix);
+      res.send(objects);
+    } catch (err) {
+      if (err instanceof PrefixNotFoundError) {
+        return res.sendStatus(404);
+      }
+      next(err);
+    }
   });
 
   return router;
