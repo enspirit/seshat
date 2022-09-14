@@ -82,7 +82,10 @@ export class LocalObject implements Object {
             ? this.metaFromDir(path.join(dirpath, entry.name), basePath)
             : this.metaFromPath(path.join(dirpath, entry.name), basePath);
         });
-      return Promise.all(promises);
+      const objects = await Promise.all(promises);
+      return objects.filter(o => {
+        return o.name.indexOf('.seshat') <= 0;
+      });
     } catch (err: any) {
       if (err.code === 'ENOENT') {
         throw new PrefixNotFoundError(`Unable to find objects with prefix ${dirpath}`);
@@ -95,12 +98,22 @@ export class LocalObject implements Object {
     const fullpath = basePath ? path.join(basePath, fpath) : fpath;
     await this.metaFromPath(fpath, basePath);
     try {
+      // Delete the file
       await fsPromises.unlink(fullpath);
     } catch (err: any) {
       if (err.code === 'ENOENT') {
         throw new ObjectNotFoundError(`Object ${fpath} not found`);
       }
       throw new SeshatError(err.message);
+    }
+
+    // Ensure metadata file is deleted as well
+    try {
+      await fsPromises.unlink(`${fullpath}.seshat`);
+    } catch (err: any) {
+      if (err.code !== 'ENOENT') {
+        throw new SeshatError(err.message);
+      }
     }
   }
 

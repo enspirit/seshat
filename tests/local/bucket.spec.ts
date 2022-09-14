@@ -58,6 +58,14 @@ describe('LocalBucket', () => {
       expect(indexTs).to.exist;
     });
 
+    it('does not return the seshat metadata files (tmp/)', async () => {
+      fs.writeFileSync(path.join(__dirname, '../../tmp/test.json.seshat'), 'hello world');
+      const metas = await bucket.list('tmp/');
+      const aMetaDataFile = metas.find(m => m.name.includes('.seshat'));
+      // eslint-disable-next-line no-unused-expressions
+      expect(aMetaDataFile).to.not.exist;
+    });
+
     it('rejects if the prefix/folder does not exist', () => {
       const promise = bucket.list('unknown/');
       return expect(promise).to.be.rejectedWith(PrefixNotFoundError);
@@ -194,7 +202,17 @@ describe('LocalBucket', () => {
       await expect(promise).to.be.rejectedWith(ObjectNotFoundError);
     });
 
-    it.skip('deletes the metadata file', async () => {
+    it('also deletes the metadata file', async () => {
+      fs.writeFileSync(path.join(__dirname, '../../tmp/test.json'), 'hello world');
+      fs.writeFileSync(path.join(__dirname, '../../tmp/test.json.seshat'), '{}');
+
+      // its metadata file exists (does not raise)
+      await bucket.get('tmp/test.json.seshat');
+      // we delete it
+      await bucket.delete('tmp/test.json');
+      // its metadata file does not exist anymore
+      const promise = bucket.get('tmp/test.json.seshat');
+      await expect(promise).to.be.rejectedWith(ObjectNotFoundError);
     });
 
     it('rejects when file not found', async () => {
