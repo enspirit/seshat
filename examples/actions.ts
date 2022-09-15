@@ -1,6 +1,6 @@
 import { Express } from 'express';
 import { createApp, LocalBucket, S3Bucket } from '../src';
-import mkdir from '../src/actions/mkdir';
+import { mkdir } from '../src/actions';
 import { s3client } from './s3';
 
 /**

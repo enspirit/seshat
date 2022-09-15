@@ -1,7 +1,7 @@
 import { Request } from 'express';
 import { Action } from '../types';
 
-const mkdir: Action = {
+export const mkdir: Action = {
   name: 'mkdir',
   run: async (req: Request): Promise<any> => {
 
@@ -13,5 +13,3 @@ const mkdir: Action = {
     return 'ok' as any;
   },
 };
-
-export default mkdir;

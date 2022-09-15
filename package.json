@@ -25,7 +25,8 @@
   "exports": {
     ".": "./dist/src/index.js",
     "./policies": "./dist/src/policies/index.js",
-    "./transformers": "./dist/src/transformers/index.js"
+    "./transformers": "./dist/src/transformers/index.js",
+    "./actions": "./dist/src/actions/index.js"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.141.0",
