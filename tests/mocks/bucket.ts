@@ -22,10 +22,10 @@ interface MockBucket {
 export const getMockBucket = (): MockBucket => {
 
   const fakeBucket = {
-    put: async (readable: Readable, _meta: ObjectMeta): Promise<Object> => {
+    put: async (readable: Readable, _meta: ObjectMeta): Promise<ObjectMeta> => {
       const devNull = fs.createWriteStream('/dev/null');
       readable.pipe(devNull);
-      return getMockFileObject();
+      return getMockFileObject().meta;
     },
   };
 

@@ -20,8 +20,8 @@ describe('the AbstractBucket class', () => {
     async _head(_path: string): Promise<ObjectMeta> {
       return mockFileObject.meta;
     }
-    async _put(_stream: Readable, _meta: ObjectMeta): Promise<Object> {
-      return mockFileObject;
+    async _put(_stream: Readable, _meta: ObjectMeta): Promise<ObjectMeta> {
+      return mockFileObject.meta;
     }
     async _delete(_path: string): Promise<void> {
       return;

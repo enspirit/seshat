@@ -122,7 +122,7 @@ export class LocalObject implements Object {
     fs.promises.mkdir(fullpath, { recursive: true });
   }
 
-  static async write(meta: ObjectMeta, stream: Readable, basePath?: string): Promise<LocalObject> {
+  static async write(meta: ObjectMeta, stream: Readable, basePath?: string): Promise<ObjectMeta> {
     const fpath = meta.name;
     const fullpath = basePath ? path.join(basePath, fpath) : fpath;
     const metadataPath = `${fullpath}.seshat`;
@@ -146,6 +146,7 @@ export class LocalObject implements Object {
     await ensureFolder();
     await Promise.all([writeFile(), writeMeta()]);
 
-    return this.fromPath(fpath, basePath);
+    const object = await this.fromPath(fpath, basePath);
+    return object.meta;
   }
 }

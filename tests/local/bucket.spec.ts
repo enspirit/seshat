@@ -157,9 +157,9 @@ describe('LocalBucket', () => {
 
     it('resolves with the object created', async () => {
       const meta = { name: mockFileObject.meta.name, contentType: mockFileObject.meta.contentType };
-      const object = await bucket.put(mockFileObject.body, meta);
-      expect(object.meta.name).to.equal('tmp/file.txt');
-      expect(object.meta.contentType).to.equal('plain/text');
+      const objectMeta = await bucket.put(mockFileObject.body, meta);
+      expect(objectMeta.name).to.equal('tmp/file.txt');
+      expect(objectMeta.contentType).to.equal('plain/text');
     });
 
     it('rejects if path goes out of bucket', async () => {
@@ -172,8 +172,8 @@ describe('LocalBucket', () => {
       const meta = { name: 'tmp/subfolder/../index.json', contentType: mockFileObject.meta.contentType };
       const promise = bucket.put(mockFileObject.body, meta);
       await expect(promise).to.not.be.rejected;
-      const object = await promise;
-      expect(object.meta.name).to.equal('tmp/index.json');
+      const objectMeta = await promise;
+      expect(objectMeta.name).to.equal('tmp/index.json');
     });
 
     it('stores the file on disk', async () => {

@@ -1,7 +1,7 @@
 import path from 'path';
 import express, { Router, Request, Response, NextFunction } from 'express';
 import Busboy from 'busboy';
-import { Bucket, ObjectMeta, Object } from '../../types';
+import { Bucket, ObjectMeta } from '../../types';
 
 export const MultipartUpload = () => (bucket: Bucket): Router => {
 
@@ -24,7 +24,7 @@ export const MultipartUpload = () => (bucket: Bucket): Router => {
 
     const basePath = req.path.substring(1);
     const busboy = Busboy({ headers: req.headers });
-    const promises: Array<Promise<Object>> = [];
+    const promises: Array<Promise<ObjectMeta>> = [];
 
     busboy.on('error', (error: Error) => {
       return next(error);
@@ -36,6 +36,7 @@ export const MultipartUpload = () => (bucket: Bucket): Router => {
         name: filepath,
         contentType: info.mimeType,
       };
+
       const p = bucket.put(file, metadata);
       p.catch((err) => {
         return next(err);
@@ -45,7 +46,7 @@ export const MultipartUpload = () => (bucket: Bucket): Router => {
 
     busboy.on('finish', async () => {
       const objects = await Promise.all(promises);
-      res.status(200).send(objects.map(o => o.meta));
+      res.status(200).send(objects);
     });
 
     req.pipe(busboy);

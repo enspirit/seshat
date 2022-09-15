@@ -22,7 +22,7 @@ describe('the multipart-uploads express router', () => {
 
     mockBucket.put = async (stream, _metadata) => {
       stream.resume();
-      return getMockFileObject();
+      return getMockFileObject().meta;
     };
 
     app = express();

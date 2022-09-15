@@ -50,7 +50,7 @@ export interface Bucket extends BucketEmitter {
 
   head(path: string): Promise<ObjectMeta>;
   get(path: string): Promise<Object>;
-  put(stream: Readable, meta: ObjectMeta): Promise<Object>;
+  put(stream: Readable, meta: ObjectMeta): Promise<ObjectMeta>;
   delete(path: string): Promise<void>;
   list(prefix?: string): Promise<ObjectMeta[]>;
   mkdir(prefix: string): Promise<void>;

@@ -59,7 +59,7 @@ export class S3Bucket extends AbstractBucket {
     }
   }
 
-  async _put(stream: Readable, meta: ObjectMeta): Promise<Object> {
+  async _put(stream: Readable, meta: ObjectMeta): Promise<ObjectMeta> {
     // Some of the metadata can be stored in standard s3 properties
     const { contentType, name, ...rest } = meta;
     const metadata = Object.entries(rest)
@@ -86,7 +86,7 @@ export class S3Bucket extends AbstractBucket {
 
     await upload.done();
 
-    return this._get(meta.name);
+    return this._head(meta.name);
   }
 
   async _delete(path: string): Promise<void> {

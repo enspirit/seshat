@@ -117,9 +117,9 @@ describe('LocalObject', () => {
     });
 
     it('returns a valid object', async () => {
-      const obj = await LocalObject.write(metadata, readStream);
+      const objMeta = await LocalObject.write(metadata, readStream);
 
-      expect(obj.meta.name).to.equal('/tmp/test.txt');
+      expect(objMeta.name).to.equal('/tmp/test.txt');
     });
 
     it('creates new files properly', async () => {
@@ -133,9 +133,9 @@ describe('LocalObject', () => {
 
       it('returns valid objects with only relative object names', async () => {
         const metadata = { name: 'test.txt', contentType: 'text/plain' };
-        const obj = await LocalObject.write(metadata, readStream, '/tmp');
+        const objMeta = await LocalObject.write(metadata, readStream, '/tmp');
 
-        expect(obj.meta.name).to.equal('test.txt');
+        expect(objMeta.name).to.equal('test.txt');
       });
 
     });

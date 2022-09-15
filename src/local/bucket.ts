@@ -32,7 +32,7 @@ export class LocalBucket extends AbstractBucket {
     return LocalObject.fromPath(path, this.path);
   }
 
-  async _put(stream: Readable, meta: ObjectMeta) {
+  async _put(stream: Readable, meta: ObjectMeta): Promise<ObjectMeta> {
     this.ensureSecure(meta.name);
     return await LocalObject.write(meta, stream, this.path);
   }

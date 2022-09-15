@@ -37,7 +37,7 @@ export default abstract class AbstractBucket implements Bucket, BucketEmitter {
 
   abstract _get(path: string): Promise<Object>;
 
-  async put(stream: Readable, meta: ObjectMeta): Promise<Object> {
+  async put(stream: Readable, meta: ObjectMeta): Promise<ObjectMeta> {
     await this.ensurePolicies((policy: BucketPolicy) => policy.put(meta));
     const output: ObjectTransformerOutput = await this.transform(stream, meta, 'Ingress');
     const object = await this._put(output.stream, output.meta);
@@ -45,7 +45,7 @@ export default abstract class AbstractBucket implements Bucket, BucketEmitter {
     return object;
   }
 
-  abstract _put(stream: Readable, meta: ObjectMeta): Promise<Object>;
+  abstract _put(stream: Readable, meta: ObjectMeta): Promise<ObjectMeta>;
 
   async delete(path: string): Promise<void> {
     await this.ensurePolicies((policy: BucketPolicy) => policy.delete(path));

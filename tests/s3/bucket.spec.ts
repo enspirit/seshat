@@ -183,9 +183,9 @@ describe('S3Bucket', () => {
     });
 
     it('returns a valid S3Object', async () => {
-      const object = await bucket.put(mockFileObject.body, metadata);
-      expect(object.meta.name).to.equal('test.json');
-      expect(object.meta.contentType).to.equal('application/json');
+      const objectMeta = await bucket.put(mockFileObject.body, metadata);
+      expect(objectMeta.name).to.equal('test.json');
+      expect(objectMeta.contentType).to.equal('application/json');
     });
 
   });
