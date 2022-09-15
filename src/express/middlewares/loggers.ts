@@ -1,17 +1,20 @@
 import { Request, Response, NextFunction } from 'express';
 import { SeshatError } from '../../errors';
 
+// Log requests once they finish (or fail)
 export const RequestLogger = (req: Request, res: Response, next: NextFunction) => {
-  // Log requests once they finish (or fail)
   let finished = false;
+  const start = Date.now();
+  const elapsed = () => `${Date.now() - start}ms`;
+
   res.on('finish', () => {
     finished = true;
-    req.seshat.logger.info(`${req.method} ${req.path} ${res.statusCode}`);
+    req.seshat.logger.info(`${req.method} ${req.path} ${res.statusCode} ${elapsed()}`);
   });
 
   res.on('close', () => {
     if (!finished) {
-      req.seshat.logger.warning(`${req.method} ${req.path} - connection closed abruptly`);
+      req.seshat.logger.warning(`${req.method} ${req.path} - ${elapsed()} - connection closed abruptly`);
     }
   });
 
