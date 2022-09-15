@@ -26,7 +26,7 @@
     ".": "./dist/src/index.js",
     "./policies": "./dist/src/policies/index.js",
     "./transformers": "./dist/src/transformers/index.js",
-    "./routers": "./dist/src/express/routers",
+    "./routers": "./dist/src/express/routers/index.js",
     "./actions": "./dist/src/actions/index.js"
   },
   "dependencies": {

@@ -1,7 +1,9 @@
 import express from 'express';
-import { Config } from './types';
+import morgan from 'morgan';
+import { Config } from '../types';
+import errorHandler from './middlewares/error-handler';
 
-import errorHandler from './express/middlewares/error-handler';
+export * from './routers';
 
 import {
   ExecuteActions,
@@ -9,7 +11,7 @@ import {
   RetrieveObjects,
   DeleteObjects,
   ListObjects,
-} from './express/routers';
+} from './routers';
 
 const DefaultRouters = [
   ExecuteActions(),
@@ -18,8 +20,6 @@ const DefaultRouters = [
   ListObjects(),
   DeleteObjects(),
 ];
-
-import morgan from 'morgan';
 
 export const createApp = (config: Config): express.Express => {
   const app = express();
