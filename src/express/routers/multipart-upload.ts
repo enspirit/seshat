@@ -1,11 +1,10 @@
 import path from 'path';
 import express, { Router, Request, Response, NextFunction } from 'express';
 import Busboy from 'busboy';
-import { Config, ObjectMeta, Object } from '../../types';
+import { Bucket, ObjectMeta, Object } from '../../types';
 
-export const createRouter = (config: Config): Router => {
+export const MultipartUpload = () => (bucket: Bucket): Router => {
 
-  const { bucket } = config;
   const router = express();
 
   const isMultiPartFormDataRequest = (req: Request, res: Response, next: NextFunction) => {

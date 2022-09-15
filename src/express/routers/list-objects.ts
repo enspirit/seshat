@@ -1,16 +1,9 @@
 import express, { NextFunction, Request, Response, Router } from 'express';
 import { PrefixNotFoundError } from '../../errors';
-import { Config } from '../../types';
+import { Bucket } from '../../types';
 
-export interface ListObjectsConfig {
-}
-
-export const DefaultConfig: ListObjectsConfig = {
-};
-
-export const createRouter = (seshatConfig: Config, _routerConfig: ListObjectsConfig = DefaultConfig): Router => {
+export const ListObjects = () => (bucket: Bucket): Router => {
   const router = express();
-  const { bucket } = seshatConfig;
 
   /**
    * Retrieve files

@@ -1,14 +1,12 @@
 import express, { NextFunction, Request, Response, Router } from 'express';
 import { json } from 'body-parser';
-import { Config, Action } from '../../types';
+import { Bucket, Action } from '../../types';
 import { ObjectNotFoundError } from '../../errors';
 
 export const SESHAT_ACTION_HEADER = 'application/vnd.seshat-action+json';
 
-export const createRouter = (config: Config): Router => {
+export const ExecuteActions = (actions: Action[] = []) => (bucket: Bucket): Router => {
 
-  const { bucket } = config;
-  const actions = config.actions || [];
   const router = express();
   router.use(json({ type: SESHAT_ACTION_HEADER }));
 

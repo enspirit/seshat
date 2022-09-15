@@ -1,8 +1,7 @@
 import express, { Router } from 'express';
-import { Config } from '../../types';
+import { Bucket } from '../../types';
 
-export const createRouter = (config: Config): Router => {
-  const { bucket } = config;
+export const DeleteObjects = () => (bucket: Bucket): Router => {
   const router = express();
 
   /**

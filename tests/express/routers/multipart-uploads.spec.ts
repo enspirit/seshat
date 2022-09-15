@@ -2,9 +2,9 @@ import request from 'supertest';
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
-import { createRouter } from '../../../src/express/routers/multipart-uploads';
+import { MultipartUpload } from '../../../src/express/routers';
 import { getMockBucket } from '../../mocks/bucket';
-import { Bucket, Config } from '../../../src/types';
+import { Bucket } from '../../../src/types';
 chai.use(sinonChai);
 
 import express, { Application } from 'express';
@@ -13,17 +13,12 @@ import { Readable } from 'stream';
 
 describe('the multipart-uploads express router', () => {
 
-  let config: Config;
-
   let router;
   let app: Application;
   let mockBucket: Bucket;
   beforeEach(() => {
     mockBucket = getMockBucket();
-    config = {
-      bucket: mockBucket,
-    };
-    router = createRouter(config);
+    router = MultipartUpload()(mockBucket);
 
     mockBucket.put = async (stream, _metadata) => {
       stream.resume();

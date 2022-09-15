@@ -1,9 +1,11 @@
-import { Request } from 'express';
+import { Request, Router } from 'express';
 import { Readable } from 'stream';
+
+export type RouterFactory = (bucket: Bucket) => Router;
 
 export interface Config {
   bucket: Bucket
-  actions?: Action[]
+  routers?: RouterFactory[]
 }
 
 export interface ObjectMeta {

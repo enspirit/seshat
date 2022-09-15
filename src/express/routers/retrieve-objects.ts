@@ -1,5 +1,5 @@
 import express, { NextFunction, Request, Response, Router, RequestHandler } from 'express';
-import { Config } from '../../types';
+import { Bucket } from '../../types';
 import { ObjectNotFoundError } from '../../errors';
 
 export interface RetrieveObjectConfig {
@@ -16,9 +16,8 @@ export const DefaultConfig: RetrieveObjectConfig = {
   },
 };
 
-export const createRouter = (seshatConfig: Config, routerConfig: RetrieveObjectConfig = DefaultConfig): Router => {
+export const RetrieveObjects = (config: RetrieveObjectConfig = DefaultConfig) => (bucket: Bucket): Router => {
   const router = express();
-  const { bucket } = seshatConfig;
 
   /**
    * Expose the object on the request
@@ -50,11 +49,11 @@ export const createRouter = (seshatConfig: Config, routerConfig: RetrieveObjectC
    * Allows a user to download a file as an attachment with different name
    */
   const downloadAs: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
-    if (!Object.hasOwnProperty.call(req.query, routerConfig.downloadAs.queryParam)) {
+    if (!Object.hasOwnProperty.call(req.query, config.downloadAs.queryParam)) {
       return next();
     }
 
-    const filename = req.query[routerConfig.downloadAs.queryParam] || req.seshat.object?.meta.name;
+    const filename = req.query[config.downloadAs.queryParam] || req.seshat.object?.meta.name;
     if (filename) {
       res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
     }
@@ -63,14 +62,14 @@ export const createRouter = (seshatConfig: Config, routerConfig: RetrieveObjectC
 
   const middlewares: RequestHandler[] = [exposeObject];
 
-  if (routerConfig.downloadAs.enabled) {
+  if (config.downloadAs.enabled) {
     middlewares.push(downloadAs);
   }
 
   /**
    * Retrieve files
    */
-  router.get('/*', middlewares, async (req: Request, res: Response, next: NextFunction) => {
+  router.get('/*', middlewares, async (req: Request, res: Response) => {
     const { object } = req.seshat;
 
     if (!object) {
