@@ -30,3 +30,7 @@ jobs:
           ruby-version: 2.7
 
       - run: make ci
+
+      - name: Dump docker logs on failure
+        if: failure()
+        uses: jwalton/gh-docker-logs@v1

@@ -14,7 +14,7 @@ export const RequestLogger = (req: Request, res: Response, next: NextFunction) =
 
   res.on('close', () => {
     if (!finished) {
-      req.seshat.logger.warning(`${req.method} ${req.path} - ${elapsed()} - connection closed abruptly`);
+      req.seshat.logger.warn(`${req.method} ${req.path} - ${elapsed()} - connection closed abruptly`);
     }
   });
 
