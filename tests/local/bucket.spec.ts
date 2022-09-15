@@ -139,6 +139,14 @@ describe('LocalBucket', () => {
 
   describe('put()', () => {
 
+    const ensureFolderUnlink = (fpath: string) => {
+      try {
+        fs.rmSync(fpath, { recursive: true, force: true });
+      } catch (_e) {
+        //
+      }
+    };
+
     const ensureFileUnlink = (fpath: string) => {
       try {
         fs.unlinkSync(fpath);
@@ -182,6 +190,14 @@ describe('LocalBucket', () => {
       const fpath = path.join(__dirname, '../../tmp/test.json.seshat');
       ensureFileUnlink(fpath);
       const meta = { name: 'tmp/test.json', contentType: mockFileObject.meta.contentType };
+      await bucket.put(mockFileObject.body, meta);
+      expect(fs.existsSync(fpath)).to.equal(true);
+    });
+
+    it('dynamically creates folder hierarchy when parent folders missing', async () => {
+      ensureFolderUnlink(path.join(__dirname, '../../tmp/foo'));
+      const fpath = path.join(__dirname, '../../tmp/foo/bar/baz/test.json');
+      const meta = { name: 'tmp/foo/bar/baz/test.json', contentType: mockFileObject.meta.contentType };
       await bucket.put(mockFileObject.body, meta);
       expect(fs.existsSync(fpath)).to.equal(true);
     });
