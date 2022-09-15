@@ -31,9 +31,7 @@ export const RetrieveObjects = (config: RetrieveObjectConfig = DefaultConfig) =>
     if (req.seshat && req.seshat.object) {
       return next();
     }
-    req.seshat ||= {
-      bucket,
-    };
+    req.seshat.bucket ||= bucket;
     try {
       const path = req.path.substring(1);
       req.seshat.object = await bucket.get(path);

@@ -1,8 +1,24 @@
-export class SeshatError extends Error { }
-export class ObjectNotFoundError extends SeshatError { }
-export class PrefixNotFoundError extends SeshatError { }
+export class SeshatError extends Error {
+  httpCode: number = 500;
+  constructor(message: string) {
+    super(message);
+  }
+}
 
-export class BucketPolicyError extends SeshatError { }
-export class AccessDeniedError extends BucketPolicyError { }
+export class ObjectNotFoundError extends SeshatError {
+  httpCode = 404;
+}
+export class PrefixNotFoundError extends SeshatError {
+  httpCode = 404;
+}
 
-export class ObjectTransformerError extends SeshatError { }
+export class BucketPolicyError extends SeshatError {
+  httpCode = 400;
+}
+export class AccessDeniedError extends BucketPolicyError {
+  httpCode = 400;
+}
+
+export class ObjectTransformerError extends SeshatError {
+
+}

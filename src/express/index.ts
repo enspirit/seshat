@@ -1,7 +1,8 @@
 import express from 'express';
-import morgan from 'morgan';
+import defaultLogger from '../logger';
 import { Config } from '../types';
-import errorHandler from './middlewares/error-handler';
+import { ErrorLogger, RequestLogger } from './middlewares';
+import { ExposeContext } from './middlewares/context';
 
 export * from './routers';
 
@@ -22,10 +23,15 @@ const DefaultRouters = [
 ];
 
 export const createApp = (config: Config): express.Express => {
+  config.logger ||= defaultLogger;
+
   const app = express();
 
-  // Logging
-  app.use(morgan('tiny'));
+  // Expose bucket, logger, ...
+  app.use(ExposeContext(config));
+
+  // Log requests
+  app.use(RequestLogger);
 
   // Use specified/default routers
   (config.routers || DefaultRouters).forEach((factory) => {
@@ -33,7 +39,8 @@ export const createApp = (config: Config): express.Express => {
     app.use(router);
   });
 
-  app.use(errorHandler);
+  // Log errors
+  app.use(ErrorLogger);
 
   return app;
 };

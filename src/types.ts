@@ -1,11 +1,13 @@
 import { Request, Router } from 'express';
 import { Readable } from 'stream';
+import { Logger } from 'winston';
 
 export type RouterFactory = (bucket: Bucket) => Router;
 
 export interface Config {
   bucket: Bucket
-  routers?: RouterFactory[]
+  routers?: RouterFactory[],
+  logger?: Logger
 }
 
 export interface ObjectMeta {
@@ -96,6 +98,7 @@ declare global {
   namespace Express {
     interface Request {
       seshat: {
+        logger: Logger
         bucket: Bucket
         object?: Object
       }

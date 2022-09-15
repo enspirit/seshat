@@ -14,7 +14,7 @@ export const ExecuteActions = (actions: Action[] = []) => (bucket: Bucket): Rout
     // We only execute this router if the header is present,
     // otherwise we execute the next matching routes
     if (req.headers['content-type'] === SESHAT_ACTION_HEADER) {
-      req.seshat ||= { bucket };
+      req.seshat.bucket ||= bucket;
       return next();
     }
     next('route');
