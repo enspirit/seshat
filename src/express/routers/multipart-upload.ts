@@ -24,24 +24,28 @@ export const MultipartUpload = () => (bucket: Bucket): Router => {
 
     const basePath = req.path.substring(1);
     const busboy = Busboy({ headers: req.headers });
-    const objects: Array<ObjectMeta> = [];
+    const promises: Array<Promise<Object>> = [];
 
     busboy.on('error', (error: Error) => {
       return next(error);
     });
 
-    busboy.on('file', async (name, file, info) => {
+    busboy.on('file', (name, file, info) => {
       const filepath = path.join(basePath, name);
       const metadata: ObjectMeta = {
         name: filepath,
         contentType: info.mimeType,
       };
-      const object = await bucket.put(file, metadata);
-      objects.push(object.meta);
+      const p = bucket.put(file, metadata);
+      p.catch((err) => {
+        return next(err);
+      });
+      promises.push(p);
     });
 
-    busboy.on('finish', () => {
-      res.send(objects);
+    busboy.on('finish', async () => {
+      const objects = await Promise.all(promises);
+      res.status(200).send(objects.map(o => o.meta));
     });
 
     req.pipe(busboy);
