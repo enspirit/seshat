@@ -1,7 +1,7 @@
 import { Request } from 'express';
 import { Action } from '../types';
 
-export const mkdir: Action = {
+export const MkdirAction: Action = {
   name: 'mkdir',
   run: async (req: Request): Promise<any> => {
 

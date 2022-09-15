@@ -1,6 +1,6 @@
 import { Express } from 'express';
 import { createApp, LocalBucket, S3Bucket } from '../src';
-import { mkdir } from '../src/actions';
+import { MkdirAction } from '../src/actions';
 import { s3client } from './s3';
 
 /**
@@ -14,14 +14,14 @@ export default (expressApp: Express, seshatRootDir: string) => {
   expressApp.use('/actions/local', createApp({
     bucket: new LocalBucket({ path: seshatRootDir }),
     actions: [
-      mkdir,
+      MkdirAction,
     ],
   }));
 
   expressApp.use('/actions/s3', createApp({
     bucket: new S3Bucket({ s3client, bucket: 'my-s3-bucket' }),
     actions: [
-      mkdir,
+      MkdirAction,
     ],
   }));
 
