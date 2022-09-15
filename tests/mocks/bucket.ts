@@ -11,6 +11,7 @@ interface MockBucket {
   head: SinonStub,
   get: SinonStub,
   list: SinonStub,
+  mkdir: SinonStub,
   delete: SinonStub,
   put: SinonSpy
   on: SinonSpy
@@ -40,6 +41,8 @@ export const getMockBucket = (): MockBucket => {
     head: sinon.stub().resolves(getMockFileObject().meta),
 
     list: sinon.stub().resolves([getMockFileObject()]),
+
+    mkdir: sinon.stub().resolves(),
 
     delete: sinon.stub().resolves(),
 

@@ -117,6 +117,11 @@ export class LocalObject implements Object {
     }
   }
 
+  static async mkdir(prefix: string, basePath?: string): Promise<void> {
+    const fullpath = basePath ? path.join(basePath, prefix) : prefix;
+    fs.promises.mkdir(fullpath, { recursive: true });
+  }
+
   static async write(meta: ObjectMeta, stream: Readable, basePath?: string): Promise<LocalObject> {
     const fpath = meta.name;
     const fullpath = basePath ? path.join(basePath, fpath) : fpath;

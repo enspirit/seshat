@@ -20,4 +20,8 @@ export const ReadOnlyPolicy: BucketPolicy = {
   async list(_prefix): Promise<void> {
   },
 
+  async mkdir(_prefix): Promise<void> {
+    throw new AccessDeniedError('Access denied.');
+  },
+
 };

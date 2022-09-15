@@ -7,6 +7,7 @@ export const SESHAT_ACTION_HEADER = 'application/vnd.seshat-action+json';
 
 export const createRouter = (config: Config): Router => {
 
+  const { bucket } = config;
   const actions = config.actions || [];
   const router = express();
   router.use(json({ type: SESHAT_ACTION_HEADER }));
@@ -15,6 +16,7 @@ export const createRouter = (config: Config): Router => {
     // We only execute this router if the header is present,
     // otherwise we execute the next matching routes
     if (req.headers['content-type'] === SESHAT_ACTION_HEADER) {
+      req.seshat ||= { bucket };
       return next();
     }
     next('route');

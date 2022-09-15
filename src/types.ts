@@ -49,7 +49,7 @@ export interface Bucket extends BucketEmitter {
   put(stream: Readable, meta: ObjectMeta): Promise<Object>;
   delete(path: string): Promise<void>;
   list(prefix?: string): Promise<ObjectMeta[]>;
-
+  mkdir(prefix: string): Promise<void>;
 }
 
 export interface BucketPolicy {
@@ -58,6 +58,7 @@ export interface BucketPolicy {
   put(meta: ObjectMeta): Promise<void>
   delete(path: string): Promise<void>
   list(prefix?: string): Promise<void>
+  mkdir(prefix: string): Promise<void>
 }
 
 export interface Object {
@@ -83,7 +84,6 @@ export interface ObjectTransformer {
 
 export interface Action {
   name: string;
-  options: { [key: string]: any };
 
   run(request: Request): Promise<any>;
 }

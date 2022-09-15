@@ -8,6 +8,7 @@ import readOnlyExample from './readonly';
 import renameExample from './rename';
 import thumbnailsExample from './thumbnails';
 import thumbnailsOnTheFlyExample from './thumbnails-on-the-fly';
+import actionsExample from './actions';
 import { version } from '../src';
 
 const app = express();
@@ -22,6 +23,7 @@ const app = express();
   renameExample,
   thumbnailsExample,
   thumbnailsOnTheFlyExample,
+  actionsExample,
 ].forEach((example) => example(app, process.env.ROOT_DIR || '../'));
 
 /**

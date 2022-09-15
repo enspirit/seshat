@@ -19,6 +19,10 @@ export const readOnlyPolicy: BucketPolicy = {
   async list(_prefix?: string): Promise<void> {
   },
 
+  async mkdir(_prefix: string): Promise<void> {
+    throw new Error('read only bucket');
+  },
+
 };
 
 export const uploadOnlyPolicy: BucketPolicy = {
@@ -39,6 +43,9 @@ export const uploadOnlyPolicy: BucketPolicy = {
 
   async list(_prefix?: string): Promise<void> {
     throw new Error('upload only bucket');
+  },
+
+  async mkdir(_prefix: string): Promise<void> {
   },
 
 };

@@ -130,6 +130,29 @@ export class S3Bucket extends AbstractBucket {
     return results.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
   }
 
+  async _mkdir(prefix: string): Promise<void> {
+
+    let folderName = this.objectKey(prefix);
+    // ensure we have a trailing slash
+    if (folderName[folderName.length - 1] !== '/') {
+      folderName = `${folderName}/`;
+    }
+
+    const target = {
+      Key: folderName,
+      Bucket: this.bucket,
+      Body: '',
+    };
+
+    const upload = new Upload({
+      client: this.s3client,
+      queueSize: 1,
+      params: target,
+    });
+
+    await upload.done();
+  }
+
   /**
    * Given that an s3 bucket can be configured with a static prefix (see S3BucketOptions)
    * we want to ensure that all object Keys are taking into consideration that optional parameter.

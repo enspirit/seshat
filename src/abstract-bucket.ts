@@ -62,6 +62,13 @@ export default abstract class AbstractBucket implements Bucket, BucketEmitter {
 
   abstract _list(prefix?: string): Promise<ObjectMeta[]>;
 
+  async mkdir(prefix: string): Promise<void> {
+    await this.ensurePolicies((policy: BucketPolicy) => policy.mkdir(prefix));
+    return this._mkdir(prefix);
+  }
+
+  abstract _mkdir(prefix?: string): Promise<void>;
+
   async exists(path: string) {
     try {
       await this.head(path);

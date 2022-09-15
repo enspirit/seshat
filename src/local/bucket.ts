@@ -47,6 +47,11 @@ export class LocalBucket extends AbstractBucket {
     return LocalObject.delete(path, this.path);
   }
 
+  async _mkdir(path: string) {
+    this.ensureSecure(path);
+    return LocalObject.mkdir(path, this.path);
+  }
+
   // checks that the path is not outside of the bucket folder
   private ensureSecure(filepath: string) {
     const fullpath = path.join(this.path, filepath);

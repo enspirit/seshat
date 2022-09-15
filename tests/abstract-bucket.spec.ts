@@ -29,6 +29,9 @@ describe('the AbstractBucket class', () => {
     async _list(_prefix?: string): Promise<ObjectMeta[]> {
       return [mockFileObject.meta];
     }
+    async _mkdir(_prefix?: string): Promise<void> {
+      return;
+    }
   }
 
   const withAllPoliciesSucceeding = () => {

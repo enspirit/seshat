@@ -17,6 +17,8 @@ export const imagesOnlyPolicy: BucketPolicy = {
   },
   async list(_prefix?: string) {
   },
+  async mkdir(_prefix?: string) {
+  },
 };
 
 /**
