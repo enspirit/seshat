@@ -5,7 +5,7 @@ export const MkdirAction: Action = {
   name: 'mkdir',
   run: async (req: Request): Promise<any> => {
 
-    const path = req.path.substring(1);
+    const path = decodeURIComponent(req.path.substring(1));
     const bucket = req.seshat.bucket;
 
     await bucket.mkdir(path);
