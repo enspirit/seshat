@@ -17,6 +17,7 @@ export interface ObjectMeta {
   ctime?: Date
   mtime?: Date
   contentLength?: number
+  etag?: string
 
   [key: string]: any
 }

@@ -4,8 +4,12 @@ import { ObjectNotFoundError } from '../../errors';
 
 export interface RetrieveObjectConfig {
   downloadAs: {
-    enabled: boolean,
+    enabled: boolean
     queryParam: string
+  },
+  headers: {
+    lastModified: boolean
+    etag: boolean
   }
 }
 
@@ -13,6 +17,10 @@ export const DefaultConfig: RetrieveObjectConfig = {
   downloadAs: {
     enabled: true,
     queryParam: 'download',
+  },
+  headers: {
+    lastModified: true,
+    etag: true,
   },
 };
 
@@ -76,6 +84,12 @@ export const RetrieveObjects = (config: RetrieveObjectConfig = DefaultConfig) =>
         .send({ error: `File not found: ${req.path}` });
     }
     res.set('Content-Type', object.meta.contentType);
+    if (config.headers.lastModified && object.meta.mtime) {
+      res.setHeader('Last-Modified', object.meta.mtime?.toString());
+    }
+    if (config.headers.etag && object.meta.etag) {
+      res.setHeader('ETag', object.meta.etag);
+    }
     if (object.meta.contentLength) {
       res.set('Content-Length', object.meta.contentLength.toString());
     }

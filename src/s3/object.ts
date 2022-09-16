@@ -11,6 +11,7 @@ export class S3ObjectMeta implements ObjectMeta {
     public contentType: string,
     public ctime?: Date | undefined,
     public mtime?: Date | undefined,
+    public etag?: string | undefined,
     public contentLength?: number | undefined,
   ) {
     this.#bucket = bucket;
@@ -37,8 +38,10 @@ export class S3Object implements Object {
       output.ContentType || 'application/octet-stream',
       output.LastModified,
       output.LastModified,
+      output.ETag,
       output.ContentLength || 0,
     );
+
     if (!output.Metadata) {
       return meta;
     }
