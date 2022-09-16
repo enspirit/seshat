@@ -22,7 +22,7 @@ export const MultipartUpload = () => (bucket: Bucket): Router => {
    */
   router.post('/*', isMultiPartFormDataRequest, async (req, res, next) => {
 
-    const basePath = decodeURI(req.path.substring(1));
+    const basePath = decodeURIComponent(req.path.substring(1));
     const busboy = Busboy({ headers: req.headers });
     const promises: Array<Promise<ObjectMeta>> = [];
 

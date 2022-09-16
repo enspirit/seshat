@@ -9,7 +9,7 @@ export const ListObjects = () => (bucket: Bucket): Router => {
    * Retrieve files
    */
   router.get('/*', async (req: Request, res: Response, next: NextFunction) => {
-    const prefix = decodeURI(req.path);
+    const prefix = decodeURIComponent(req.path);
     if (prefix[prefix.length - 1] !== '/') {
       return next('route');
     }

@@ -41,7 +41,7 @@ export const RetrieveObjects = (config: RetrieveObjectConfig = DefaultConfig) =>
     }
     req.seshat.bucket ||= bucket;
     try {
-      const path = decodeURI(req.path.substring(1));
+      const path = decodeURIComponent(req.path.substring(1));
       req.seshat.object = await bucket.get(path);
     } catch (err) {
       if (!(err instanceof ObjectNotFoundError)) {
