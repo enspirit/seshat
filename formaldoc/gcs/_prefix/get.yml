@@ -1,0 +1,38 @@
+---
+  name: |-
+    GET /gcs/{prefix}
+
+  url: |-
+    /gcs/{prefix}
+
+  services:
+  - method: |-
+      GET
+
+    description: |-
+      Allows listing objects starting with a specific prefix
+
+    preconditions:
+      - Objects exist with that prefix
+
+    input_schema: |-
+      {
+        prefix : String
+      }
+
+    output_schema: |-
+      [SeshatObject]
+
+    error_schema: |-
+      Error
+
+    examples:
+
+      - description: |-
+          FOR: the root prefix exists
+        params:
+          prefix: /
+        expected:
+          content_type: application/json
+          status: 200
+

@@ -13,8 +13,9 @@ export const ListObjects = () => (bucket: Bucket): Router => {
     if (prefix[prefix.length - 1] !== '/') {
       return next('route');
     }
+
     try {
-      const objects = await bucket.list(prefix);
+      const objects = await bucket.list(prefix.substring(1));
       res.send(objects);
     } catch (err) {
       if (err instanceof PrefixNotFoundError) {

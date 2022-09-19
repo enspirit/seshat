@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from 'express';
 
 import localExample from './local';
 import s3example from './s3';
+import gcsexample from './gcs';
 import gzipExample from './gzip';
 import authenticationExample from './authentication';
 import readOnlyExample from './readonly';
@@ -17,6 +18,7 @@ const app = express();
 [
   localExample,
   s3example,
+  gcsexample,
   gzipExample,
   authenticationExample,
   readOnlyExample,
