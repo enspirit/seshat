@@ -82,7 +82,9 @@ export class GCSBucket extends AbstractBucket {
         autoPaginate: false,
       });
 
-    const objects = await Promise.all(files.map(f => GCSObjectMeta.fromFile(f, this.prefix)));
+    let objects = await Promise.all(files.map(f => GCSObjectMeta.fromFile(f, this.prefix)));
+    // Remove folder/prefix from its own list
+    objects = objects.filter(o => o.name !== prefix && o.contentLength !== 0);
 
     const prefixes = (apiResponse.prefixes || []).map((p: string) => {
       return {
