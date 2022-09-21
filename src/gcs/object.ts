@@ -23,7 +23,7 @@ export class GCSObjectMeta implements ObjectMeta {
     if (!exists) {
       throw new ObjectNotFoundError(`Object ${file.name} not found`);
     }
-    return new GCSObjectMeta(
+    const meta = new GCSObjectMeta(
       file.bucket.name,
       prefix ? file.name.substring(prefix.length) : file.name,
       file.metadata.contentType || 'application/octet-stream',
@@ -32,6 +32,16 @@ export class GCSObjectMeta implements ObjectMeta {
       file.metadata.etag,
       file.metadata.size ? parseInt(file.metadata.size) : undefined,
     );
+
+    if (!file.metadata?.metadata) {
+      return meta;
+    }
+
+    return Object.entries(file.metadata.metadata)
+      .reduce((meta: ObjectMeta, [key, value]: [string, any]): ObjectMeta => {
+        meta[key] = value;
+        return meta;
+      }, meta) as GCSObjectMeta;
   }
 
 }

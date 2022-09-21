@@ -57,6 +57,20 @@ export class GCSBucket extends AbstractBucket {
       stream.pipe(writable);
     });
 
+    const nonStandardMeta = Object.entries(meta)
+      .reduce((meta, [key, value]) => {
+        if (!['name', 'contentType', 'ctime', 'mtime', 'contentLength', 'etag'].includes(key)) {
+          meta[key] = value;
+        }
+        return meta;
+      }, {} as {[key: string]: any});
+
+    if (Object.keys(nonStandardMeta).length > 0) {
+      await file.setMetadata({
+        metadata: meta,
+      });
+    }
+
     return this._head(name);
   }
 
