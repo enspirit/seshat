@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response, Router, RequestHandler } from 'express';
 import { Bucket } from '../../types';
 import { ObjectNotFoundError } from '../../errors';
+import { nextTick } from 'node:process';
 
 export interface RetrieveObjectConfig {
   downloadAs: {
@@ -75,7 +76,7 @@ export const RetrieveObjects = (config: RetrieveObjectConfig = DefaultConfig) =>
   /**
    * Retrieve files
    */
-  router.get('/*', middlewares, async (req: Request, res: Response) => {
+  router.get('/*', middlewares, async (req: Request, res: Response, next: NextFunction) => {
     const { object } = req.seshat;
 
     if (!object) {
@@ -93,6 +94,9 @@ export const RetrieveObjects = (config: RetrieveObjectConfig = DefaultConfig) =>
     if (object.meta.contentLength) {
       res.set('Content-Length', object.meta.contentLength.toString());
     }
+    object.body.on('error', (err) => {
+      next(err);
+    });
     object.body.pipe(res);
   });
 
