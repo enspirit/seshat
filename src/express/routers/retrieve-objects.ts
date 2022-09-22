@@ -1,7 +1,6 @@
 import express, { NextFunction, Request, Response, Router, RequestHandler } from 'express';
 import { Bucket } from '../../types';
 import { ObjectNotFoundError } from '../../errors';
-import { nextTick } from 'node:process';
 
 export interface RetrieveObjectConfig {
   downloadAs: {
