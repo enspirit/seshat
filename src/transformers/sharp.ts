@@ -14,6 +14,7 @@ export interface SharpOptions {
     height?: number,
     options?: sharp.ResizeOptions
   },
+  extract?: sharp.Region
 }
 
 export class SharpTransformer implements ObjectTransformer {
@@ -22,10 +23,13 @@ export class SharpTransformer implements ObjectTransformer {
   }
 
   async transform(stream: Readable, meta: ObjectMeta, _mode: ObjectTransformerMode): Promise<ObjectTransformerOutput> {
-    const { output, resize } = this.options;
+    const { output, resize, extract } = this.options;
     const fileinfo = path.parse(meta.name);
 
     const transformer = sharp();
+    if (extract) {
+      transformer.extract(extract);
+    }
     if (resize) {
       transformer.resize(resize.width, resize.height, resize.options);
     }
