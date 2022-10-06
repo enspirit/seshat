@@ -9,12 +9,12 @@ export const RequestLogger = (req: Request, res: Response, next: NextFunction) =
 
   res.on('finish', () => {
     finished = true;
-    req.seshat.logger.info(`${req.method} ${req.path} ${res.statusCode} ${elapsed()}`);
+    req.seshat.logger.info(`${req.method} ${req.originalUrl} ${res.statusCode} ${elapsed()}`);
   });
 
   res.on('close', () => {
     if (!finished) {
-      req.seshat.logger.warn(`${req.method} ${req.path} - ${elapsed()} - connection closed abruptly`);
+      req.seshat.logger.warn(`${req.method} ${req.originalUrl} - ${elapsed()} - connection closed abruptly`);
     }
   });
 
