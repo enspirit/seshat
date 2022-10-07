@@ -61,7 +61,7 @@ export const RetrieveObjects = (config: RetrieveObjectConfig = DefaultConfig) =>
 
     const filename = req.query[config.downloadAs.queryParam] || req.seshat.object?.meta.name;
     if (filename) {
-      res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
+      res.setHeader('Content-Disposition', `attachment; filename=${encodeURIComponent(filename as string)}`);
     }
     next();
   };
