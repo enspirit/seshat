@@ -14,7 +14,8 @@ export interface SharpOptions {
     height?: number,
     options?: sharp.ResizeOptions
   },
-  extract?: sharp.Region
+  extract?: sharp.Region,
+  withMetadata?: boolean | sharp.WriteableMetadata
 }
 
 export class SharpTransformer implements ObjectTransformer {
@@ -23,7 +24,7 @@ export class SharpTransformer implements ObjectTransformer {
   }
 
   async transform(stream: Readable, meta: ObjectMeta, _mode: ObjectTransformerMode): Promise<ObjectTransformerOutput> {
-    const { output, resize, extract } = this.options;
+    const { output, resize, extract, withMetadata } = this.options;
     const fileinfo = path.parse(meta.name);
 
     const transformer = sharp();
@@ -32,6 +33,13 @@ export class SharpTransformer implements ObjectTransformer {
     }
     if (resize) {
       transformer.resize(resize.width, resize.height, resize.options);
+    }
+    if (withMetadata) {
+      if (withMetadata === true) {
+        transformer.withMetadata();
+      } else {
+        transformer.withMetadata(withMetadata);
+      }
     }
     transformer.toFormat(output.format, output.options);
 

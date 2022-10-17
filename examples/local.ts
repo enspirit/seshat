@@ -1,5 +1,5 @@
 import { Express } from 'express';
-import { createApp, LocalBucket } from '../src';
+import { createApp, LocalBucket, SecureRename } from '../src';
 
 /**
  * This simple example shows how to add a seshat endpoint
@@ -12,7 +12,7 @@ import { createApp, LocalBucket } from '../src';
 export default (expressApp: Express, seshatRootDir: string) => {
 
   expressApp.use('/local', createApp({
-    bucket: new LocalBucket({ path: seshatRootDir }),
+    bucket: new LocalBucket({ path: seshatRootDir, transformers: [new SecureRename()] }),
   }));
 
 };
