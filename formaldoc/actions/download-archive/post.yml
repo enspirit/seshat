@@ -1,9 +1,9 @@
 ---
 name: |-
-  POST /actions/s3/ - action "download-archive"
+  POST /actions/s3/{prefix} - action "download-archive"
 
 url: |-
-  /actions/s3/
+  /actions/s3/{prefix}
 
 services:
 - method: |-
@@ -14,6 +14,7 @@ services:
 
   input_schema: |-
     {
+      prefix: String
     }
 
   output_schema: |-
@@ -23,18 +24,55 @@ services:
     Error
 
   preconditions:
-      - (test background) The bucket contains objects
+    - (test background) The bucket contains objects
 
   postconditions:
-    - Prefix object has been created
+    - (x) The response is a valid zip file
 
   examples:
 
     - description: |-
-        when requested without prefix
+        FOR: it works for the whole bucket
+      params:
+        prefix: ""
       headers:
         content-type: application/vnd.seshat-action+json
         seshat-action: download-archive
       expected:
         status: 200
         content_type: application/zip
+      metadata:
+        zip:
+          includes:
+            - seshat.jpg
+            - subfolder/seshat.jpg
+
+    - description: |-
+        FOR: it works with a prefix selection
+      params:
+        prefix: subfolder
+      headers:
+        content-type: application/vnd.seshat-action+json
+        seshat-action: download-archive
+      expected:
+        status: 200
+        content_type: application/zip
+      metadata:
+        zip:
+          excludes:
+            - seshat.jpg
+          includes:
+            - subfolder/seshat.jpg
+
+  counterexamples:
+
+    - description: |-
+        FOR: it refuses to create empty zip files
+      params:
+        prefix: does-not-exist
+      headers:
+        content-type: application/vnd.seshat-action+json
+        seshat-action: download-archive
+      expected:
+        status: 404
+        content_type: application/json

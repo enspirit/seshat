@@ -19,6 +19,10 @@ export class AccessDeniedError extends BucketPolicyError {
   httpCode = 400;
 }
 
+export class NoObjectMatchingError extends BucketPolicyError {
+  httpCode = 400;
+}
+
 export class ObjectTransformerError extends SeshatError {
 
 }

@@ -24,7 +24,7 @@ export const ExecuteActions = (actions: Action[] = []) => (bucket: Bucket): Rout
    * Execute actions
    */
   router.post('*', isSeshatActionRequest, async (req, res, next) => {
-    const actionName = req.headers['seshat-action'];
+    const actionName = req.headers['seshat-action'] as String;
     // At least the action name must be defined
     if (!actionName) {
       return res.status(400).send({
@@ -44,10 +44,7 @@ export const ExecuteActions = (actions: Action[] = []) => (bucket: Bucket): Rout
         return res.send(actionResult);
       }
     } catch (error: any) {
-      if (error instanceof ObjectNotFoundError) {
-        return res.status(404).send({ error: error.message });
-      }
-      return res.status(500).send({ error: error.message });
+      next(error);
     }
 
   });

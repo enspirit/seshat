@@ -55,6 +55,7 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     ruby2_keywords (0.0.5)
+    rubyzip (2.3.2)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.8.2)
@@ -80,6 +81,7 @@ PLATFORMS
 
 DEPENDENCIES
   mini_magick (~> 4.11.0)
+  rubyzip (~> 2.3.2)
   webspicy (~> 0.21.1)
 
 BUNDLED WITH
