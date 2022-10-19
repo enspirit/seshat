@@ -13,7 +13,7 @@ class TheBucketContainsObjects
 
     url, _ = test_case.specification.instantiate_url(test_case.params)
 
-    folder = File.basename(url)
+    folder = url[1...-1]
 
     # check we have a fixture file matching what the test should upload
     fixture_path = File.join(File.dirname(__FILE__), '..', '..', 'fixtures', 'seshat.jpg')

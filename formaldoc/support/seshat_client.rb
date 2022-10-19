@@ -17,8 +17,11 @@ class SeshatClient
       }
     }
     url = folder ? config.host + folder + '/' : config.host + '/'
-    puts url.inspect
-    response = HTTP[test_case.headers.dup].post(url, http_opts)
+    headers = {
+      'Authorization' => test_case.headers['Authorization']
+    }.compact
+
+    response = HTTP[headers].post(url, http_opts)
     raise "Unable to upload file for precondition" unless response.status == 200
 
     response

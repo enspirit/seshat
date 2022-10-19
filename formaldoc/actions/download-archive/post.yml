@@ -1,9 +1,9 @@
 ---
 name: |-
-  POST /actions/s3/{prefix} - action "download-archive"
+  POST /actions/s3/ - action "download-archive"
 
 url: |-
-  /actions/s3/{prefix}
+  /actions/s3/
 
 services:
 - method: |-
@@ -14,7 +14,6 @@ services:
 
   input_schema: |-
     {
-      prefix: String
     }
 
   output_schema: |-
@@ -23,6 +22,9 @@ services:
   error_schema: |-
     Error
 
+  preconditions:
+      - (test background) The bucket contains objects
+
   postconditions:
     - Prefix object has been created
 
@@ -30,8 +32,6 @@ services:
 
     - description: |-
         when requested without prefix
-      params:
-        prefix: ""
       headers:
         content-type: application/vnd.seshat-action+json
         seshat-action: download-archive

@@ -1,7 +1,7 @@
 import { Express } from 'express';
 import { createApp, LocalBucket, S3Bucket } from '../src';
 import { MkdirAction, DownloadArchiveAction } from '../src/actions';
-import { ExecuteActions } from '../src/';
+import { ExecuteActions, MultipartUpload, RetrieveObjects } from '../src/';
 import { s3client } from './s3';
 
 /**
@@ -16,6 +16,8 @@ export default (expressApp: Express, seshatRootDir: string) => {
     bucket: new LocalBucket({ path: seshatRootDir }),
     routers: [
       ExecuteActions([MkdirAction, DownloadArchiveAction]),
+      MultipartUpload(),
+      RetrieveObjects(),
     ],
   }));
 
@@ -23,6 +25,8 @@ export default (expressApp: Express, seshatRootDir: string) => {
     bucket: new S3Bucket({ s3client, bucket: 'my-s3-bucket' }),
     routers: [
       ExecuteActions([MkdirAction, DownloadArchiveAction]),
+      MultipartUpload(),
+      RetrieveObjects(),
     ],
   }));
 
