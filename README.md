@@ -40,6 +40,7 @@ Please have a look at the [examples/](examples/) folder, you'll find simple exam
 * [compress objects as they are uploaded](examples/gzip.ts)
 * [create thumbnails from uploaded images](examples/thumbnails.ts)
 * [create thumbnails on-the-fly when recovering files](examples/thumbnails-on-the-fly.ts.ts)
+* [execute actions such as creating empty prefixes and extract objects as zip files](examples/actions.ts)
 
 # Breaking Changes
 
