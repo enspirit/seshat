@@ -38,7 +38,8 @@
     "express": "^4.18.1",
     "mime-types": "^2.1.35",
     "sharp": "^0.30.7",
-    "winston": "^3.8.2"
+    "winston": "^3.8.2",
+    "jszip": "^3.10.1"
   },
   "devDependencies": {
     "@enspirit/eslint-config-node": "^0.1.5",
@@ -50,6 +51,7 @@
     "@types/mocha": "^9.1.1",
     "@types/node": "^18.6.1",
     "@types/sharp": "^0.30.4",
+    "@types/jszip": "^3.4.1",
     "@types/sinon": "^10.0.13",
     "@types/sinon-chai": "^3.2.8",
     "@types/supertest": "^2.0.12",

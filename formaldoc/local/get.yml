@@ -33,8 +33,6 @@
 
       - description: |-
           FOR: the bucket has objects
-        tags:
-          - only
         expected:
           content_type: application/json
           status: 200
@@ -47,8 +45,6 @@
           FOR: the bucket has objects with complex prefix
         params:
           recursive: "true"
-        tags:
-          - only
         expected:
           content_type: application/json
           status: 200

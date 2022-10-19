@@ -39,8 +39,10 @@ export const ExecuteActions = (actions: Action[] = []) => (bucket: Bucket): Rout
     }
 
     try {
-      const actionResult = await action.run(req);
-      return res.send(actionResult);
+      const actionResult = await action.run(req, res);
+      if (!res.headersSent) {
+        return res.send(actionResult);
+      }
     } catch (error: any) {
       if (error instanceof ObjectNotFoundError) {
         return res.status(404).send({ error: error.message });

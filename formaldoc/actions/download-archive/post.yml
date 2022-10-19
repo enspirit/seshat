@@ -1,0 +1,40 @@
+---
+name: |-
+  POST /actions/s3/{prefix} - action "download-archive"
+
+url: |-
+  /actions/s3/{prefix}
+
+services:
+- method: |-
+    POST
+
+  description: |-
+    Allows downloading all objects starting with prefix as a zip archive
+
+  input_schema: |-
+    {
+      prefix: String
+    }
+
+  output_schema: |-
+    .
+
+  error_schema: |-
+    Error
+
+  postconditions:
+    - Prefix object has been created
+
+  examples:
+
+    - description: |-
+        when requested without prefix
+      params:
+        prefix: ""
+      headers:
+        content-type: application/vnd.seshat-action+json
+        seshat-action: download-archive
+      expected:
+        status: 200
+        content_type: application/zip

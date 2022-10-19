@@ -113,7 +113,7 @@ export class S3Bucket extends AbstractBucket {
     const res = await this.s3client.send(new ListObjectsV2Command(params));
 
     // Prefixes
-    const prefixes = (res.CommonPrefixes || []).map((entry) => {
+    const prefixes = options?.recursive ? [] : (res.CommonPrefixes || []).map((entry) => {
       return {
         name: entry.Prefix as string,
         contentType: 'seshat/prefix',

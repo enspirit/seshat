@@ -1,0 +1,39 @@
+---
+name: |-
+  POST /actions/s3/{prefix} - action "mkdir"
+
+url: |-
+  /actions/s3/{prefix}
+
+services:
+- method: |-
+    POST
+
+  description: |-
+    Allows creating prefix
+
+  input_schema: |-
+    {
+      prefix: String
+    }
+
+  output_schema: |-
+    .
+
+  error_schema: |-
+    Error
+
+  postconditions:
+    - Prefix object has been created
+
+  examples:
+
+    - description: |-
+        when requested with a folder name
+      headers:
+        content-type: application/vnd.seshat-action+json
+        seshat-action: mkdir
+      params:
+        prefix: foobar
+      expected:
+        status: 200
