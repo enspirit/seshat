@@ -1,9 +1,9 @@
 ---
   name: |-
-    DELETE /gcs/{path}
+    DELETE /s3/{object}
 
   url: |-
-    /gcs/{path}
+    /s3/{object}
 
   services:
   - method: |-
@@ -17,7 +17,7 @@
 
     input_schema: |-
       {
-        path      :  String
+        object      :  String
       }
 
     output_schema: |-
@@ -31,7 +31,7 @@
       - description: |-
           FOR: the file exists
         params:
-          path: subfolder/test.json
+          object: subfolder/test.json
         expected:
           status: 204
 
@@ -40,7 +40,7 @@
       - description: |-
           FOR: the file does not exist
         params:
-          path: unknown.json
+          object: unknown.json
         expected:
           content_type: application/json
           status: 404

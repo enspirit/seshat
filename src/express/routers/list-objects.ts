@@ -1,6 +1,6 @@
 import express, { NextFunction, Request, Response, Router } from 'express';
 import { PrefixNotFoundError } from '../../errors';
-import { Bucket } from '../../types';
+import { Bucket, ListOptions } from '../../types';
 
 export const ListObjects = () => (bucket: Bucket): Router => {
   const router = express();
@@ -14,8 +14,12 @@ export const ListObjects = () => (bucket: Bucket): Router => {
       return next('route');
     }
 
+    const options: ListOptions = {
+      recursive: req.query.recursive === 'true' || false,
+    };
+
     try {
-      const objects = await bucket.list(prefix.substring(1));
+      const objects = await bucket.list(prefix.substring(1), options);
       res.send(objects);
     } catch (err) {
       if (err instanceof PrefixNotFoundError) {

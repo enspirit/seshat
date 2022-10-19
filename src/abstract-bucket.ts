@@ -1,7 +1,7 @@
 import EventEmitter from 'events';
 import { Readable } from 'stream';
 import { ObjectTransformerError } from './errors';
-import { Bucket, BucketPolicy, Object, ObjectMeta, ObjectTransformer, ObjectTransformerOutput, BucketConfig, ObjectTransformerMode, BucketEmitter, BucketEvent } from './types';
+import { Bucket, BucketPolicy, Object, ObjectMeta, ObjectTransformer, ObjectTransformerOutput, BucketConfig, ObjectTransformerMode, BucketEmitter, BucketEvent, ListOptions } from './types';
 
 export default abstract class AbstractBucket implements Bucket, BucketEmitter {
 
@@ -55,12 +55,12 @@ export default abstract class AbstractBucket implements Bucket, BucketEmitter {
 
   abstract _delete(path: string): Promise<void>;
 
-  async list(prefix?: string): Promise<ObjectMeta[]> {
+  async list(prefix?: string, options?: ListOptions): Promise<ObjectMeta[]> {
     await this.ensurePolicies((policy: BucketPolicy) => policy.list(prefix));
-    return this._list(prefix);
+    return this._list(prefix, options);
   }
 
-  abstract _list(prefix?: string): Promise<ObjectMeta[]>;
+  abstract _list(prefix?: string, options?: ListOptions): Promise<ObjectMeta[]>;
 
   async mkdir(prefix: string): Promise<void> {
     await this.ensurePolicies((policy: BucketPolicy) => policy.mkdir(prefix));

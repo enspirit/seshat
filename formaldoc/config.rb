@@ -4,6 +4,7 @@ require 'mini_magick'
 Webspicy::Configuration.new(Path.dir) do |c|
 
   c.precondition AnObjectWithThatNameExistsOnBucket
+  c.precondition TheBucketContainsObjects
   c.postcondition ObjectsCanBeDownloaded
   c.postcondition ImageIsResized
 

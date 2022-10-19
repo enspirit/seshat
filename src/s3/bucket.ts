@@ -1,9 +1,9 @@
 import { Readable } from 'stream';
 import AbstractBucket from '../abstract-bucket';
-import { BucketConfig, Object, ObjectMeta } from '../types';
+import { BucketConfig, ListOptions, Object, ObjectMeta } from '../types';
 import { S3Object } from './object';
 
-import { S3Client, HeadObjectCommand, ListObjectsV2Command, DeleteObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, HeadObjectCommand, ListObjectsV2Command, DeleteObjectCommand, GetObjectCommand, ListObjectsV2CommandInput } from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage';
 
 import { ObjectNotFoundError, PrefixNotFoundError } from '../errors';
@@ -99,12 +99,18 @@ export class S3Bucket extends AbstractBucket {
     }));
   }
 
-  async _list(prefix?: string | undefined): Promise<ObjectMeta[]> {
-    const res = await this.s3client.send(new ListObjectsV2Command({
+  async _list(prefix?: string | undefined, options?: ListOptions): Promise<ObjectMeta[]> {
+    const params: ListObjectsV2CommandInput = {
       Bucket: this.bucket,
       Prefix: this.objectKey(prefix),
       Delimiter: '/',
-    }));
+    };
+
+    if (options && options.recursive === true) {
+      delete params.Delimiter;
+    }
+
+    const res = await this.s3client.send(new ListObjectsV2Command(params));
 
     // Prefixes
     const prefixes = (res.CommonPrefixes || []).map((entry) => {

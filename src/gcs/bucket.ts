@@ -1,8 +1,8 @@
 import { Readable } from 'stream';
 import AbstractBucket from '../abstract-bucket';
-import { BucketConfig, Object, ObjectMeta } from '../types';
+import { BucketConfig, ListOptions, Object, ObjectMeta } from '../types';
 import { GCSObject, GCSObjectMeta } from './object';
-import { Storage } from '@google-cloud/storage';
+import { GetFilesOptions, Storage } from '@google-cloud/storage';
 
 import { ObjectNotFoundError } from '../errors';
 
@@ -87,14 +87,21 @@ export class GCSBucket extends AbstractBucket {
     await file.delete();
   }
 
-  async _list(prefix?: string | undefined): Promise<ObjectMeta[]> {
+  async _list(prefix?: string | undefined, options?: ListOptions): Promise<ObjectMeta[]> {
+
+    const params: GetFilesOptions = {
+      prefix: this.objectKey(prefix),
+      delimiter: '/',
+      autoPaginate: false,
+    };
+
+    if (options && options.recursive === true) {
+      delete params.delimiter;
+    }
+
     const [files, _, apiResponse] = await this.client
       .bucket(this.bucket)
-      .getFiles({
-        prefix: this.objectKey(prefix),
-        delimiter: '/',
-        autoPaginate: false,
-      });
+      .getFiles(params);
 
     let objects = await Promise.all(files.map(f => GCSObjectMeta.fromFile(f, this.prefix)));
     // Remove folder/prefix from its own list

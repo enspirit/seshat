@@ -46,6 +46,10 @@ export interface BucketEmitter {
   ): boolean;
 }
 
+export type ListOptions = {
+  recursive?: boolean
+}
+
 export interface Bucket extends BucketEmitter {
   exists(path: string): Promise<boolean>;
 
@@ -53,7 +57,7 @@ export interface Bucket extends BucketEmitter {
   get(path: string): Promise<Object>;
   put(stream: Readable, meta: ObjectMeta): Promise<ObjectMeta>;
   delete(path: string): Promise<void>;
-  list(prefix?: string): Promise<ObjectMeta[]>;
+  list(prefix?: string, options?: ListOptions): Promise<ObjectMeta[]>;
   mkdir(prefix: string): Promise<void>;
 }
 
