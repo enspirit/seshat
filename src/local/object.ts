@@ -1,11 +1,12 @@
 import { Readable } from 'stream';
-import { Object, ObjectMeta } from '../types';
+import { ListOptions, Object, ObjectMeta } from '../types';
 
 import * as path from 'path';
 import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
 import * as mime from 'mime-types';
 import { SeshatError, ObjectNotFoundError, PrefixNotFoundError } from '../errors';
+import { readdir } from './utils';
 
 export class LocalObject implements Object {
 
@@ -72,20 +73,22 @@ export class LocalObject implements Object {
     return new LocalObject(meta, fs.createReadStream(fullpath));
   }
 
-  static async readdir(dirpath: string, basePath?: string): Promise<ObjectMeta[]> {
+  static async readdir(dirpath: string, basePath?: string, options?: ListOptions): Promise<ObjectMeta[]> {
     try {
       const fullpath = basePath ? path.join(basePath, dirpath) : dirpath;
-      const objectPaths = await fsPromises.readdir(fullpath, { withFileTypes: true });
+      const objectPaths = await readdir(fullpath, options?.recursive);
       const promises = objectPaths
+        .filter(dirent => options?.recursive === true ? dirent.isFile() : true)
         .map(entry => {
           return entry.isDirectory()
             ? this.metaFromDir(path.join(dirpath, entry.name), basePath)
             : this.metaFromPath(path.join(dirpath, entry.name), basePath);
         });
       const objects = await Promise.all(promises);
-      return objects.filter(o => {
-        return o.name.indexOf('.seshat') <= 0;
-      });
+      return objects
+        .filter(o => {
+          return o.name.indexOf('.seshat') <= 0;
+        });
     } catch (err: any) {
       if (err.code === 'ENOENT') {
         throw new PrefixNotFoundError(`Unable to find objects with prefix ${dirpath}`);

@@ -2,7 +2,7 @@ import * as path from 'path';
 import { LocalObject } from './object';
 import { Readable } from 'stream';
 import AbstractBucket from '../abstract-bucket';
-import { BucketConfig, ObjectMeta } from '../types';
+import { BucketConfig, ListOptions, ObjectMeta } from '../types';
 
 export interface LocalBucketConfig extends BucketConfig {
   path: string
@@ -37,9 +37,9 @@ export class LocalBucket extends AbstractBucket {
     return await LocalObject.write(meta, stream, this.path);
   }
 
-  async _list(prefix: string = '') {
+  async _list(prefix: string = '', options?: ListOptions) {
     this.ensureSecure(prefix);
-    return LocalObject.readdir(prefix, this.path);
+    return LocalObject.readdir(prefix, this.path, options);
   }
 
   async _delete(path: string) {

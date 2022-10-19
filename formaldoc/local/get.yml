@@ -1,30 +1,30 @@
 ---
   name: |-
-    GET /local/{path}
+    GET /local/
 
   url: |-
-    /local/{path}
+    /local/
 
   services:
   - method: |-
       GET
 
     description: |-
-      Allows retrieving a file
+      the list-objects express router allows listing objects
 
     preconditions:
-      - An object with that name exists on the bucket
+      - (test background) The bucket contains objects
 
     input_schema: |-
       {
-        path      :  String
-        download  :? String|Nil
+        recursive :? String|Nil
       }
 
     output_schema: |-
-      {
-        ...: String | .
-      }
+      [{
+        name: String
+        ...
+      }]
 
     error_schema: |-
       Error
@@ -32,48 +32,27 @@
     examples:
 
       - description: |-
-          FOR: the file exists
-        params:
-          path: test.json
+          FOR: the bucket has objects
+        tags:
+          - only
         expected:
           content_type: application/json
           status: 200
         assert:
-        - "pathFD('', :name => '@enspirit/seshat')"
+          - includes(:name => 'seshat.jpg')
+          - includes(:name => 'subfolder/')
+          - notIncludes(:name => 'subfolder/seshat.jpg')
 
       - description: |-
-          FOR: we can force a download as attachment (without rename)
+          FOR: the bucket has objects with complex prefix
         params:
-          path: test.json
-          download: # equivalent to ?download
+          recursive: "true"
+        tags:
+          - only
         expected:
           content_type: application/json
-          headers:
-            content-disposition: attachment; filename=test.json
           status: 200
         assert:
-        - "pathFD('', :name => '@enspirit/seshat')"
-
-      - description: |-
-          FOR: we can force a download as attachment (without rename)
-        params:
-          path: test.json
-          download: 'newname.json' # equivalent to ?download=newname.json
-        expected:
-          content_type: application/json
-          headers:
-            content-disposition: attachment; filename=newname.json
-          status: 200
-        assert:
-        - "pathFD('', :name => '@enspirit/seshat')"
-
-    counterexamples:
-
-      - description: |-
-          FOR: the file does not exist
-        params:
-          path: unknown.json
-        expected:
-          content_type: application/json
-          status: 404
-
+          - includes(:name => 'seshat.jpg')
+          - includes(:name => 'subfolder/seshat.jpg')
+          - notIncludes(:name => 'subfolder/')

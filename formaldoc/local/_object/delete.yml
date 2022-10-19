@@ -1,9 +1,9 @@
 ---
   name: |-
-    DELETE /local/{path}
+    DELETE /local/{object}
 
   url: |-
-    /local/{path}
+    /local/{object}
 
   services:
   - method: |-
@@ -17,7 +17,7 @@
 
     input_schema: |-
       {
-        path      :  String
+        object      :  String
       }
 
     output_schema: |-
@@ -31,7 +31,7 @@
       - description: |-
           FOR: the file exists
         params:
-          path: tmp/test.json
+          object: tmp/test.json
         expected:
           status: 204
 
@@ -40,7 +40,7 @@
       - description: |-
           FOR: the file does not exist
         params:
-          path: unknown.json
+          object: unknown.json
         expected:
           content_type: application/json
           status: 404
