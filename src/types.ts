@@ -1,4 +1,4 @@
-import { Request, Response, Router } from 'express';
+import { NextFunction, Request, Response, Router } from 'express';
 import { Readable } from 'stream';
 import { Logger } from 'winston';
 
@@ -94,7 +94,7 @@ export interface ObjectTransformer {
 export interface Action {
   name: string;
 
-  run(request: Request, response: Response): Promise<any>;
+  run(request: Request, response?: Response, next?: NextFunction): Promise<any>;
 }
 
 export type MiddlewareFactory = (config: Config, opts?: any) => any

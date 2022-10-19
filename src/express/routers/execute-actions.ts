@@ -23,7 +23,7 @@ export const ExecuteActions = (actions: Action[] = []) => (bucket: Bucket): Rout
   /**
    * Execute actions
    */
-  router.post('*', isSeshatActionRequest, async (req, res) => {
+  router.post('*', isSeshatActionRequest, async (req, res, next) => {
     const actionName = req.headers['seshat-action'];
     // At least the action name must be defined
     if (!actionName) {
@@ -39,7 +39,7 @@ export const ExecuteActions = (actions: Action[] = []) => (bucket: Bucket): Rout
     }
 
     try {
-      const actionResult = await action.run(req, res);
+      const actionResult = await action.run(req, res, next);
       if (!res.headersSent) {
         return res.send(actionResult);
       }
