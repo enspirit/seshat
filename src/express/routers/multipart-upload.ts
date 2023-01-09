@@ -1,9 +1,13 @@
 import path from 'path';
 import express, { Router, Request, Response, NextFunction } from 'express';
-import Busboy, { BusboyConfig } from 'busboy';
+import Busboy from 'busboy';
 import { Bucket, ObjectMeta } from '../../types';
 
-export const MultipartUpload = (busboyConfig: BusboyConfig = {}) => (bucket: Bucket): Router => {
+export interface MultipartUploadConfig {
+  defParamCharset?: string
+}
+
+export const MultipartUpload = (config: MultipartUploadConfig = { defParamCharset: 'utf-8' }) => (bucket: Bucket): Router => {
 
   const router = express();
 
@@ -25,8 +29,7 @@ export const MultipartUpload = (busboyConfig: BusboyConfig = {}) => (bucket: Buc
     const basePath = decodeURIComponent(req.path.substring(1));
     const busboy = Busboy({
       headers: req.headers,
-      defParamCharset: 'utf-8',
-      ...busboyConfig,
+      defParamCharset: config.defParamCharset || 'utf-8',
     });
     const promises: Array<Promise<ObjectMeta>> = [];
 
