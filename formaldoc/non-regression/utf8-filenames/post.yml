@@ -1,0 +1,40 @@
+---
+name: |-
+  UTF8 Filenames
+
+url: |-
+  /s3/
+
+services:
+- method: |-
+    POST
+
+  description: |-
+    It does support UTF-8 filenames
+
+  input_schema: |-
+    {
+    }
+
+  output_schema: |-
+    [SeshatObject]
+
+  error_schema: |-
+    Error
+
+  postconditions:
+    - (x) Objects can be downloaded using their names
+
+  examples:
+
+    - description: |-
+        FOR: filenames can contain special chars
+      file_upload:
+        param_name: précédent.csv
+        path: ../../fixtures/todos.csv
+        content_type: "text/csv"
+      expected:
+        status: 200
+        content_type: application/json
+      assert:
+        - "pathFD('0', :name => 'précédent.csv')"

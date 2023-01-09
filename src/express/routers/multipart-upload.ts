@@ -1,9 +1,9 @@
 import path from 'path';
 import express, { Router, Request, Response, NextFunction } from 'express';
-import Busboy from 'busboy';
+import Busboy, { BusboyConfig } from 'busboy';
 import { Bucket, ObjectMeta } from '../../types';
 
-export const MultipartUpload = () => (bucket: Bucket): Router => {
+export const MultipartUpload = (busboyConfig: BusboyConfig = {}) => (bucket: Bucket): Router => {
 
   const router = express();
 
@@ -23,7 +23,11 @@ export const MultipartUpload = () => (bucket: Bucket): Router => {
   router.post('/*', isMultiPartFormDataRequest, async (req, res, next) => {
 
     const basePath = decodeURIComponent(req.path.substring(1));
-    const busboy = Busboy({ headers: req.headers });
+    const busboy = Busboy({
+      headers: req.headers,
+      defParamCharset: 'utf-8',
+      ...busboyConfig,
+    });
     const promises: Array<Promise<ObjectMeta>> = [];
 
     busboy.on('error', (error: Error) => {
