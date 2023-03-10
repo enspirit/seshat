@@ -1,5 +1,7 @@
 # Seshat
 
+![SeshatLogo](assets/seshat.jpg)
+
 :warning: This is a complete rewrite of Seshat. If you're looking for the v1, [please head to the v1 branch](https://github.com/enspirit/seshat/tree/v1) :warning:
 
 See the [Breaking Changes](#breaking-changes) section for incompatibilities between v1 & v2.
