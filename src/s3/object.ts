@@ -47,7 +47,7 @@ export class S3Object implements Object {
     }
     return Object.entries(output.Metadata)
       .reduce((meta: ObjectMeta, [key, value]: [string, string]): ObjectMeta => {
-        meta[key] = value;
+        meta[key] = decodeURIComponent(value);
         return meta;
       }, meta) as S3ObjectMeta;
   }

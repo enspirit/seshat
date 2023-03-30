@@ -64,7 +64,7 @@ export class S3Bucket extends AbstractBucket {
     const { contentType, name, ...rest } = meta;
     const metadata = Object.entries(rest)
       .reduce((obj, [key, value]) => {
-        obj[key] = value.toString ? value.toString() : value;
+        obj[key] = encodeURIComponent(value.toString ? value.toString() : value);
         return obj;
       }, {} as {[key: string]: string});
 

@@ -182,12 +182,28 @@ describe('S3Bucket', () => {
       }));
     });
 
+    // Some S3 servers don't handle non-ascii chars very well
+    it('ensures metadata props are url safe', async () => {
+      metadata.originalname = 'é ç à Z.png';
+      await bucket.put(mockFileObject.body, metadata);
+      await expect(s3client.send).to.be.calledWith(sinon.match.instanceOf(PutObjectCommand));
+      await expect(s3client.send).to.be.calledWith(sinon.match({
+        input: {
+          Bucket: 'seshat-bucket',
+          Key: 'test.json',
+          ContentType: 'application/json',
+          Metadata: {
+            originalname: 'e%CC%81%20c%CC%A7%20a%CC%80%20Z.png',
+          },
+        },
+      }));
+    });
+
     it('returns a valid S3Object', async () => {
       const objectMeta = await bucket.put(mockFileObject.body, metadata);
       expect(objectMeta.name).to.equal('test.json');
       expect(objectMeta.contentType).to.equal('application/json');
     });
-
   });
 
   describe('delete()', () => {
