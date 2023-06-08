@@ -1,3 +1,7 @@
+## 2.4.4 - 2023-06-09
+
+* Fix support for Last-Modified/ETag caching protocol (LocalStorage)
+
 ## 2.4.3 - 2023-06-08
 
 * Fix support for Last-Modified/ETag caching protocol
