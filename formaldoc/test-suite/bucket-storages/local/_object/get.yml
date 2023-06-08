@@ -15,6 +15,9 @@
     preconditions:
       - An object with that name exists on the bucket
 
+    postconditions:
+      - (x) It supports the Last-Modified/If-Modified-Since caching protocol
+
     input_schema: |-
       {
         object      :  String
