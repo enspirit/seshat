@@ -24,6 +24,8 @@ describe('LocalObject', () => {
       expect(promise).to.eventually.be.an.instanceof(LocalObject);
       const object = await promise;
       expect(object.meta.name).to.equal(fpath);
+      expect(object.meta.ctime).to.be.an.instanceof(Date);
+      expect(object.meta.mtime).to.be.an.instanceof(Date);
     });
 
     it('rejects for invalid path', async () => {

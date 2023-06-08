@@ -79,6 +79,9 @@ describe('LocalBucket', () => {
       const stat = await bucket.get('package.json');
       expect(stat.meta.name).to.equal('package.json');
       expect(stat.meta.contentType).to.equal('application/json');
+      expect(stat.meta.ctime).to.be.an.instanceof(Date);
+      expect(stat.meta.mtime).to.be.an.instanceof(Date);
+
     });
 
     it('resolves the correct fstat information (file in subfolder)', async () => {
