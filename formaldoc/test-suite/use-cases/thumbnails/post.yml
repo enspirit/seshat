@@ -32,7 +32,7 @@ services:
         FOR: the file is an image
       file_upload:
         param_name: seshat.jpg
-        path: ../fixtures/seshat.jpg
+        path: ../../../fixtures/seshat.jpg
         content_type: "image/jpeg"
       expected:
         status: 200
@@ -46,7 +46,7 @@ services:
         FOR: the file is not an image
       file_upload:
         param_name: seshat.jpg
-        path: ../fixtures/test.json
+        path: ../../../fixtures/test.json
         content_type: "application/json"
       expected:
         status: 400

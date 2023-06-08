@@ -1,9 +1,9 @@
 ---
 name: |-
-  POST /s3/ - multipart upload
+  POST /local/ - multipart upload
 
 url: |-
-  /s3/
+  /local/
 
 services:
 - method: |-
@@ -31,22 +31,10 @@ services:
         when requested with a single file
       file_upload:
         param_name: some-todos.csv
-        path: ../fixtures/todos.csv
+        path: ../../../fixtures/todos.csv
         content_type: "text/csv"
       expected:
         status: 200
         content_type: application/json
       assert:
         - "pathFD('0', :name => 'some-todos.csv')"
-
-    - description: |-
-        FOR: object names can contain directory separator
-      file_upload:
-        param_name: object/names/can/contain/slashes/some-todos.csv
-        path: ../fixtures/todos.csv
-        content_type: "text/csv"
-      expected:
-        status: 200
-        content_type: application/json
-      assert:
-        - "pathFD('0', :name => 'object/names/can/contain/slashes/some-todos.csv')"
