@@ -27,8 +27,8 @@ export class GCSObjectMeta implements ObjectMeta {
       file.bucket.name,
       prefix ? file.name.substring(prefix.length) : file.name,
       file.metadata.contentType || 'application/octet-stream',
-      file.metadata.timeCreated,
-      file.metadata.updated,
+      new Date(file.metadata.timeCreated),
+      new Date(file.metadata.updated),
       file.metadata.etag,
       file.metadata.size ? parseInt(file.metadata.size) : undefined,
     );

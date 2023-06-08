@@ -85,7 +85,7 @@ export const RetrieveObjects = (config: RetrieveObjectConfig = DefaultConfig) =>
     }
     res.set('Content-Type', object.meta.contentType);
     if (config.headers.lastModified && object.meta.mtime) {
-      res.setHeader('Last-Modified', object.meta.mtime?.toString());
+      res.setHeader('Last-Modified', object.meta.mtime?.toUTCString());
     }
     if (config.headers.etag && object.meta.etag) {
       res.setHeader('ETag', object.meta.etag);
@@ -96,7 +96,12 @@ export const RetrieveObjects = (config: RetrieveObjectConfig = DefaultConfig) =>
     object.body.on('error', (err) => {
       next(err);
     });
-    object.body.pipe(res);
+
+    if (req.fresh) {
+      return res.sendStatus(304);
+    } else {
+      object.body.pipe(res);
+    }
   });
 
   return router;

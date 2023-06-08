@@ -13,6 +13,7 @@ import actionsExample from './actions';
 import { version } from '../src';
 
 const app = express();
+app.set('etag', 'strong');
 
 // Mount all examples
 [
