@@ -1,9 +1,9 @@
 ---
 name: |-
-  POST /rename/ - multipart upload
+  POST /s3/ - multipart upload
 
 url: |-
-  /rename/
+  /s3/
 
 services:
 - method: |-
@@ -31,22 +31,22 @@ services:
         when requested with a single file
       file_upload:
         param_name: some-todos.csv
-        path: ../fixtures/todos.csv
+        path: ../../../fixtures/todos.csv
         content_type: "text/csv"
       expected:
         status: 200
         content_type: application/json
       assert:
-        - "notMatch('0/name', /some-todos.csv/)"
+        - "pathFD('0', :name => 'some-todos.csv')"
 
     - description: |-
-        FOR: non-ascii chars are accepted in file names
+        FOR: object names can contain directory separator
       file_upload:
-        param_name: à faire.csv
-        path: ../fixtures/todos.csv
+        param_name: object/names/can/contain/slashes/some-todos.csv
+        path: ../../../fixtures/todos.csv
         content_type: "text/csv"
       expected:
         status: 200
         content_type: application/json
       assert:
-        - "match('0/originalname', /à faire.csv/)"
+        - "pathFD('0', :name => 'object/names/can/contain/slashes/some-todos.csv')"

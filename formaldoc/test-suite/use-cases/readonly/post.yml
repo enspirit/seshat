@@ -31,7 +31,7 @@ services:
         FOR: the bucket uses the read-only policy
       file_upload:
         param_name: some-todos.csv
-        path: ../fixtures/todos.csv
+        path: ../../../fixtures/todos.csv
         content_type: "text/csv"
       expected:
         status: 400

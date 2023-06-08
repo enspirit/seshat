@@ -1,16 +1,16 @@
 ---
 name: |-
-  UTF8 Filenames
+  POST /gzip/ - multipart upload on bucket with gzip transformer
 
 url: |-
-  /s3/
+  /gzip/
 
 services:
 - method: |-
     POST
 
   description: |-
-    It does support UTF-8 filenames
+    Allows uploading files that are compressed before being stored
 
   input_schema: |-
     {
@@ -28,13 +28,13 @@ services:
   examples:
 
     - description: |-
-        FOR: filenames can contain special chars
+        when requested with a single file
       file_upload:
-        param_name: précédent.csv
-        path: ../../fixtures/todos.csv
+        param_name: some-todos.csv
+        path: ../../../fixtures/todos.csv
         content_type: "text/csv"
       expected:
         status: 200
         content_type: application/json
       assert:
-        - "pathFD('0', :name => 'précédent.csv')"
+        - "match('0/name', /some-todos.csv.gz/)"

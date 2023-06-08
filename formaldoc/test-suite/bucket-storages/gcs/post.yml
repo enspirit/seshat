@@ -31,7 +31,7 @@ services:
         when requested with a single file
       file_upload:
         param_name: some-todos.csv
-        path: ../fixtures/todos.csv
+        path: ../../../fixtures/todos.csv
         content_type: "text/csv"
       expected:
         status: 200
@@ -43,7 +43,7 @@ services:
         FOR: object names can contain directory separator
       file_upload:
         param_name: object/names/can/contain/slashes/some-todos.csv
-        path: ../fixtures/todos.csv
+        path: ../../../fixtures/todos.csv
         content_type: "text/csv"
       expected:
         status: 200
