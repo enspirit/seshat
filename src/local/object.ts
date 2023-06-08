@@ -47,23 +47,29 @@ export class LocalObject implements Object {
   static async metaFromStats(name: string, fpath: string, stats: fs.Stats): Promise<ObjectMeta> {
     const loadMeta = async () => {
       try {
-        const meta = (await fs.promises.readFile(`${fpath}.seshat`)).toString();
-        return JSON.parse(meta);
+        const json = (await fs.promises.readFile(`${fpath}.seshat`)).toString();
+        const meta = JSON.parse(json);
+        return {
+          ...meta,
+          ctime: meta.ctime ? new Date(meta.ctime) : undefined,
+          mtime: meta.mtime ? new Date(meta.mtime) : undefined,
+        };
       } catch (err) {
         return {};
       }
     };
 
     const meta = await loadMeta();
+
     return {
       name: path.normalize(name),
-      ctime: stats.ctime,
-      mtime: stats.mtime,
+      contentLength: stats.size,
       contentType: stats.isDirectory()
         ? 'directory'
         : mime.lookup(fpath) || 'application/octet-stream',
-      contentLength: stats.size,
       ...meta,
+      ctime: new Date(stats.ctime || meta.ctime),
+      mtime: new Date(stats.mtime || meta.mtime),
     };
   }
 
