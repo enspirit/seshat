@@ -1,4 +1,4 @@
-## 2.5.0 - ...
+## 2.5.0 - 2023-06-09
 
 * Extend archive action capabilities
 * Upgraded webspicy to 0.25 and moved caching postconditions there
