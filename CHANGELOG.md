@@ -1,3 +1,8 @@
+## 2.5.1 - 2023-06-09
+
+* Improve error logging to include details about Error instances
+* Transformer errors subclassing SeshatError bubble up
+
 ## 2.5.0 - 2023-06-09
 
 * Extend archive action capabilities
