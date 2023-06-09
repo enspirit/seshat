@@ -15,6 +15,9 @@ services:
   input_schema: |-
     {
       prefix: String
+      objects:? [String]|{
+        ...: [String]
+      }
     }
 
   output_schema: |-
@@ -63,6 +66,50 @@ services:
             - seshat.jpg
           includes:
             - subfolder/seshat.jpg
+
+    - description: |-
+        FOR: it works with specific list of objects
+      tags:
+        - ONLY
+      params:
+        prefix: ""
+        objects:
+          - seshat.jpg
+          - subfolder/seshat.jpg
+      headers:
+        content-type: application/vnd.seshat-action+json
+        seshat-action: download-archive
+      expected:
+        status: 200
+        content_type: application/zip
+      metadata:
+        zip:
+          includes:
+            - seshat.jpg
+            - subfolder/seshat.jpg
+
+    - description: |-
+        FOR: it works with object selection
+      tags:
+        - ONLY
+      params:
+        prefix: ""
+        objects:
+          folder1:
+            - seshat.jpg
+          folder2:
+            - seshat.jpg
+      headers:
+        content-type: application/vnd.seshat-action+json
+        seshat-action: download-archive
+      expected:
+        status: 200
+        content_type: application/zip
+      metadata:
+        zip:
+          includes:
+            - folder1/seshat.jpg
+            - folder2/seshat.jpg
 
   counterexamples:
 
