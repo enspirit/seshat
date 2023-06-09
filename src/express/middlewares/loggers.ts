@@ -22,7 +22,18 @@ export const RequestLogger = (req: Request, res: Response, next: NextFunction) =
 };
 
 export const ErrorLogger = (err: Error, req: Request, res: Response, _next: NextFunction) => {
-  req.seshat.logger.error({ error: err.constructor.name, message: err.message, request: { path: req.path, method: req.method } });
+  const log: any = {
+    error: err.constructor.name,
+    message: err.message,
+    stack: err.stack,
+    request: {
+      path: req.path,
+      method: req.method,
+    },
+  };
+
+  req.seshat.logger.error(log);
+
   if (err instanceof SeshatError) {
     res.status(err.httpCode).send({ error: err.message });
   } else {

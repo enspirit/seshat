@@ -2,6 +2,7 @@ import EventEmitter from 'events';
 import { Readable } from 'stream';
 import { ObjectTransformerError } from './errors';
 import { Bucket, BucketPolicy, Object, ObjectMeta, ObjectTransformer, ObjectTransformerOutput, BucketConfig, ObjectTransformerMode, BucketEmitter, BucketEvent, ListOptions } from './types';
+import logger from './logger';
 
 export default abstract class AbstractBucket implements Bucket, BucketEmitter {
 
@@ -93,7 +94,8 @@ export default abstract class AbstractBucket implements Bucket, BucketEmitter {
           const result = await t.transform(stream, meta, mode);
           return result;
         } catch (err) {
-          throw new ObjectTransformerError(`Object transformer failed: ${t.constructor.name}`);
+          logger.error(err);
+          throw new ObjectTransformerError(`Object transformer failed: ${t.constructor.name}`, err as Error);
         }
       }, Promise.resolve({ stream, meta }));
   }

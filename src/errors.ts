@@ -1,7 +1,8 @@
 export class SeshatError extends Error {
   httpCode: number = 500;
-  constructor(message: string) {
-    super(message);
+
+  constructor(msg: string, public rootCause?: Error) {
+    super(msg);
   }
 }
 
@@ -24,5 +25,4 @@ export class NoObjectMatchingError extends BucketPolicyError {
 }
 
 export class ObjectTransformerError extends SeshatError {
-
 }
