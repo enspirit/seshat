@@ -1,3 +1,7 @@
+## 2.4.5
+
+* Upgraded webspicy to 0.25 and moved caching postconditions there
+
 ## 2.4.4 - 2023-06-09
 
 * Fix support for Last-Modified/ETag caching protocol (LocalStorage)

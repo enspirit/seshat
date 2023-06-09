@@ -1,10 +1,10 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    addressable (2.8.1)
+    addressable (2.8.4)
       public_suffix (>= 2.0.2, < 6.0)
     citrus (3.0.2)
-    commonmarker (0.23.8)
+    commonmarker (0.23.9)
     date (3.3.3)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
@@ -12,7 +12,7 @@ GEM
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
-    finitio (0.11.4)
+    finitio (0.12.0)
       citrus (>= 3.0, < 4.0)
     hansi (0.2.1)
     http (4.4.1)
@@ -35,12 +35,13 @@ GEM
       net-smtp
     mini_magick (4.12.0)
     mini_mime (1.1.2)
+    minitest (5.18.0)
     mustache (1.1.1)
-    mustermann (2.0.2)
+    mustermann (3.0.0)
       ruby2_keywords (~> 0.0.1)
-    mustermann-contrib (2.0.2)
+    mustermann-contrib (3.0.0)
       hansi (~> 0.2.0)
-      mustermann (= 2.0.2)
+      mustermann (= 3.0.0)
     net-imap (0.3.4)
       date
       net-protocol
@@ -54,13 +55,16 @@ GEM
       commonmarker (~> 0.17)
       psych (~> 3.1)
     paint (2.3.0)
-    path (2.0.1)
+    path (2.1.0)
+    predicate (2.8.0)
+      minitest (>= 5.0)
+      sexpr (~> 1.1)
     psych (3.3.4)
     public_suffix (5.0.1)
-    rack (3.0.4.1)
+    rack (3.0.7)
     rack-proxy (0.7.6)
       rack
-    rack-robustness (1.1.0)
+    rack-robustness (1.2.0)
     rack-test (0.6.3)
       rack (>= 1.0)
     rake (13.0.6)
@@ -69,23 +73,25 @@ GEM
       ffi (~> 1.0)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
-    timeout (0.3.1)
+    sexpr (1.1.0)
+    timeout (0.3.2)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.8.2)
-    webspicy (0.22.0)
-      finitio (>= 0.10.0, < 0.12.0)
+    webspicy (0.25.0)
+      finitio (>= 0.12.0, < 0.13.0)
       http (~> 4.4.1)
       listen (~> 3.7)
       mail (~> 2.7)
       mustache (~> 1.0)
-      mustermann (~> 2.0)
+      mustermann (~> 3.0)
       mustermann-contrib
       openapi3_parser (~> 0.8.2)
       paint (~> 2.2)
       path (~> 2.0)
+      predicate (>= 2.8, < 3.0)
       rack-proxy (~> 0.7.0)
-      rack-robustness (~> 1.1, >= 1.1.0)
+      rack-robustness (>= 1.2, < 2.0)
       rack-test (~> 0.6.3)
 
 PLATFORMS
@@ -97,7 +103,7 @@ PLATFORMS
 DEPENDENCIES
   mini_magick (>= 4.12.0, < 5.0)
   rubyzip (>= 2.3.2, < 3.0)
-  webspicy (>= 0.22.0, < 0.23)
+  webspicy (>= 0.25.0, < 0.26)
 
 BUNDLED WITH
-   2.2.1
+   2.4.6

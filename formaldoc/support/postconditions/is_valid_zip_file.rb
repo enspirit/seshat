@@ -30,7 +30,7 @@ class IsValidZipFile
       end
     end
   ensure
-    File.delete(zippath) if File.exists?(zippath)
+    File.delete(zippath) if File.exist?(zippath)
   end
 
 end
