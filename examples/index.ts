@@ -11,6 +11,7 @@ import thumbnailsExample from './thumbnails';
 import thumbnailsOnTheFlyExample from './thumbnails-on-the-fly';
 import actionsExample from './actions';
 import { version } from '../src';
+import logger from '../src/logger';
 
 const app = express();
 app.set('etag', 'strong');
@@ -38,5 +39,5 @@ app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
 });
 
 app.listen(3000, () => {
-  console.log(`Seshat ${version} is running on http://localhost:3000`);
+  logger.info(`Seshat ${version} is running on http://localhost:3000`);
 });
