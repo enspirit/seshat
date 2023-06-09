@@ -25,11 +25,14 @@ services:
   postconditions:
     - (x) Objects can be downloaded using their names
     - (x) The image is resized properly
+    - (x) Exif metadata are preserved
 
   examples:
 
     - description: |-
         FOR: the file is an image
+      tags:
+        - ONLY
       file_upload:
         param_name: seshat.jpg
         path: ../../../fixtures/seshat.jpg

@@ -11,6 +11,7 @@ Webspicy::Configuration.new(Path.dir) do |c|
   c.precondition TheBucketContainsObjects
   c.postcondition ObjectsCanBeDownloaded
   c.postcondition ImageIsResized
+  c.postcondition ExifMetadataIsPreserved
   c.postcondition IsValidZipFile
   c.postcondition Webspicy::Web::Specification::Post::LastModifiedCachingProtocol
   c.postcondition Webspicy::Web::Specification::Post::ETagCachingProtocol

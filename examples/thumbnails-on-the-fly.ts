@@ -24,6 +24,7 @@ export default (expressApp: Express, _seshatRootDir: string) => {
     resize: {
       width: 400,
     },
+    withMetadata: true,
   }, 'Egress');
 
   expressApp.use('/thumbnails-on-the-fly', createApp({
