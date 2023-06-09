@@ -36,8 +36,10 @@ export class SharpTransformer implements ObjectTransformer {
     }
     if (withMetadata) {
       if (withMetadata === true) {
+        // we reuse the existing metadata of the image
         transformer.withMetadata();
       } else {
+        // object case, metadata can be passed explicitely
         transformer.withMetadata(withMetadata);
       }
     }
