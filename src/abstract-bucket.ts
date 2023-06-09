@@ -1,6 +1,6 @@
 import EventEmitter from 'events';
 import { Readable } from 'stream';
-import { ObjectTransformerError } from './errors';
+import { ObjectTransformerError, SeshatError } from './errors';
 import { Bucket, BucketPolicy, Object, ObjectMeta, ObjectTransformer, ObjectTransformerOutput, BucketConfig, ObjectTransformerMode, BucketEmitter, BucketEvent, ListOptions } from './types';
 import logger from './logger';
 
@@ -95,6 +95,9 @@ export default abstract class AbstractBucket implements Bucket, BucketEmitter {
           return result;
         } catch (err) {
           logger.error(err);
+          if (err instanceof SeshatError) {
+            throw err;
+          }
           throw new ObjectTransformerError(`Object transformer failed: ${t.constructor.name}`, err as Error);
         }
       }, Promise.resolve({ stream, meta }));

@@ -9,7 +9,7 @@ import { Readable } from 'stream';
 import { BucketPolicy, Object, ObjectMeta, ObjectTransformer, ObjectTransformerType } from '../src/types';
 import { getMockFileObject } from './mocks/object';
 import { readOnlyPolicy, uploadOnlyPolicy } from './mocks/policies';
-import { ObjectTransformerError } from '../src/errors';
+import { ObjectTransformerError, SeshatError } from '../src/errors';
 
 describe('the AbstractBucket class', () => {
 
@@ -336,6 +336,17 @@ describe('the AbstractBucket class', () => {
 
         const p = bucket.put(stream, meta);
         return expect(p).to.be.rejectedWith(ObjectTransformerError, /Object transformer failed: DummyIngressTransformer/);
+      });
+
+      it('lets transformer errors bubble up if they extend SeshatError', async () => {
+        const stub = sinon.stub(ingress, 'transform');
+        class MyCustomError extends SeshatError {}
+        const error = new MyCustomError('a custom transforming error occured');
+        stub.rejects(error);
+        const stream = mockFileObject.body;
+
+        const p = bucket.put(stream, meta);
+        return expect(p).to.be.rejectedWith(MyCustomError, /a custom transforming error occured/);
       });
     });
 
