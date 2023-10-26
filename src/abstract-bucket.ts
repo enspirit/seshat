@@ -9,7 +9,7 @@ export default abstract class AbstractBucket implements Bucket, BucketEmitter {
   private emitter: EventEmitter;
 
   constructor(
-    private config: BucketConfig,
+    protected config: BucketConfig,
   ) {
     this.emitter = new EventEmitter();
   }

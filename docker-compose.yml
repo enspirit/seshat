@@ -4,7 +4,9 @@ services:
     build: .
     command: npm run dev
     environment:
-      S3_ENDPOINT: http://minio:9000
+      S3_ENDPOINT: https://minio
+      # we are using self signed certs in development/test
+      NODE_TLS_REJECT_UNAUTHORIZED: "0"
     ports:
       - 3000:3000
     volumes:
@@ -20,9 +22,10 @@ services:
     environment:
       MINIO_ACCESS_KEY: access-key
       MINIO_SECRET_KEY: secret-key
+    command: minio server --console-address 0.0.0.0:9001 --address ":443" /data
     volumes:
       - ./volumes/s3:/data
-    command: server --console-address 0.0.0.0:9001 /data
+      - ./minio/certs:/root/.minio/certs
 
   gcs:
     image: fsouza/fake-gcs-server
