@@ -40,13 +40,9 @@ tests.integration.watch:
 	@bundle exec webspicy formaldoc -w
 
 # The self signed certificates required for the sse-c example
-minio/certs/public.crt: generate-keys
-minio/certs/private.key: generate-keys
-
-minio/certs/:
+minio/certs/public.crt: minio/certs/private.key
+minio/certs/private.key:
 	mkdir -p minio/certs
-
-generate-keys: minio/certs/
 	openssl req -x509 -config minio/openssl.conf -nodes -days 3650 -newkey rsa:2048 -keyout minio/certs/private.key -out minio/certs/public.crt
 
 Makefile: minio/certs/public.crt minio/certs/private.key
