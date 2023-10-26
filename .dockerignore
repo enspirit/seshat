@@ -10,3 +10,4 @@ docker-compose.yaml
 Gemfile*
 Makefile
 node_modules
+minio

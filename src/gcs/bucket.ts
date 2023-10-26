@@ -4,7 +4,7 @@ import { BucketConfig, ListOptions, Object, ObjectMeta } from '../types';
 import { GCSObject, GCSObjectMeta } from './object';
 import { GetFilesOptions, Storage } from '@google-cloud/storage';
 
-import { ObjectNotFoundError } from '../errors';
+import { NotImplementedError, ObjectNotFoundError } from '../errors';
 
 export interface GCSBucketConfig extends BucketConfig {
   bucket: string,
@@ -25,6 +25,10 @@ export class GCSBucket extends AbstractBucket {
     this.client = config.client;
     this.bucket = config.bucket;
     this.prefix = config.prefix;
+
+    if (config.encryption) {
+      throw new NotImplementedError('No support for encryption on GCS bucket');
+    }
   }
 
   async _head(path: string): Promise<ObjectMeta> {

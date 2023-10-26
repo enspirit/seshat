@@ -10,6 +10,7 @@ import renameExample from './rename';
 import thumbnailsExample from './thumbnails';
 import thumbnailsOnTheFlyExample from './thumbnails-on-the-fly';
 import actionsExample from './actions';
+import sseExample from './sse-c';
 import { version } from '../src';
 import logger from '../src/logger';
 
@@ -28,6 +29,7 @@ app.set('etag', 'strong');
   thumbnailsExample,
   thumbnailsOnTheFlyExample,
   actionsExample,
+  sseExample,
 ].forEach((example) => example(app, process.env.ROOT_DIR || '../'));
 
 /**

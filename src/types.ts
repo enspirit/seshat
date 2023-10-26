@@ -22,9 +22,15 @@ export interface ObjectMeta {
   [key: string]: any
 }
 
+export interface BucketEncryption {
+  alg: 'AES256',
+  key: string
+}
+
 export interface BucketConfig {
   policies?: Array<BucketPolicy>
   transformers?: Array<ObjectTransformer>
+  encryption?: BucketEncryption
 }
 
 export type BucketEvent = {

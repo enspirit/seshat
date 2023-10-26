@@ -3,6 +3,7 @@ import { LocalObject } from './object';
 import { Readable } from 'stream';
 import AbstractBucket from '../abstract-bucket';
 import { BucketConfig, ListOptions, ObjectMeta } from '../types';
+import { NotImplementedError } from '../errors';
 
 export interface LocalBucketConfig extends BucketConfig {
   path: string
@@ -19,6 +20,9 @@ export class LocalBucket extends AbstractBucket {
     this.path = config.path;
     if (process.env.NODE_ENV === 'production') {
       throw new Error('LocalBucket is not supposed to be used in production environments.');
+    }
+    if (config.encryption) {
+      throw new NotImplementedError('No support for encryption on GCS bucket');
     }
   }
 

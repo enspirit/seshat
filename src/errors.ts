@@ -6,6 +6,10 @@ export class SeshatError extends Error {
   }
 }
 
+export class NotImplementedError extends SeshatError {
+  httpCode = 500;
+}
+
 export class ObjectNotFoundError extends SeshatError {
   httpCode = 404;
 }

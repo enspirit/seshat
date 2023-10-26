@@ -3,7 +3,7 @@ import AbstractBucket from '../abstract-bucket';
 import { BucketConfig, ListOptions, Object, ObjectMeta } from '../types';
 import { S3Object } from './object';
 
-import { S3Client, HeadObjectCommand, ListObjectsV2Command, DeleteObjectCommand, GetObjectCommand, ListObjectsV2CommandInput } from '@aws-sdk/client-s3';
+import { S3Client, HeadObjectCommand, ListObjectsV2Command, DeleteObjectCommand, GetObjectCommand, ListObjectsV2CommandInput, GetObjectCommandInput, PutObjectCommandInput, HeadObjectCommandInput } from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage';
 
 import { ObjectNotFoundError, PrefixNotFoundError } from '../errors';
@@ -30,11 +30,18 @@ export class S3Bucket extends AbstractBucket {
   }
 
   async _head(path: string): Promise<ObjectMeta> {
+    const params: HeadObjectCommandInput = {
+      Bucket: this.bucket,
+      Key: this.objectKey(path),
+    };
+
+    if (this.config.encryption) {
+      params.SSECustomerAlgorithm = this.config.encryption.alg;
+      params.SSECustomerKey = '01234567890123456789012345678901';
+    }
+
     try {
-      const headOutput = await this.s3client.send(new HeadObjectCommand({
-        Bucket: this.bucket,
-        Key: this.objectKey(path),
-      }));
+      const headOutput = await this.s3client.send(new HeadObjectCommand(params));
       return S3Object.metaFromCommandOutput(this.bucket, path, headOutput);
     } catch (err: any) {
       if (['NotFound', 'NoSuchKey'].includes(err.name)) {
@@ -45,11 +52,18 @@ export class S3Bucket extends AbstractBucket {
   }
 
   async _get(path: string): Promise<Object> {
+    const params: GetObjectCommandInput = {
+      Bucket: this.bucket,
+      Key: this.objectKey(path),
+    };
+
+    if (this.config.encryption) {
+      params.SSECustomerAlgorithm = this.config.encryption.alg;
+      params.SSECustomerKey = this.config.encryption.key;
+    }
+
     try {
-      const object = await this.s3client.send(new GetObjectCommand({
-        Bucket: this.bucket,
-        Key: this.objectKey(path),
-      }));
+      const object = await this.s3client.send(new GetObjectCommand(params));
       return S3Object.fromGetObjectCommandOutput(this.bucket, path, object);
     } catch (err: any) {
       if (['NotFound', 'NoSuchKey'].includes(err.name)) {
@@ -68,7 +82,7 @@ export class S3Bucket extends AbstractBucket {
         return obj;
       }, {} as {[key: string]: string});
 
-    const target = {
+    const target: PutObjectCommandInput = {
       Key: this.objectKey(name),
       Bucket: this.bucket,
       ContentType: contentType,
@@ -77,6 +91,11 @@ export class S3Bucket extends AbstractBucket {
         ...metadata,
       },
     };
+
+    if (this.config.encryption) {
+      target.SSECustomerAlgorithm = this.config.encryption.alg;
+      target.SSECustomerKey = this.config.encryption.key;
+    }
 
     const upload = new Upload({
       client: this.s3client,
