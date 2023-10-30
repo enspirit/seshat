@@ -30,3 +30,7 @@ export class NoObjectMatchingError extends BucketPolicyError {
 
 export class ObjectTransformerError extends SeshatError {
 }
+
+export class VirusDetectedError extends ObjectTransformerError {
+  httpCode = 400;
+}

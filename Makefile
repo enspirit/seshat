@@ -1,4 +1,4 @@
-ci: npm.install npm.lint tests.unit bundler.install up waitforseshat tests.integration
+ci: clamav.up npm.install npm.lint tests.unit bundler.install up waitforseshat tests.integration
 
 npm.install:
 	@npm install
@@ -13,10 +13,13 @@ waitforseshat:
 	@sleep 10
 
 up:
-	@docker-compose up -d --force-recreate --build
+	@docker-compose up -d --build
 
 %.up:
 	@docker-compose up -d --force-recreate --build $*
+
+%.bash:
+	@docker-compose exec $* sh
 
 down:
 	@docker-compose down

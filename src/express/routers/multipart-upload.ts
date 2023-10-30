@@ -52,8 +52,12 @@ export const MultipartUpload = (config: MultipartUploadConfig = { defParamCharse
     });
 
     busboy.on('finish', async () => {
-      const objects = await Promise.all(promises);
-      res.status(200).send(objects);
+      try {
+        const objects = await Promise.all(promises);
+        res.status(200).send(objects);
+      } catch (err) {
+        next(err);
+      }
     });
 
     req.pipe(busboy);
