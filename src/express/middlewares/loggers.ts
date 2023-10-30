@@ -35,8 +35,8 @@ export const ErrorLogger = (err: Error, req: Request, res: Response, _next: Next
   req.seshat.logger.error(log);
 
   if (err instanceof SeshatError) {
-    res.status(err.httpCode).send({ error: err.message });
+    res.status(err.httpCode).send({ code: err.constructor.name, message: err.message });
   } else {
-    res.status(500).send({ error: err.message });
+    res.status(500).send({ code: 'UnexpectedErrorr', message: err.message });
   }
 };

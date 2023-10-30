@@ -79,9 +79,7 @@ export const RetrieveObjects = (config: RetrieveObjectConfig = DefaultConfig) =>
     const { object } = req.seshat;
 
     if (!object) {
-      return res
-        .status(404)
-        .send({ error: `File not found: ${req.path}` });
+      return next(new ObjectNotFoundError('Object not found'));
     }
     res.set('Content-Type', object.meta.contentType);
     if (config.headers.lastModified && object.meta.mtime) {

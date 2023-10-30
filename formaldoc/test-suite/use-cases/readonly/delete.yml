@@ -30,4 +30,4 @@ services:
         status: 400
         content_type: application/json
       assert:
-        - "pathFD('', :error => 'Access denied.')"
+        - "pathFD('', :message => 'Access denied.')"

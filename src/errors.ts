@@ -34,3 +34,5 @@ export class ObjectTransformerError extends SeshatError {
 export class VirusDetectedError extends ObjectTransformerError {
   httpCode = 400;
 }
+
+export class UnknownActionError extends SeshatError {}

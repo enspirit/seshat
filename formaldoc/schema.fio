@@ -10,5 +10,6 @@ SeshatObject = {
 }
 
 Error = {
-  error: String
+  code: String
+  message: String
 }

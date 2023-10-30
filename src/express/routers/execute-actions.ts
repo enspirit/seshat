@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response, Router } from 'express';
 import { json } from 'body-parser';
 import { Bucket, Action } from '../../types';
-import { ObjectNotFoundError } from '../../errors';
+import { ObjectNotFoundError, UnknownActionError } from '../../errors';
 
 export const SESHAT_ACTION_HEADER = 'application/vnd.seshat-action+json';
 
@@ -35,7 +35,7 @@ export const ExecuteActions = (actions: Action[] = []) => (bucket: Bucket): Rout
     // look for the action
     const action = actions.find((a: Action) => a.name === actionName);
     if (!action) {
-      return res.status(400).send({ error: `Unknown action: '${actionName}` });
+      return next(new UnknownActionError(`Unknown action: '${actionName}`));
     }
 
     try {

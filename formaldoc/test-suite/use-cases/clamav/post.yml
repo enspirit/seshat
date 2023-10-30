@@ -50,4 +50,5 @@ services:
       expected:
         status: 400
       assert:
-        - "match('error', /Virus detected:/)"
+        - "match('message', /Virus detected:/)"
+        - "match('code', /VirusDetectedError/)"
