@@ -34,3 +34,7 @@ services:
       - 4443:4443
     volumes:
       - ./volumes/gcs:/data
+
+  clamav:
+    image: clamav/clamav:1.2
+

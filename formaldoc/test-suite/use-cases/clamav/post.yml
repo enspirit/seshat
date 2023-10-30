@@ -1,0 +1,53 @@
+---
+name: |-
+  POST /clamav/ - antivirus scanning on file uploads
+
+url: |-
+  /clamav/
+
+services:
+- method: |-
+    POST
+
+  description: |-
+    Allows scanning files before storing them on the bucket
+
+  input_schema: |-
+    {
+    }
+
+  output_schema: |-
+    [SeshatObject]
+
+  error_schema: |-
+    Error
+
+  postconditions:
+    - (x) Objects can be downloaded using their names
+
+  examples:
+
+    - description: |-
+        when requested with a clean file
+      file_upload:
+        param_name: some-todos.csv
+        path: ../../../fixtures/todos.csv
+        content_type: "text/csv"
+      expected:
+        status: 200
+        content_type: application/json
+      assert:
+        - "match('0/name', /some-todos.csv/)"
+
+  counterexamples:
+
+    - description: |-
+        when requested with an infected file
+      file_upload:
+        param_name: fakevirus.bin
+        path: ../../../fixtures/fakevirus.bin
+        content_type: "application/octet-stream"
+      expected:
+        status: 400
+      assert:
+        - "match('error', /Virus detected:/)"

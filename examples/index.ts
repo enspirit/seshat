@@ -11,6 +11,8 @@ import thumbnailsExample from './thumbnails';
 import thumbnailsOnTheFlyExample from './thumbnails-on-the-fly';
 import actionsExample from './actions';
 import sseExample from './sse-c';
+import clamavExample from './clamav';
+
 import { version } from '../src';
 import logger from '../src/logger';
 
@@ -30,15 +32,8 @@ app.set('etag', 'strong');
   thumbnailsOnTheFlyExample,
   actionsExample,
   sseExample,
+  clamavExample,
 ].forEach((example) => example(app, process.env.ROOT_DIR || '../'));
-
-/**
- * Error logging
- */
-app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
-  console.error(err.stack);
-  res.status(500).send('Something broke!');
-});
 
 app.listen(3000, () => {
   logger.info(`Seshat ${version} is running on http://localhost:3000`);
