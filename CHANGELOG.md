@@ -1,3 +1,12 @@
+## 2.7.0 - 2023-10-30
+
+* Support for virus scanning with ClamAV
+* Change Error schema to include code & message
+
+## 2.6.0 - 2023-10-26
+
+* Support for SSE-C for S3-backed buckets
+
 ## 2.5.1 - 2023-06-09
 
 * Improve error logging to include details about Error instances
