@@ -82,7 +82,8 @@ describe('the express app', () => {
         .expect(400)
         .expect('Content-Type', /application\/json/)
         .expect({
-          error: 'access denied',
+          code: 'BucketPolicyError',
+          message: 'access denied',
         });
 
       stub.reset();
@@ -245,7 +246,8 @@ describe('the express app', () => {
         .expect(400)
         .expect('Content-Type', /application\/json/)
         .expect({
-          error: 'access denied',
+          code: 'BucketPolicyError',
+          message: 'access denied',
         });
 
       stub.reset();
