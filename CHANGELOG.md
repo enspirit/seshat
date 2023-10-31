@@ -1,3 +1,7 @@
+## 2.8.1 - 2023-10-31
+
+* Fix stream error handling on local storage.
+
 ## 2.8.0 - 2023-10-31
 
 * Support for custom object metadata
