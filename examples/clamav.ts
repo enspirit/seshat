@@ -1,5 +1,5 @@
 import { Express } from 'express';
-import { createApp, S3Bucket } from '../src';
+import { createApp, LocalBucket, S3Bucket } from '../src';
 import { ClamavScanner } from '../src/transformers';
 import { s3client } from './s3';
 
@@ -16,10 +16,13 @@ const clamav = new ClamavScanner({
     port: 3310,
   },
 });
-export default (expressApp: Express, _seshatRootDir: string) => {
+export default (expressApp: Express, seshatRootDir: string) => {
 
-  expressApp.use('/clamav', createApp({
+  expressApp.use('/clamav/s3', createApp({
     bucket: new S3Bucket({ s3client, bucket: 'my-s3-bucket', transformers: [clamav] }),
   }));
 
+  expressApp.use('/clamav/local', createApp({
+    bucket: new LocalBucket({ path: seshatRootDir, transformers: [clamav] }),
+  }));
 };

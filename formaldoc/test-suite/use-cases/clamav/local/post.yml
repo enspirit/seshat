@@ -1,9 +1,9 @@
 ---
 name: |-
-  POST /clamav/ - antivirus scanning on file uploads
+  POST /clamav/local - antivirus scanning on file uploads
 
 url: |-
-  /clamav/
+  /clamav/local/
 
 services:
 - method: |-
@@ -31,7 +31,7 @@ services:
         when requested with a clean file
       file_upload:
         param_name: some-todos.csv
-        path: ../../../fixtures/todos.csv
+        path: ../../../../fixtures/todos.csv
         content_type: "text/csv"
       expected:
         status: 200
@@ -45,7 +45,7 @@ services:
         when requested with an infected file
       file_upload:
         param_name: fakevirus.bin
-        path: ../../../fixtures/fakevirus.bin
+        path: ../../../../fixtures/fakevirus.bin
         content_type: "application/octet-stream"
       expected:
         status: 400

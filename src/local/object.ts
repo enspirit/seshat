@@ -142,8 +142,12 @@ export class LocalObject implements Object {
 
     const writeFile = async () => {
       const fileStream = fs.createWriteStream(fullpath);
-      stream.pipe(fileStream);
-      await new Promise(resolve => fileStream.on('finish', resolve));
+      await new Promise((resolve, reject) => {
+        fileStream.on('finish', resolve);
+        fileStream.on('error', reject);
+        stream.on('error', reject);
+        stream.pipe(fileStream);
+      });
     };
 
     const writeMeta = async () => {
