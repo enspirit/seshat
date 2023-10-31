@@ -1,3 +1,9 @@
+## 2.8.0 - 2023-10-31
+
+* Support for custom object metadata
+* New action 'cleanup-ttl'
+* Deprecate actions objects in favor of action factories
+
 ## 2.7.0 - 2023-10-30
 
 * Support for virus scanning with ClamAV
