@@ -9,7 +9,7 @@ const DefaultOptions: CleanupTTLOptions = {
   ttlMetadataKey: 'ttl',
 };
 
-export const CleanupTTL = (options: CleanupTTLOptions = DefaultOptions): Action => {
+export const CleanupTTLFactory = (options: CleanupTTLOptions = DefaultOptions): Action => {
   return {
     name: 'cleanup-ttl',
     run: async (req: Request): Promise<any> => {
@@ -39,3 +39,8 @@ export const CleanupTTL = (options: CleanupTTLOptions = DefaultOptions): Action 
     },
   };
 };
+
+/**
+ * For backward compatibility when actions did not have parameters
+ */
+export const CleanupTTL = CleanupTTLFactory();

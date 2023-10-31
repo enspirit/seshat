@@ -15,7 +15,7 @@ export default (expressApp: Express, seshatRootDir: string) => {
   expressApp.use('/actions/local', createApp({
     bucket: new LocalBucket({ path: seshatRootDir }),
     routers: [
-      ExecuteActions([MkdirAction, DownloadArchiveAction, CleanupTTL()]),
+      ExecuteActions([MkdirAction, DownloadArchiveAction, CleanupTTL]),
       MultipartUpload(),
       RetrieveObjects(),
     ],
@@ -24,7 +24,7 @@ export default (expressApp: Express, seshatRootDir: string) => {
   expressApp.use('/actions/s3', createApp({
     bucket: new S3Bucket({ s3client, bucket: 'my-s3-bucket' }),
     routers: [
-      ExecuteActions([MkdirAction, DownloadArchiveAction, CleanupTTL()]),
+      ExecuteActions([MkdirAction, DownloadArchiveAction, CleanupTTL]),
       MultipartUpload(),
       RetrieveObjects(),
     ],
