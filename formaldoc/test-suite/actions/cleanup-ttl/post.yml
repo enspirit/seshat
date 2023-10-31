@@ -1,0 +1,80 @@
+---
+name: |-
+  POST /actions/s3/{prefix} - action "cleanup-ttl"
+
+url: |-
+  /actions/s3/{prefix}
+
+services:
+- method: |-
+    POST
+
+  description: |-
+    Allows cleaning up objects whose ttl have expired
+
+  input_schema: |-
+    {
+      prefix:? String
+      recursive:? Boolean
+    }
+
+  output_schema: |-
+    {
+      deleted: [SeshatObject]
+    }
+
+  error_schema: |-
+    Error
+
+  preconditions:
+    - (test background) The bucket contains objects with TTL metadata
+
+  postconditions: []
+
+  default_example:
+    metadata:
+      object:
+        metadata:
+          ttl: 0
+
+  examples:
+
+    - description: |-
+        FOR: it works for the whole bucket
+      params:
+        prefix: ""
+      headers:
+        content-type: application/vnd.seshat-action+json
+        seshat-action: cleanup-ttl
+      expected:
+        status: 200
+        content_type: application/json
+      assert:
+        - size('deleted', 1)
+
+    - description: |-
+        FOR: it works recursively
+      params:
+        prefix: ""
+        recursive: true
+      headers:
+        content-type: application/vnd.seshat-action+json
+        seshat-action: cleanup-ttl
+      expected:
+        status: 200
+        content_type: application/json
+      assert:
+        - notEmpty('deleted')
+
+    - description: |-
+        FOR: it works with a prefix selection
+      params:
+        prefix: subfolder/
+      headers:
+        content-type: application/vnd.seshat-action+json
+        seshat-action: cleanup-ttl
+      expected:
+        status: 200
+        content_type: application/json
+      assert:
+        - size('deleted', 1)

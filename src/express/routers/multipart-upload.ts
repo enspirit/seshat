@@ -5,9 +5,15 @@ import { Bucket, ObjectMeta } from '../../types';
 
 export interface MultipartUploadConfig {
   defParamCharset?: string
+  metadataHeaderPrefix?: string
 }
 
-export const MultipartUpload = (config: MultipartUploadConfig = { defParamCharset: 'utf-8' }) => (bucket: Bucket): Router => {
+const DefaultOptions: MultipartUploadConfig = {
+  defParamCharset: 'utf-8',
+  metadataHeaderPrefix: 'seshat-metadata-',
+};
+
+export const MultipartUpload = (config: MultipartUploadConfig = DefaultOptions) => (bucket: Bucket): Router => {
 
   const router = express();
 
@@ -31,6 +37,21 @@ export const MultipartUpload = (config: MultipartUploadConfig = { defParamCharse
       headers: req.headers,
       defParamCharset: config.defParamCharset || 'utf-8',
     });
+
+    const metaHeaders: Record<string, unknown> = {};
+
+    if (config.metadataHeaderPrefix) {
+      const metaHeaderPrefix = config.metadataHeaderPrefix;
+
+      Object.keys(req.headers)
+        .filter(k => k.indexOf(metaHeaderPrefix) === 0)
+        .reduce((headers, key) => {
+          const metaName = key.split(metaHeaderPrefix)[1];
+          headers[metaName] = req.headers[key];
+          return headers;
+        }, metaHeaders);
+    }
+
     const promises: Array<Promise<ObjectMeta>> = [];
 
     busboy.on('error', (error: Error) => {
@@ -40,6 +61,7 @@ export const MultipartUpload = (config: MultipartUploadConfig = { defParamCharse
     busboy.on('file', (name, file, info) => {
       const filepath = path.join(basePath, name);
       const metadata: ObjectMeta = {
+        ...metaHeaders,
         name: filepath,
         contentType: info.mimeType,
       };
