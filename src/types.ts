@@ -68,12 +68,12 @@ export interface Bucket extends BucketEmitter {
 }
 
 export interface BucketPolicy {
-  head(path: string): Promise<void>
-  get(path: string): Promise<void>
-  put(meta: ObjectMeta): Promise<void>
-  delete(path: string): Promise<void>
-  list(prefix?: string): Promise<void>
-  mkdir(prefix: string): Promise<void>
+  head(path: string, req?: Request): Promise<void>
+  get(path: string, req?: Request): Promise<void>
+  put(meta: ObjectMeta, req?: Request): Promise<void>
+  delete(path: string, req?: Request): Promise<void>
+  list(prefix?: string, req?: Request): Promise<void>
+  mkdir(prefix: string, req?: Request): Promise<void>
 }
 
 export interface Object {
