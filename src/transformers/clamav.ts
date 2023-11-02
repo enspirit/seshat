@@ -9,23 +9,30 @@ import { VirusDetectedError } from '../errors';
 export class ClamavScanner implements ObjectTransformer {
 
   type: ObjectTransformerType = 'Duplex';
-
   clam: NodeClam;
+  initialized: boolean = false;
 
-  constructor(options?: ClamScanInitOptions) {
+  constructor(protected options?: ClamScanInitOptions) {
     this.clam = new NodeClam();
+  }
 
-    this.clam.init({
+  async ensureInitialized() {
+    if (this.initialized) {
+      return;
+    }
+    await this.clam.init({
       clamdscan: {
         host: 'clamav',
         port: 3310,
-        ...options?.clamdscan,
+        ...this.options?.clamdscan,
       },
-      ...options,
+      ...this.options,
     });
   }
 
   async transform(stream: Readable, meta: ObjectMeta, _mode: ObjectTransformerMode): Promise<ObjectTransformerOutput> {
+    await this.ensureInitialized();
+
     const futureStream = new PassThrough();
 
     const tmpFileWriteStream = temp.createWriteStream();
