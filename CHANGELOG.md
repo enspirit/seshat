@@ -1,3 +1,7 @@
+## 2.8.2 - 2023-11-02
+
+* Init clamav client on first transformer usage
+
 ## 2.8.1 - 2023-10-31
 
 * Fix stream error handling on local storage.
