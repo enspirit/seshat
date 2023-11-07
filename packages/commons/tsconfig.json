@@ -1,8 +1,10 @@
 {
-  "include": ["*.ts", "**/*.ts"],
+  "include": ["."],
   "extends": "../tsconfig/base.json",
   "exclude": ["dist", "build", "node_modules"],
   "compilerOptions": {
+    "moduleResolution": "node",
+    "target": "esnext",
     "module": "commonjs",
     "outDir": "./dist"
   }

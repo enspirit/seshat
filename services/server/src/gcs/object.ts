@@ -1,5 +1,6 @@
 import { Readable } from 'stream';
-import { Object, ObjectMeta } from '../types';
+import { Object } from '../types';
+import { ObjectMeta } from '@enspirit/seshat-commons';
 import { File } from '@google-cloud/storage';
 import { ObjectNotFoundError } from '@enspirit/seshat-commons';
 

@@ -1,7 +1,8 @@
 import crypto from 'crypto';
 import path from 'path';
 import { Readable } from 'stream';
-import { ObjectMeta, ObjectTransformer, ObjectTransformerMode, ObjectTransformerOutput, ObjectTransformerType } from '../types';
+import { ObjectTransformer, ObjectTransformerMode, ObjectTransformerOutput, ObjectTransformerType } from '../types';
+import { ObjectMeta } from '@enspirit/seshat-commons';
 
 const uniqueName = (length = 16): Promise<string> => {
   return new Promise((resolve, reject) => {

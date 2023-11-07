@@ -1,4 +1,5 @@
-import { BucketPolicy, ObjectMeta } from '../../src/types';
+import { BucketPolicy } from '../../src/types';
+import { ObjectMeta } from '@enspirit/seshat-commons';
 
 export const readOnlyPolicy: BucketPolicy = {
 

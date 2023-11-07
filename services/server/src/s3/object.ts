@@ -1,5 +1,6 @@
 import { Readable } from 'stream';
-import { Object, ObjectMeta } from '../types';
+import { Object } from '../types';
+import { ObjectMeta } from '@enspirit/seshat-commons';
 import { HeadObjectCommandOutput, GetObjectCommandOutput } from '@aws-sdk/client-s3';
 
 export class S3ObjectMeta implements ObjectMeta {

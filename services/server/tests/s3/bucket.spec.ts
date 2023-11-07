@@ -1,6 +1,7 @@
 import { S3Client, ListObjectsV2Command, HeadObjectCommand, DeleteObjectCommand, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
 
-import { Object, ObjectMeta, S3Bucket } from '../../src/';
+import { Object, S3Bucket } from '../../src/';
+import { ObjectMeta } from '@enspirit/seshat-commons';
 import { ObjectNotFoundError, PrefixNotFoundError } from '@enspirit/seshat-commons';
 
 import { expect, default as chai } from 'chai';

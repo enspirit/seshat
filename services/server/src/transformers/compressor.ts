@@ -1,7 +1,8 @@
 import { createGzip } from 'node:zlib';
 
 import { Readable } from 'stream';
-import { ObjectMeta, ObjectTransformer, ObjectTransformerMode, ObjectTransformerOutput, ObjectTransformerType } from '../types';
+import { ObjectTransformer, ObjectTransformerMode, ObjectTransformerOutput, ObjectTransformerType } from '../types';
+import { ObjectMeta } from '@enspirit/seshat-commons';
 
 export class ObjectCompressor implements ObjectTransformer {
 

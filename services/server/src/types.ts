@@ -1,3 +1,4 @@
+import { ObjectMeta } from '@enspirit/seshat-commons';
 import { NextFunction, Request, Response, Router } from 'express';
 import { Readable } from 'stream';
 import { Logger } from 'winston';
@@ -8,18 +9,6 @@ export interface Config {
   bucket: Bucket
   routers?: RouterFactory[],
   logger?: Logger
-}
-
-export interface ObjectMeta {
-  name: string
-  contentType: string
-
-  ctime?: Date
-  mtime?: Date
-  contentLength?: number
-  etag?: string
-
-  [key: string]: any
 }
 
 export interface BucketEncryption {

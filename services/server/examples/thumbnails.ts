@@ -1,5 +1,6 @@
 import { Express } from 'express';
-import { BucketPolicy, createApp, ObjectMeta, S3Bucket } from '../src';
+import { BucketPolicy, createApp, S3Bucket } from '../src';
+import { ObjectMeta } from '@enspirit/seshat-commons';
 import { BucketPolicyError } from '@enspirit/seshat-commons';
 import { SharpTransformer } from '../src/transformers/sharp';
 import { s3client } from './s3';

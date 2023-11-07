@@ -10,9 +10,12 @@ services:
       NODE_TLS_REJECT_UNAUTHORIZED: "0"
     ports:
       - 3000:3000
+      - 3001:3001
     volumes:
       - ./services/server/src:/home/app/services/server/src
       - ./services/server/examples:/home/app/services/server/examples
+      - ./packages/client/src:/home/app/packages/client/src
+      - ./packages/vue/src:/home/app/packages/vue/src
       - ./tmp:/home/app/tmp
 
   minio:

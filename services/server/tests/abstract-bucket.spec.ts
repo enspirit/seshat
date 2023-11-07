@@ -6,7 +6,8 @@ chai.use(sinonChai);
 
 import AbstractBucket from '../src/abstract-bucket';
 import { Readable } from 'stream';
-import { BucketPolicy, Object, ObjectMeta, ObjectTransformer, ObjectTransformerType } from '../src/types';
+import { BucketPolicy, Object, ObjectTransformer, ObjectTransformerType } from '../src/types';
+import { ObjectMeta } from '@enspirit/seshat-commons';
 import { getMockFileObject } from './mocks/object';
 import { readOnlyPolicy, uploadOnlyPolicy } from './mocks/policies';
 import { ObjectTransformerError, SeshatError } from '@enspirit/seshat-commons';

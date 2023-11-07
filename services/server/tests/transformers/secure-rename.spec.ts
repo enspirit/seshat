@@ -1,7 +1,8 @@
 import { expect } from 'chai';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import { Object, ObjectMeta, ObjectTransformer, ObjectTransformerOutput, SecureRename } from '../../src';
+import { Object, ObjectTransformer, ObjectTransformerOutput, SecureRename } from '../../src';
+import { ObjectMeta } from '@enspirit/seshat-commons';
 chai.use(chaiAsPromised);
 
 import { getMockFileObject } from '../mocks/object';

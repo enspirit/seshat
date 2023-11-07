@@ -1,6 +1,7 @@
 import { Readable } from 'stream';
 import AbstractBucket from '../abstract-bucket';
-import { BucketConfig, ListOptions, Object, ObjectMeta } from '../types';
+import { BucketConfig, ListOptions, Object } from '../types';
+import { ObjectMeta } from '@enspirit/seshat-commons';
 import { GCSObject, GCSObjectMeta } from './object';
 import { GetFilesOptions, Storage } from '@google-cloud/storage';
 

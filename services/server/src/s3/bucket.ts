@@ -1,6 +1,7 @@
 import { Readable } from 'stream';
 import AbstractBucket from '../abstract-bucket';
-import { BucketConfig, ListOptions, Object, ObjectMeta } from '../types';
+import { BucketConfig, ListOptions, Object } from '../types';
+import { ObjectMeta } from '@enspirit/seshat-commons';
 import { S3Object } from './object';
 
 import { S3Client, HeadObjectCommand, ListObjectsV2Command, DeleteObjectCommand, GetObjectCommand, ListObjectsV2CommandInput, GetObjectCommandInput, PutObjectCommandInput, HeadObjectCommandInput } from '@aws-sdk/client-s3';

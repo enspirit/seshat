@@ -2,8 +2,9 @@
   "name": "@enspirit/seshat-commons",
   "version": "1.0.0",
   "main": "./dist/src/index.js",
-  "types": "./src/index.ts",
-  "type": "commonjs",
+  "types": "./dist/src/index.d.ts",
+  "module": "./src/index",
+  "files": ["dist/"],
   "scripts": {
     "build": "tsc",
     "test": "vitest run --coverage",

@@ -12,11 +12,13 @@ import thumbnailsOnTheFlyExample from './thumbnails-on-the-fly';
 import actionsExample from './actions';
 import sseExample from './sse-c';
 import clamavExample from './clamav';
+import cors from 'cors';
 
 import { version } from '../src';
 import logger from '../src/logger';
 
 const app = express();
+app.use(cors());
 app.set('etag', 'strong');
 
 // Mount all examples

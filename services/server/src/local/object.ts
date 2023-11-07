@@ -1,5 +1,6 @@
 import { Readable } from 'stream';
-import { ListOptions, Object, ObjectMeta } from '../types';
+import { ListOptions, Object } from '../types';
+import { ObjectMeta } from '@enspirit/seshat-commons';
 
 import * as path from 'path';
 import * as fs from 'fs';

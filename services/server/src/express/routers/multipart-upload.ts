@@ -1,7 +1,8 @@
 import path from 'path';
 import express, { Router, Request, Response, NextFunction } from 'express';
 import Busboy from 'busboy';
-import { Bucket, ObjectMeta } from '../../types';
+import { Bucket } from '../../types';
+import { ObjectMeta } from '@enspirit/seshat-commons';
 
 export interface MultipartUploadConfig {
   defParamCharset?: string

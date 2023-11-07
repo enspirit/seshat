@@ -2,7 +2,8 @@ import sharp from 'sharp';
 import mime from 'mime-types';
 import path from 'path';
 import { Readable } from 'stream';
-import { ObjectMeta, ObjectTransformer, ObjectTransformerMode, ObjectTransformerOutput, ObjectTransformerType } from '../types';
+import { ObjectTransformer, ObjectTransformerMode, ObjectTransformerOutput, ObjectTransformerType } from '../types';
+import { ObjectMeta } from '@enspirit/seshat-commons';
 
 export interface SharpOptions {
   output: {

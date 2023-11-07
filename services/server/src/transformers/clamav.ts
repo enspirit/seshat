@@ -1,7 +1,8 @@
 import temp from 'temp';
 import NodeClam, { Options as ClamScanInitOptions } from 'clamscan';
 import { PassThrough, Readable } from 'stream';
-import { ObjectMeta, ObjectTransformer, ObjectTransformerMode, ObjectTransformerOutput, ObjectTransformerType } from '../types';
+import { ObjectTransformer, ObjectTransformerMode, ObjectTransformerOutput, ObjectTransformerType } from '../types';
+import { ObjectMeta } from '@enspirit/seshat-commons';
 import { unlink } from 'fs/promises';
 import { createReadStream } from 'fs';
 import { VirusDetectedError } from '@enspirit/seshat-commons';

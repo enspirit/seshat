@@ -2,7 +2,8 @@ import * as path from 'path';
 import { LocalObject } from './object';
 import { Readable } from 'stream';
 import AbstractBucket from '../abstract-bucket';
-import { BucketConfig, ListOptions, ObjectMeta } from '../types';
+import { BucketConfig, ListOptions } from '../types';
+import { ObjectMeta } from '@enspirit/seshat-commons';
 import { NotImplementedError } from '@enspirit/seshat-commons';
 
 export interface LocalBucketConfig extends BucketConfig {

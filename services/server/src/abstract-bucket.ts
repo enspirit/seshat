@@ -1,7 +1,8 @@
 import EventEmitter from 'events';
 import { Readable } from 'stream';
 import { ObjectTransformerError, SeshatError } from '@enspirit/seshat-commons';
-import { Bucket, BucketPolicy, Object, ObjectMeta, ObjectTransformer, ObjectTransformerOutput, BucketConfig, ObjectTransformerMode, BucketEmitter, BucketEvent, ListOptions } from './types';
+import { Bucket, BucketPolicy, Object, ObjectTransformer, ObjectTransformerOutput, BucketConfig, ObjectTransformerMode, BucketEmitter, BucketEvent, ListOptions } from './types';
+import { ObjectMeta } from '@enspirit/seshat-commons';
 import logger from './logger';
 
 export default abstract class AbstractBucket implements Bucket, BucketEmitter {

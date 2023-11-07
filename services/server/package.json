@@ -48,6 +48,7 @@
     "winston": "^3.11.0"
   },
   "devDependencies": {
+    "cors": "^2.8.5",
     "@enspirit/tsconfig": "workspace:*",
     "@enspirit/eslint-config-node": "^0.1.5",
     "@types/busboy": "^1.5.0",
