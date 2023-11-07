@@ -1,81 +1,38 @@
 {
   "name": "@enspirit/seshat",
   "version": "2.8.3",
-  "description": "Seshat v2",
-  "main": "dist/src/index.js",
-  "types": "dist/src/index.d.ts",
-  "scripts": {
-    "build": "rm -rf dist && tsc",
-    "build:watch": "tsc -w",
-    "dev": "ROOT_DIR=$PWD tsc-watch --onSuccess 'node ./dist/examples/index.js'",
-    "example": "ROOT_DIR=$PWD node ./dist/examples/index.js",
-    "test": "mocha -r ts-node/register tests/helpers.ts 'tests/**/*.spec.ts'",
-    "test:watch": "mocha -r ts-node/register tests/helpers.ts 'tests/**/*.spec.ts' --watch --watch-files src/**/*.ts,tests/**/*.ts",
-    "lint": "eslint src tests --ext ts",
-    "preversion": "npm run build",
-    "prepublishOnly": "npm run build"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "MIT",
-  "files": [
-    "dist/src",
-    "dist/package.json"
+  "workspaces": [
+    "packages/*",
+    "services/*"
   ],
-  "exports": {
-    ".": "./dist/src/index.js",
-    "./policies": "./dist/src/policies/index.js",
-    "./transformers": "./dist/src/transformers/index.js",
-    "./routers": "./dist/src/express/routers/index.js",
-    "./actions": "./dist/src/actions/index.js"
-  },
-  "dependencies": {
-    "@aws-sdk/client-s3": "^3.436.0",
-    "@aws-sdk/lib-storage": "^3.436.0",
-    "@google-cloud/storage": "^6.5.0",
-    "body-parser": "^1.20.2",
-    "busboy": "^1.6.0",
-    "clamscan": "^2.1.2",
-    "express": "^4.18.2",
-    "jszip": "^3.10.1",
-    "mime-types": "^2.1.35",
-    "sharp": "^0.32.6",
-    "temp": "^0.9.4",
-    "@types/clamscan": "^2.0.6",
-    "@types/sharp": "^0.31.1",
-    "winston": "^3.11.0"
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix",
+    "test": "turbo run test",
+    "test:watch": "turbo run test:watch",
+    "test:webspicy": "turbo run test:webspicy",
+    "check:updates": "turbo run check:updates",
+    "check:updates:u": "turbo run check:updates:u",
+    "package": "turbo run package"
   },
   "devDependencies": {
-    "@enspirit/eslint-config-node": "^0.1.5",
-    "@types/busboy": "^1.5.0",
-    "@types/chai": "^4.3.1",
-    "@types/chai-as-promised": "^7.1.5",
-    "@types/express": "^4.17.13",
-    "@types/jszip": "^3.4.1",
-    "@types/mime-types": "^2.1.1",
-    "@types/mocha": "^9.1.1",
-    "@types/node": "^18.6.1",
-    "@types/sinon": "^10.0.13",
-    "@types/sinon-chai": "^3.2.8",
-    "@types/supertest": "^2.0.12",
-    "@types/temp": "^0.9.3",
-    "@typescript-eslint/eslint-plugin": "^5.31.0",
-    "@typescript-eslint/parser": "^5.31.0",
-    "aws-sdk-client-mock": "^1.0.0",
-    "chai": "^4.3.6",
-    "chai-as-promised": "^7.1.1",
-    "eslint": "^8.20.0",
-    "mocha": "^10.0.0",
-    "sinon": "^14.0.0",
-    "sinon-chai": "^3.7.0",
-    "supertest": "^6.2.4",
+    "@types/node": "^18.15.11",
+    "@vitest/coverage-c8": "^0.29.8",
+    "dotenv-cli": "^7.2.1",
+    "esbuild": "^0.17.15",
+    "eslint-config-custom": "workspace:*",
     "ts-node": "^10.9.1",
-    "ts-watch": "^1.0.8",
-    "tsc-watch": "^5.0.3",
-    "typescript": "^4.7.4"
+    "turbo": "^1.10.6",
+    "typescript": "^5.2.2",
+    "vitest": "^0.29.8"
   },
   "engines": {
     "npm": ">=8.0.0",
-    "node": ">=16.0.0"
+    "node": ">=16.*"
+  },
+  "packageManager": "pnpm@8.0.0",
+  "dependencies": {
   }
 }

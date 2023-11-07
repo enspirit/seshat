@@ -1,8 +1,9 @@
 services:
 
   seshat:
-    build: .
-    command: npm run dev
+    build:
+      context: ./
+    command: pnpm run dev
     environment:
       S3_ENDPOINT: https://minio
       # we are using self signed certs in development/test
@@ -10,8 +11,8 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./src:/home/app/src
-      - ./examples:/home/app/examples
+      - ./services/server/src:/home/app/services/server/src
+      - ./services/server/examples:/home/app/services/server/examples
       - ./tmp:/home/app/tmp
 
   minio:

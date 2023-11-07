@@ -15,9 +15,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [16.x]
+        node-version: [16.x, 18.x]
     steps:
       - uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
 
       - name: Set up node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -30,6 +34,8 @@ jobs:
           ruby-version: 2.7
 
       - run: make ci
+        env:
+          NODE_VERSION: ${{ matrix.node-version }}
 
       - name: Dump docker logs on failure
         if: failure()

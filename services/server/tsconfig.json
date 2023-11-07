@@ -1,0 +1,29 @@
+{
+  "extends": "@enspirit/tsconfig/base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "incremental": true,
+    "target": "es2022",
+    "module": "commonjs",
+    "declaration": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "outDir": "dist",
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true
+  },
+  "files": [
+    "./node_modules/@types/mocha/index.d.ts",
+    "./node_modules/@types/node/index.d.ts",
+  ],
+  "include": [
+    "src/**/*.ts",
+    "examples/**/*.ts",
+    "tests/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+  ]
+}
