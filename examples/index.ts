@@ -4,6 +4,7 @@ import localExample from './local';
 import s3example from './s3';
 import gcsexample from './gcs';
 import gzipExample from './gzip';
+import authPolicyExample from './auth-policy';
 import authenticationExample from './authentication';
 import readOnlyExample from './readonly';
 import renameExample from './rename';
@@ -26,6 +27,7 @@ app.set('etag', 'strong');
   gcsexample,
   gzipExample,
   authenticationExample,
+  authPolicyExample,
   readOnlyExample,
   renameExample,
   thumbnailsExample,
