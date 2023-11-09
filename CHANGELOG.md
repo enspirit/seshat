@@ -1,3 +1,7 @@
+## 2.8.3 - 2023-11-09
+
+* Fix bug for S3 SSE-C
+
 ## 2.8.2 - 2023-11-02
 
 * Init clamav client on first transformer usage
