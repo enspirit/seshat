@@ -1,10 +1,13 @@
-ci: clamav.up npm.install npm.lint tests.unit bundler.install up waitforseshat tests.integration
+ci: clamav.up pnpm.install pnpm.build pnpm.lint tests.unit bundler.install up waitforseshat tests.integration
 
-npm.install:
-	@npm install
+pnpm.install:
+	@pnpm install
 
-npm.lint:
-	@npm install
+pnpm.build:
+	@pnpm run build
+
+pnpm.lint:
+	@pnpm install
 
 bundler.install:
 	@bundle install
@@ -31,10 +34,10 @@ ps:
 	@docker-compose logs -f $*
 
 tests.unit:
-	@npm run test
+	@pnpm run test
 
 tests.unit.watch:
-	@npm run test:watch
+	@pnpm run test:watch
 
 tests.integration:
 	@bundle exec webspicy formaldoc

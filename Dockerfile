@@ -1,10 +1,14 @@
 FROM node:16-alpine as builder
 
+RUN npm install -g pnpm
+
 WORKDIR /home/app
 
-COPY package*.json ./
-RUN npm install
+COPY packages ./packages
+COPY pnpm-* package*.json ./
+COPY services/server/package*.json ./services/server/
+RUN pnpm install
 
 COPY ./ ./
 
-RUN npm run build
+RUN pnpm run build

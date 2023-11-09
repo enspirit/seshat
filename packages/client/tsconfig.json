@@ -1,0 +1,12 @@
+{
+  "include": ["*.ts", "**/*.ts"],
+  "extends": "../tsconfig/base.json",
+  "exclude": ["dist", "build", "node_modules"],
+  "compilerOptions": {
+    "outDir": "dist",
+    "target": "ESnext",
+    "module": "ESNext",
+    "lib": ["dom", "DOM.Iterable", "ESNext"],
+    "sourceMap": true
+  }
+}

@@ -6,8 +6,9 @@ volumes
 .dockerignore
 .gitignore
 *.md
-docker-compose.yaml
 Gemfile*
 Makefile
 node_modules
 minio
+docker-compose*
+**/*/dist/

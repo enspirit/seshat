@@ -6,6 +6,7 @@ class SeshatClient
   end
 
   def post_file(test_case, path, filename, folder=nil, extra_headers = {})
+
     # upload the file
     file = HTTP::FormData::File.new(path, {
       content_type: fmt_mime_type(filename),
@@ -17,6 +18,7 @@ class SeshatClient
       }
     }
     url = folder ? config.host + folder + '/' : config.host + '/'
+
     headers = {
       'Authorization' => test_case.headers['Authorization']
     }.merge(extra_headers).compact
