@@ -37,7 +37,7 @@ export class S3Bucket extends AbstractBucket {
 
     if (this.config.encryption) {
       params.SSECustomerAlgorithm = this.config.encryption.alg;
-      params.SSECustomerKey = '01234567890123456789012345678901';
+      params.SSECustomerKey = this.config.encryption.key;
     }
 
     try {
