@@ -6,7 +6,7 @@ import { HeadObjectCommandOutput, GetObjectCommandOutput } from '@aws-sdk/client
 export class S3ObjectMeta implements ObjectMeta {
 
   constructor(
-    public bucket: string,
+    _bucket: string,
     public name: string,
     public contentType: string,
     public ctime?: Date | undefined,
