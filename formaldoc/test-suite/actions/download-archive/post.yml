@@ -69,8 +69,6 @@ services:
 
     - description: |-
         FOR: it works with specific list of objects
-      tags:
-        - ONLY
       params:
         prefix: ""
         objects:
@@ -90,8 +88,6 @@ services:
 
     - description: |-
         FOR: it works with object selection
-      tags:
-        - ONLY
       params:
         prefix: ""
         objects:

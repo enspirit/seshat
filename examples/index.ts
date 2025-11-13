@@ -12,6 +12,7 @@ import thumbnailsOnTheFlyExample from './thumbnails-on-the-fly';
 import actionsExample from './actions';
 import sseExample from './sse-c';
 import clamavExample from './clamav';
+import cacheControlExample from './cacheControl';
 
 import { version } from '../src';
 import logger from '../src/logger';
@@ -33,6 +34,7 @@ app.set('etag', 'strong');
   actionsExample,
   sseExample,
   clamavExample,
+  cacheControlExample,
 ].forEach((example) => example(app, process.env.ROOT_DIR || '../'));
 
 app.listen(3000, () => {

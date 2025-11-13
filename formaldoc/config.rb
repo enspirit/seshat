@@ -13,6 +13,7 @@ Webspicy::Configuration.new(Path.dir) do |c|
   c.postcondition ImageIsResized
   c.postcondition ExifMetadataIsPreserved
   c.postcondition IsValidZipFile
+  c.errcondition NoCacheControlHeader
   c.postcondition Webspicy::Web::Specification::Post::LastModifiedCachingProtocol
   c.postcondition Webspicy::Web::Specification::Post::ETagCachingProtocol
 

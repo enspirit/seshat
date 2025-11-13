@@ -10,6 +10,7 @@ export interface RetrieveObjectConfig {
   headers: {
     lastModified: boolean
     etag: boolean
+    cacheControl: string
   }
 }
 
@@ -21,6 +22,7 @@ export const DefaultConfig: RetrieveObjectConfig = {
   headers: {
     lastModified: true,
     etag: true,
+    cacheControl: 'private, max-age=86400, must-revalidate',
   },
 };
 
@@ -87,6 +89,9 @@ export const RetrieveObjects = (config: RetrieveObjectConfig = DefaultConfig) =>
     }
     if (config.headers.etag && object.meta.etag) {
       res.setHeader('ETag', object.meta.etag);
+    }
+    if (config.headers.cacheControl) {
+      res.setHeader('Cache-Control', config.headers.cacheControl);
     }
     if (object.meta.contentLength) {
       res.set('Content-Length', object.meta.contentLength.toString());

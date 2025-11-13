@@ -1,0 +1,72 @@
+---
+  name: |-
+    GET /{strategy}/{object}
+
+  url: |-
+    /{strategy}/{object}
+
+  services:
+  - method: |-
+      GET
+
+    description: |-
+      Allows retrieving a file
+
+    preconditions:
+      - An object with that name exists on the bucket
+
+    postconditions:
+      - (x) It supports the Last-Modified/If-Modified-Since caching protocol
+      - ( ) It sets the Cache-Control header as expected
+
+    errconditions:
+      - (x) It does not set the Cache-Control header
+
+    input_schema: |-
+      {
+        strategy: String
+        object: String
+      }
+
+    output_schema: |-
+      {
+        ...: String | .
+      }
+
+    error_schema: |-
+      Error
+
+    examples:
+
+      - description: |-
+          FOR: It sets the Cache-Control header as expected
+        params:
+          strategy: default-cache
+          object: test.json
+        expected:
+          content_type: application/json
+          status: 200
+          headers:
+            Cache-Control: private, max-age=86400, must-revalidate
+
+      - description: |-
+          FOR: It sets the Cache-Control header as expected
+        params:
+          strategy: no-cache
+          object: test.json
+        expected:
+          content_type: application/json
+          status: 200
+          headers:
+            Cache-Control: no-cache
+
+    counterexamples:
+
+      - description: |-
+          FOR: It does not set the Cache-Control header
+        params:
+          strategy: default-cache
+          object: unknown.json
+        expected:
+          content_type: application/json
+          status: 404

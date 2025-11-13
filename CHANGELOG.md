@@ -1,3 +1,9 @@
+## 2.9.0
+
+* Add support for Cache-Control header in RetrieveObject. Default value
+  is set to 'private, max-age=86400, must-revalidate', which is compatible
+  with usual seshat use.
+
 ## 2.8.3 - 2023-11-09
 
 * Fix bug for S3 SSE-C
