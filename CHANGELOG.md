@@ -4,6 +4,9 @@
   is set to 'private, max-age=86400, must-revalidate', which is compatible
   with usual seshat use.
 
+* RetrieveObject now supports a deep partial config, allowing to only pass
+  configuration settings that differ from the default config.
+
 ## 2.8.3 - 2023-11-09
 
 * Fix bug for S3 SSE-C

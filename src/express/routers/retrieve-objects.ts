@@ -1,6 +1,8 @@
 import express, { NextFunction, Request, Response, Router, RequestHandler } from 'express';
 import { Bucket } from '../../types';
 import { ObjectNotFoundError } from '../../errors';
+import { DeepPartial } from '../../utils';
+import { deepMerge } from '../../utils';
 
 export interface RetrieveObjectConfig {
   downloadAs: {
@@ -26,7 +28,8 @@ export const DefaultConfig: RetrieveObjectConfig = {
   },
 };
 
-export const RetrieveObjects = (config: RetrieveObjectConfig = DefaultConfig) => (bucket: Bucket): Router => {
+export const RetrieveObjects = (partialConfig: DeepPartial<RetrieveObjectConfig> = {}) => (bucket: Bucket): Router => {
+  const config: RetrieveObjectConfig = deepMerge(DefaultConfig, partialConfig);
   const router = express();
 
   /**

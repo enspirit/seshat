@@ -17,13 +17,7 @@ export default (expressApp: Express, seshatRootDir: string) => {
       DeleteObjects(),
       MultipartUpload(),
       RetrieveObjects({
-        downloadAs: {
-          enabled: true,
-          queryParam: 'download',
-        },
         headers: {
-          etag: true,
-          lastModified: true,
           cacheControl: 'no-cache',
         },
       }),
