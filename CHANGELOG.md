@@ -1,4 +1,4 @@
-## 2.9.0
+## 2.9.0 - 2025-11-13
 
 * Add support for Cache-Control header in RetrieveObject. Default value
   is set to 'private, max-age=86400, must-revalidate', which is compatible
