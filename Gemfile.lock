@@ -3,12 +3,15 @@ GEM
   specs:
     addressable (2.8.4)
       public_suffix (>= 2.0.2, < 6.0)
+    base64 (0.3.0)
     citrus (3.0.2)
     commonmarker (0.23.9)
     date (3.3.3)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
-    ffi (1.15.5)
+    ffi (1.17.2)
+    ffi (1.17.2-x86_64-darwin)
+    ffi (1.17.2-x86_64-linux-gnu)
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
@@ -42,6 +45,7 @@ GEM
     mustermann-contrib (3.0.0)
       hansi (~> 0.2.0)
       mustermann (= 3.0.0)
+    mutex_m (0.3.0)
     net-imap (0.3.4)
       date
       net-protocol
@@ -101,7 +105,10 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  base64
+  ffi (~> 1.16)
   mini_magick (>= 4.12.0, < 5.0)
+  mutex_m
   rubyzip (>= 2.3.2, < 3.0)
   webspicy (>= 0.25.0, < 0.26)
 

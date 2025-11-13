@@ -29,6 +29,9 @@ jobs:
         with:
           ruby-version: 2.7
 
+      - name: Install ImageMagick
+        run: sudo apt-get update && sudo apt-get install -y imagemagick
+
       - run: make ci
 
       - name: Dump docker logs on failure

@@ -13,22 +13,22 @@ waitforseshat:
 	@sleep 10
 
 up:
-	@docker-compose up -d --build
+	@docker compose up -d --build
 
 %.up:
-	@docker-compose up -d --force-recreate --build $*
+	@docker compose up -d --force-recreate --build $*
 
 %.bash:
-	@docker-compose exec $* sh
+	@docker compose exec $* sh
 
 down:
-	@docker-compose down
+	@docker compose down
 
 ps:
-	@docker-compose ps
+	@docker compose ps
 
 %.logs:
-	@docker-compose logs -f $*
+	@docker compose logs -f $*
 
 tests.unit:
 	@npm run test
