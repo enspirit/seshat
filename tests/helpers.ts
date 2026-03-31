@@ -1,4 +1,10 @@
+import { use } from 'chai';
+import sinonChai from 'sinon-chai';
+import chaiAsPromised from 'chai-as-promised';
 import { Readable } from 'stream';
+
+use(sinonChai);
+use(chaiAsPromised);
 
 export const streamToString = (stream: Readable): Promise<string> => {
   const chunks: any[] = [];
@@ -8,4 +14,3 @@ export const streamToString = (stream: Readable): Promise<string> => {
     stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
   });
 };
-

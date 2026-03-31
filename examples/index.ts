@@ -1,21 +1,21 @@
 import express, { NextFunction, Request, Response } from 'express';
 
-import localExample from './local';
-import s3example from './s3';
-import gcsexample from './gcs';
-import gzipExample from './gzip';
-import authenticationExample from './authentication';
-import readOnlyExample from './readonly';
-import renameExample from './rename';
-import thumbnailsExample from './thumbnails';
-import thumbnailsOnTheFlyExample from './thumbnails-on-the-fly';
-import actionsExample from './actions';
-import sseExample from './sse-c';
-import clamavExample from './clamav';
-import cacheControlExample from './cacheControl';
+import localExample from './local.js';
+import s3example from './s3.js';
+import gcsexample from './gcs.js';
+import gzipExample from './gzip.js';
+import authenticationExample from './authentication.js';
+import readOnlyExample from './readonly.js';
+import renameExample from './rename.js';
+import thumbnailsExample from './thumbnails.js';
+import thumbnailsOnTheFlyExample from './thumbnails-on-the-fly.js';
+import actionsExample from './actions.js';
+import sseExample from './sse-c.js';
+import clamavExample from './clamav.js';
+import cacheControlExample from './cacheControl.js';
 
-import { version } from '../src';
-import logger from '../src/logger';
+import { version } from '../src/index.js';
+import logger from '../src/logger.js';
 
 const app = express();
 app.set('etag', 'strong');

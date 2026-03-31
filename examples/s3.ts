@@ -1,5 +1,5 @@
 import { Express } from 'express';
-import { createApp, S3Bucket } from '../src';
+import { createApp, S3Bucket } from '../src/index.js';
 import { S3Client } from '@aws-sdk/client-s3';
 
 /**

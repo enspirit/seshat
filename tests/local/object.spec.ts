@@ -1,15 +1,16 @@
 import { expect } from 'chai';
-import chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
 import { writeFileSync } from 'fs';
-chai.use(chaiAsPromised);
 
+import { fileURLToPath } from 'url';
 import { Readable } from 'stream';
-import path from 'path';
+import path, { dirname } from 'path';
 import fs from 'fs';
 
-import { LocalObject } from '../../src/';
-import { ObjectNotFoundError, PrefixNotFoundError } from '../../src/errors';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+import { LocalObject } from '../../src/index.js';
+import { ObjectNotFoundError, PrefixNotFoundError } from '../../src/errors.js';
 
 describe('LocalObject', () => {
 
@@ -53,7 +54,7 @@ describe('LocalObject', () => {
       expect(promise).to.eventually.be.an('array');
       const metas = await promise;
       const thisTestFile = metas.find(m => m.name.indexOf('local/object.spec.ts') >= 0);
-      // eslint-disable-next-line no-unused-expressions
+
       return expect(thisTestFile).to.exist;
     });
 
@@ -69,7 +70,7 @@ describe('LocalObject', () => {
         expect(promise).to.eventually.be.an('array');
         const metas = await promise;
         const thisTestFile = metas.find(m => m.name === 'object.spec.ts');
-        // eslint-disable-next-line no-unused-expressions
+  
         return expect(thisTestFile).to.exist;
       });
 

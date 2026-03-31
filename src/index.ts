@@ -1,14 +1,14 @@
-import * as pack from '../package.json';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const pack = require('../package.json') as { version: string };
+export const version = pack.version;
 
-const { version } = pack;
-export { version };
-
-export * from './errors';
-export * from './express';
-export * from './types';
-export * from './local';
-export * from './s3';
-export * from './gcs';
-export * from './policies';
-export * from './transformers';
-export * from './actions';
+export * from './errors.js';
+export * from './express/index.js';
+export type * from './types.js';
+export * from './local/index.js';
+export * from './s3/index.js';
+export * from './gcs/index.js';
+export * from './policies/index.js';
+export * from './transformers/index.js';
+export * from './actions/index.js';

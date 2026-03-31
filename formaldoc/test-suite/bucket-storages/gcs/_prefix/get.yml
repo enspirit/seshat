@@ -17,7 +17,7 @@
 
     input_schema: |-
       {
-        prefix : String
+        prefix : String|Nil
       }
 
     output_schema: |-
@@ -31,7 +31,7 @@
       - description: |-
           FOR: the root prefix exists
         params:
-          prefix: /
+          prefix:
         expected:
           content_type: application/json
           status: 200

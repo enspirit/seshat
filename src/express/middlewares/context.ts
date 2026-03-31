@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import { Config } from '../../types';
-import defaultLogger from '../../logger';
+import type { Config } from '../../types.js';
+import defaultLogger from '../../logger.js';
 import { randomUUID } from 'crypto';
 
 export const ExposeContext = (config: Config) => (req: Request, res: Response, next: NextFunction) => {

@@ -1,8 +1,8 @@
 import express, { NextFunction, Request, Response, Router, RequestHandler } from 'express';
-import { Bucket } from '../../types';
-import { ObjectNotFoundError } from '../../errors';
-import { DeepPartial } from '../../utils';
-import { deepMerge } from '../../utils';
+import type { Bucket } from '../../types.js';
+import { ObjectNotFoundError } from '../../errors.js';
+import { DeepPartial } from '../../utils/index.js';
+import { deepMerge } from '../../utils/index.js';
 
 export interface RetrieveObjectConfig {
   downloadAs: {
@@ -80,7 +80,7 @@ export const RetrieveObjects = (partialConfig: DeepPartial<RetrieveObjectConfig>
   /**
    * Retrieve files
    */
-  router.get('/*', middlewares, async (req: Request, res: Response, next: NextFunction) => {
+  router.get('/{*splat}', middlewares, async (req: Request, res: Response, next: NextFunction) => {
     const { object } = req.seshat;
 
     if (!object) {

@@ -1,10 +1,10 @@
 import { Readable } from 'stream';
-import AbstractBucket from '../abstract-bucket';
-import { BucketConfig, ListOptions, Object, ObjectMeta } from '../types';
-import { GCSObject, GCSObjectMeta } from './object';
+import AbstractBucket from '../abstract-bucket.js';
+import type { BucketConfig, ListOptions, Object, ObjectMeta } from '../types.js';
+import { GCSObject, GCSObjectMeta } from './object.js';
 import { GetFilesOptions, Storage } from '@google-cloud/storage';
 
-import { NotImplementedError, ObjectNotFoundError } from '../errors';
+import { NotImplementedError, ObjectNotFoundError } from '../errors.js';
 
 export interface GCSBucketConfig extends BucketConfig {
   bucket: string,
@@ -111,7 +111,7 @@ export class GCSBucket extends AbstractBucket {
     // Remove folder/prefix from its own list
     objects = objects.filter(o => o.name !== prefix && o.contentLength !== 0);
 
-    const prefixes = (apiResponse.prefixes || []).map((p: string) => {
+    const prefixes = ((apiResponse as any).prefixes || []).map((p: string) => {
       return {
         name: this.seshatKey(p),
         contentType: 'seshat/prefix',

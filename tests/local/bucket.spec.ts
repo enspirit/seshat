@@ -1,14 +1,15 @@
+import { fileURLToPath } from 'url';
 import fs from 'fs';
-import path from 'path';
-import chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
-import { LocalBucket } from '../../src/';
-chai.use(chaiAsPromised);
+import path, { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+import { LocalBucket } from '../../src/index.js';
 
 import { expect } from 'chai';
-import { ObjectNotFoundError, PrefixNotFoundError } from '../../src/errors';
-import { getMockFileObject } from '../mocks/object';
-import { Bucket, Object } from '../../src/types';
+import { ObjectNotFoundError, PrefixNotFoundError } from '../../src/errors.js';
+import { getMockFileObject } from '../mocks/object.js';
+import type { Bucket, Object } from '../../src/types.js';
 
 describe('LocalBucket', () => {
 
@@ -47,14 +48,14 @@ describe('LocalBucket', () => {
     it('resolves the correct list of objects (no param)', async () => {
       const metas = await bucket.list();
       const packageJson = metas.find(m => m.name === 'package.json');
-      // eslint-disable-next-line no-unused-expressions
+
       expect(packageJson).to.exist;
     });
 
     it('resolves the correct list of objects (src/)', async () => {
       const metas = await bucket.list('src/');
       const indexTs = metas.find(m => m.name === 'src/index.ts');
-      // eslint-disable-next-line no-unused-expressions
+
       expect(indexTs).to.exist;
     });
 
@@ -62,7 +63,7 @@ describe('LocalBucket', () => {
       fs.writeFileSync(path.join(__dirname, '../../tmp/test.json.seshat'), 'hello world');
       const metas = await bucket.list('tmp/');
       const aMetaDataFile = metas.find(m => m.name.includes('.seshat'));
-      // eslint-disable-next-line no-unused-expressions
+
       expect(aMetaDataFile).to.not.exist;
     });
 

@@ -1,10 +1,7 @@
 import { expect } from 'chai';
-import chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
-import { Object, ObjectMeta, ObjectTransformer, ObjectTransformerOutput, SecureRename } from '../../src';
-chai.use(chaiAsPromised);
+import { type Object, type ObjectMeta, type ObjectTransformer, type ObjectTransformerOutput, SecureRename } from '../../src/index.js';
 
-import { getMockFileObject } from '../mocks/object';
+import { getMockFileObject } from '../mocks/object.js';
 
 describe('SecureRename', () => {
 

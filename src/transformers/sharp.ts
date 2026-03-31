@@ -2,7 +2,7 @@ import sharp from 'sharp';
 import mime from 'mime-types';
 import path from 'path';
 import { Readable } from 'stream';
-import { ObjectMeta, ObjectTransformer, ObjectTransformerMode, ObjectTransformerOutput, ObjectTransformerType } from '../types';
+import type { ObjectMeta, ObjectTransformer, ObjectTransformerMode, ObjectTransformerOutput, ObjectTransformerType } from '../types.js';
 
 export interface SharpOptions {
   output: {

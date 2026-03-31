@@ -1,7 +1,7 @@
 import path from 'path';
 import express, { Router, Request, Response, NextFunction } from 'express';
 import Busboy from 'busboy';
-import { Bucket, ObjectMeta } from '../../types';
+import type { Bucket, ObjectMeta } from '../../types.js';
 
 export interface MultipartUploadConfig {
   defParamCharset?: string
@@ -30,7 +30,7 @@ export const MultipartUpload = (config: MultipartUploadConfig = DefaultOptions) 
   /**
    * Create files
    */
-  router.post('/*', isMultiPartFormDataRequest, async (req, res, next) => {
+  router.post('/{*splat}', isMultiPartFormDataRequest, async (req, res, next) => {
 
     const basePath = decodeURIComponent(req.path.substring(1));
     const busboy = Busboy({

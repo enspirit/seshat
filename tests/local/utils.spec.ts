@@ -1,9 +1,6 @@
 import fs, { Dirent } from 'fs';
 import path from 'path';
-import chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
-chai.use(chaiAsPromised);
-import { readdir } from '../../src/local/utils';
+import { readdir } from '../../src/local/utils.js';
 import { expect } from 'chai';
 
 describe('fs utils', () => {
@@ -31,7 +28,7 @@ describe('fs utils', () => {
 
     const objExists = (name: string, objects: Dirent[]) => {
       const object = objects.find(o => o.name === name);
-      // eslint-disable-next-line no-unused-expressions
+
       expect(object).to.exist;
     };
 
@@ -42,12 +39,12 @@ describe('fs utils', () => {
     it('returns an empty array for empty folders', async () => {
       // For absolute paths
       let objects = await readdir(tmpdir);
-      // eslint-disable-next-line no-unused-expressions
+
       expect(objects).to.be.empty;
 
       // For relative paths
       objects = await readdir(tmpdirRelative);
-      // eslint-disable-next-line no-unused-expressions
+
       expect(objects).to.be.empty;
     });
 

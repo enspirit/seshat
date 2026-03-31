@@ -1,13 +1,12 @@
 import { Readable } from 'stream';
-import { Object, ObjectMeta } from '../types';
+import type { Object, ObjectMeta } from '../types.js';
 import { File } from '@google-cloud/storage';
-import { ObjectNotFoundError } from '../errors';
+import { ObjectNotFoundError } from '../errors.js';
 
 export class GCSObjectMeta implements ObjectMeta {
-  #bucket;
 
   constructor(
-    bucket: string,
+    _bucket: string,
     public name: string,
     public contentType: string,
     public ctime?: Date | undefined,
@@ -15,7 +14,6 @@ export class GCSObjectMeta implements ObjectMeta {
     public etag?: string | undefined,
     public contentLength?: number | undefined,
   ) {
-    this.#bucket = bucket;
   }
 
   static async fromFile(file: File, prefix?: string): Promise<GCSObjectMeta> {
@@ -27,10 +25,10 @@ export class GCSObjectMeta implements ObjectMeta {
       file.bucket.name,
       prefix ? file.name.substring(prefix.length) : file.name,
       file.metadata.contentType || 'application/octet-stream',
-      new Date(file.metadata.timeCreated),
-      new Date(file.metadata.updated),
+      file.metadata.timeCreated ? new Date(file.metadata.timeCreated) : undefined,
+      file.metadata.updated ? new Date(file.metadata.updated) : undefined,
       file.metadata.etag,
-      file.metadata.size ? parseInt(file.metadata.size) : undefined,
+      file.metadata.size ? parseInt(String(file.metadata.size)) : undefined,
     );
 
     if (!file.metadata?.metadata) {

@@ -1,12 +1,11 @@
 import { Readable } from 'stream';
-import { Object, ObjectMeta } from '../types';
+import type { Object, ObjectMeta } from '../types.js';
 import { HeadObjectCommandOutput, GetObjectCommandOutput } from '@aws-sdk/client-s3';
 
 export class S3ObjectMeta implements ObjectMeta {
-  #bucket;
 
   constructor(
-    bucket: string,
+    _bucket: string,
     public name: string,
     public contentType: string,
     public ctime?: Date | undefined,
@@ -14,7 +13,6 @@ export class S3ObjectMeta implements ObjectMeta {
     public etag?: string | undefined,
     public contentLength?: number | undefined,
   ) {
-    this.#bucket = bucket;
   }
 }
 

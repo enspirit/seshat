@@ -1,7 +1,7 @@
 import { Express } from 'express';
-import { BucketPolicy, BucketPolicyError, createApp, ObjectMeta, S3Bucket } from '../src';
-import { SharpTransformer } from '../src/transformers/sharp';
-import { s3client } from './s3';
+import { type BucketPolicy, BucketPolicyError, createApp, type ObjectMeta, S3Bucket } from '../src/index.js';
+import { SharpTransformer } from '../src/transformers/sharp.js';
+import { s3client } from './s3.js';
 
 export const imagesOnlyPolicy: BucketPolicy = {
   async head(_path: string) {

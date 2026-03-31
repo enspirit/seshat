@@ -1,12 +1,12 @@
 import { Readable } from 'stream';
-import { ListOptions, Object, ObjectMeta } from '../types';
+import type { ListOptions, Object, ObjectMeta } from '../types.js';
 
 import * as path from 'path';
 import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
 import * as mime from 'mime-types';
-import { SeshatError, ObjectNotFoundError, PrefixNotFoundError } from '../errors';
-import { readdir } from './utils';
+import { SeshatError, ObjectNotFoundError, PrefixNotFoundError } from '../errors.js';
+import { readdir } from './utils.js';
 
 export class LocalObject implements Object {
 
@@ -54,7 +54,7 @@ export class LocalObject implements Object {
           ctime: meta.ctime ? new Date(meta.ctime) : undefined,
           mtime: meta.mtime ? new Date(meta.mtime) : undefined,
         };
-      } catch (err) {
+      } catch (_err) {
         return {};
       }
     };
@@ -142,10 +142,22 @@ export class LocalObject implements Object {
 
     const writeFile = async () => {
       const fileStream = fs.createWriteStream(fullpath);
-      await new Promise((resolve, reject) => {
-        fileStream.on('finish', resolve);
-        fileStream.on('error', reject);
-        stream.on('error', reject);
+      await new Promise<void>((resolve, reject) => {
+        let settled = false;
+        const done = (err?: Error) => {
+          if (settled) { return; }
+          settled = true;
+          stream.removeListener('error', onError);
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        };
+        const onError = (err: Error) => done(err);
+        fileStream.on('finish', () => done());
+        fileStream.on('error', onError);
+        stream.on('error', onError);
         stream.pipe(fileStream);
       });
     };

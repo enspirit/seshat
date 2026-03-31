@@ -1,6 +1,7 @@
-import * as path from 'path';
-import * as fs from 'fs';
-import { Object } from '../../src/types';
+import { Readable } from 'stream';
+import type { Object } from '../../src/types.js';
+
+const MOCK_CONTENT = 'This is mock content!!';
 
 export const getMockFileObject = (): Object => {
   return {
@@ -8,10 +9,10 @@ export const getMockFileObject = (): Object => {
       name: 'tmp/file.txt',
       ctime: new Date(),
       mtime: new Date(),
-      contentLength: 22,
+      contentLength: Buffer.byteLength(MOCK_CONTENT),
       contentType: 'plain/text',
     },
-    body: fs.createReadStream(path.join(__dirname, '../../package.json')),
+    body: Readable.from(MOCK_CONTENT),
   } as Object;
 };
 

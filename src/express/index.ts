@@ -1,10 +1,10 @@
 import express from 'express';
-import defaultLogger from '../logger';
-import { Config } from '../types';
-import { ErrorLogger, RequestLogger } from './middlewares';
-import { ExposeContext } from './middlewares/context';
+import defaultLogger from '../logger.js';
+import type { Config } from '../types.js';
+import { ErrorLogger, RequestLogger } from './middlewares/index.js';
+import { ExposeContext } from './middlewares/context.js';
 
-export * from './routers';
+export * from './routers/index.js';
 
 import {
   ExecuteActions,
@@ -12,7 +12,7 @@ import {
   RetrieveObjects,
   DeleteObjects,
   ListObjects,
-} from './routers';
+} from './routers/index.js';
 
 const DefaultRouters = [
   ExecuteActions(),

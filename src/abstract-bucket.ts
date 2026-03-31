@@ -1,8 +1,8 @@
 import EventEmitter from 'events';
 import { Readable } from 'stream';
-import { ObjectTransformerError, SeshatError } from './errors';
-import { Bucket, BucketPolicy, Object, ObjectMeta, ObjectTransformer, ObjectTransformerOutput, BucketConfig, ObjectTransformerMode, BucketEmitter, BucketEvent, ListOptions } from './types';
-import logger from './logger';
+import { ObjectTransformerError, SeshatError } from './errors.js';
+import type { Bucket, BucketPolicy, Object, ObjectMeta, ObjectTransformer, ObjectTransformerOutput, BucketConfig, ObjectTransformerMode, BucketEmitter, BucketEvent, ListOptions } from './types.js';
+import logger from './logger.js';
 
 export default abstract class AbstractBucket implements Bucket, BucketEmitter {
 
@@ -74,7 +74,7 @@ export default abstract class AbstractBucket implements Bucket, BucketEmitter {
     try {
       await this.head(path);
       return true;
-    } catch (err) {
+    } catch (_err) {
       return false;
     }
   }

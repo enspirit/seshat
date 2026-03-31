@@ -1,6 +1,6 @@
 import { Express } from 'express';
-import { createApp, LocalBucket } from '../src';
-import { ReadOnlyPolicy } from '../src';
+import { createApp, LocalBucket } from '../src/index.js';
+import { ReadOnlyPolicy } from '../src/index.js';
 
 /**
  * This simple example shows how a bucket can use policies to allow/disallow actions.

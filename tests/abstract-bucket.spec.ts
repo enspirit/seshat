@@ -1,15 +1,12 @@
-import chai from 'chai';
 import { expect } from 'chai';
-import sinonChai from 'sinon-chai';
 import { default as sinon, SinonStub } from 'sinon';
-chai.use(sinonChai);
 
-import AbstractBucket from '../src/abstract-bucket';
+import AbstractBucket from '../src/abstract-bucket.js';
 import { Readable } from 'stream';
-import { BucketPolicy, Object, ObjectMeta, ObjectTransformer, ObjectTransformerType } from '../src/types';
-import { getMockFileObject } from './mocks/object';
-import { readOnlyPolicy, uploadOnlyPolicy } from './mocks/policies';
-import { ObjectTransformerError, SeshatError } from '../src/errors';
+import type { BucketPolicy, Object, ObjectMeta, ObjectTransformer, ObjectTransformerType } from '../src/types.js';
+import { getMockFileObject } from './mocks/object.js';
+import { readOnlyPolicy, uploadOnlyPolicy } from './mocks/policies.js';
+import { ObjectTransformerError, SeshatError } from '../src/errors.js';
 
 describe('the AbstractBucket class', () => {
 
@@ -66,7 +63,7 @@ describe('the AbstractBucket class', () => {
   const expectListenerToNotBeCalled = (listener: SinonStub) => {
     return new Promise<void>((resolve) => {
       process.nextTick(() => {
-        // eslint-disable-next-line no-unused-expressions
+
         expect(listener).to.not.be.called;
         resolve();
       });
@@ -126,7 +123,7 @@ describe('the AbstractBucket class', () => {
         const listener = sinon.stub().resolves();
         bucket.on('stored', listener);
         await bucket.put(mockFileObject.body, meta);
-        // eslint-disable-next-line no-unused-expressions
+
         expect(listener).to.not.be.called;
       });
 
@@ -136,7 +133,7 @@ describe('the AbstractBucket class', () => {
         bucket.on('stored', listener);
         try {
           await bucket.put(mockFileObject.body, meta);
-        } catch (err) {
+        } catch (_err) {
           //
         }
         await expectListenerToNotBeCalled(listener);
@@ -162,7 +159,7 @@ describe('the AbstractBucket class', () => {
         bucket.on('stored', listener);
         try {
           await bucket.put(mockFileObject.body, meta);
-        } catch (err) {
+        } catch (_err) {
           //
         }
         await expectListenerToNotBeCalled(listener);
@@ -264,7 +261,7 @@ describe('the AbstractBucket class', () => {
         bucket.on('deleted', listener);
         try {
           await bucket.delete('/tmp/test.pdf');
-        } catch (err) {
+        } catch (_err) {
           //
         }
         await expectListenerToNotBeCalled(listener);
@@ -285,7 +282,7 @@ describe('the AbstractBucket class', () => {
         const listener = sinon.stub().resolves();
         bucket.on('deleted', listener);
         await bucket.delete('tmp/test.pdf');
-        // eslint-disable-next-line no-unused-expressions
+
         expect(listener).to.not.be.called;
       });
 
@@ -295,7 +292,7 @@ describe('the AbstractBucket class', () => {
         bucket.on('deleted', listener);
         try {
           await bucket.delete('/tmp/test.pdf');
-        } catch (err) {
+        } catch (_err) {
           //
         }
         await expectListenerToNotBeCalled(listener);

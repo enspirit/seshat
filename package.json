@@ -2,16 +2,17 @@
   "name": "@enspirit/seshat",
   "version": "2.9.0",
   "description": "Seshat v2",
+  "type": "module",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "scripts": {
-    "build": "rm -rf dist && tsc",
+    "build": "rm -rf dist && tsc && cp package.json dist/",
     "build:watch": "tsc -w",
     "dev": "ROOT_DIR=$PWD tsc-watch --onSuccess 'node ./dist/examples/index.js'",
     "example": "ROOT_DIR=$PWD node ./dist/examples/index.js",
-    "test": "mocha -r ts-node/register tests/helpers.ts 'tests/**/*.spec.ts'",
-    "test:watch": "mocha -r ts-node/register tests/helpers.ts 'tests/**/*.spec.ts' --watch --watch-files src/**/*.ts,tests/**/*.ts",
-    "lint": "eslint src tests --ext ts",
+    "test": "mocha 'tests/**/*.spec.ts'",
+    "test:watch": "mocha 'tests/**/*.spec.ts' --watch --watch-files src/**/*.ts,tests/**/*.ts",
+    "lint": "eslint src tests",
     "preversion": "npm run build",
     "prepublishOnly": "npm run build"
   },
@@ -23,59 +24,69 @@
     "dist/package.json"
   ],
   "exports": {
-    ".": "./dist/src/index.js",
-    "./policies": "./dist/src/policies/index.js",
-    "./transformers": "./dist/src/transformers/index.js",
-    "./routers": "./dist/src/express/routers/index.js",
-    "./actions": "./dist/src/actions/index.js"
+    ".": {
+      "types": "./dist/src/index.d.ts",
+      "import": "./dist/src/index.js"
+    },
+    "./policies": {
+      "types": "./dist/src/policies/index.d.ts",
+      "import": "./dist/src/policies/index.js"
+    },
+    "./transformers": {
+      "types": "./dist/src/transformers/index.d.ts",
+      "import": "./dist/src/transformers/index.js"
+    },
+    "./routers": {
+      "types": "./dist/src/express/routers/index.d.ts",
+      "import": "./dist/src/express/routers/index.js"
+    },
+    "./actions": {
+      "types": "./dist/src/actions/index.d.ts",
+      "import": "./dist/src/actions/index.js"
+    }
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.436.0",
     "@aws-sdk/lib-storage": "^3.436.0",
-    "@google-cloud/storage": "^6.5.0",
-    "body-parser": "^1.20.2",
+    "@google-cloud/storage": "^7.19.0",
+    "@types/clamscan": "^2.4.1",
     "busboy": "^1.6.0",
     "clamscan": "^2.4.0",
-    "express": "^4.18.2",
+    "express": "^5.2.1",
     "jszip": "^3.10.1",
-    "mime-types": "^2.1.35",
-    "sharp": "^0.32.6",
+    "mime-types": "^3.0.2",
+    "sharp": "^0.34.5",
     "temp": "^0.9.4",
-    "@types/clamscan": "^2.4.1",
-    "@types/sharp": "^0.31.1",
     "winston": "^3.11.0"
   },
   "devDependencies": {
-    "@enspirit/eslint-config-node": "^0.1.5",
+    "@eslint/js": "^9.39.4",
     "@types/busboy": "^1.5.0",
-    "@types/chai": "^4.3.1",
-    "@types/chai-as-promised": "^7.1.5",
-    "@types/express": "^4.17.13",
-    "@types/jszip": "^3.4.1",
-    "@types/mime-types": "^2.1.1",
-    "@types/mocha": "^9.1.1",
-    "@types/node": "^18.6.1",
-    "@types/sinon": "^10.0.13",
-    "@types/sinon-chai": "^3.2.8",
-    "@types/supertest": "^2.0.12",
+    "@types/express": "^5.0.6",
+    "@types/mime-types": "^3.0.1",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^25.5.0",
+    "@types/supertest": "^7.2.0",
     "@types/temp": "^0.9.3",
-    "@typescript-eslint/eslint-plugin": "^5.31.0",
-    "@typescript-eslint/parser": "^5.31.0",
-    "aws-sdk-client-mock": "^1.0.0",
-    "chai": "^4.3.6",
-    "chai-as-promised": "^7.1.1",
-    "eslint": "^8.20.0",
-    "mocha": "^10.0.0",
-    "sinon": "^14.0.0",
-    "sinon-chai": "^3.7.0",
-    "supertest": "^6.2.4",
-    "ts-node": "^10.9.1",
+    "aws-sdk-client-mock": "^4.1.0",
+    "chai": "^6.2.2",
+    "chai-as-promised": "^8.0.2",
+    "eslint": "^9.39.4",
+    "eslint-plugin-chai-friendly": "^1.1.1",
+    "eslint-plugin-no-only-tests": "^3.3.0",
+    "globals": "^16.5.0",
+    "mocha": "^11.7.5",
+    "sinon": "^21.0.3",
+    "sinon-chai": "^4.0.1",
+    "supertest": "^7.2.2",
     "ts-watch": "^1.0.8",
-    "tsc-watch": "^5.0.3",
-    "typescript": "^4.7.4"
+    "tsc-watch": "^7.2.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2",
+    "typescript-eslint": "^8.58.0"
   },
   "engines": {
     "npm": ">=8.0.0",
-    "node": ">=16.0.0"
+    "node": ">=20.0.0"
   }
 }

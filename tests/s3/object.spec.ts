@@ -1,12 +1,7 @@
 import { expect } from 'chai';
-import chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
-import sinonChai from 'sinon-chai';
-chai.use(chaiAsPromised);
-chai.use(sinonChai);
 
 import { GetObjectCommandOutput, HeadObjectCommandOutput } from '@aws-sdk/client-s3';
-import { S3Object, S3ObjectMeta } from '../../src/';
+import { S3Object, S3ObjectMeta } from '../../src/index.js';
 
 describe('S3Object', () => {
 

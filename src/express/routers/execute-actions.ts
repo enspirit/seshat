@@ -1,14 +1,13 @@
 import express, { NextFunction, Request, Response, Router } from 'express';
-import { json } from 'body-parser';
-import { Bucket, Action } from '../../types';
-import { UnknownActionError } from '../../errors';
+import type { Bucket, Action } from '../../types.js';
+import { UnknownActionError } from '../../errors.js';
 
 export const SESHAT_ACTION_HEADER = 'application/vnd.seshat-action+json';
 
 export const ExecuteActions = (actions: Action[] = []) => (bucket: Bucket): Router => {
 
   const router = express();
-  router.use(json({ type: SESHAT_ACTION_HEADER }));
+  router.use(express.json({ type: SESHAT_ACTION_HEADER }));
 
   const isSeshatActionRequest = (req: Request, res: Response, next: NextFunction) => {
     // We only execute this router if the header is present,
@@ -23,8 +22,8 @@ export const ExecuteActions = (actions: Action[] = []) => (bucket: Bucket): Rout
   /**
    * Execute actions
    */
-  router.post('*', isSeshatActionRequest, async (req, res, next) => {
-    const actionName = req.headers['seshat-action'] as String;
+  router.post('{*splat}', isSeshatActionRequest, async (req, res, next) => {
+    const actionName = req.headers['seshat-action'] as string;
     // At least the action name must be defined
     if (!actionName) {
       return res.status(400).send({

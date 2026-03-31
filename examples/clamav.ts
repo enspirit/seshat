@@ -1,7 +1,7 @@
 import { Express } from 'express';
-import { createApp, LocalBucket, S3Bucket } from '../src';
-import { ClamavScanner } from '../src/transformers';
-import { s3client } from './s3';
+import { createApp, LocalBucket, S3Bucket } from '../src/index.js';
+import { ClamavScanner } from '../src/transformers/index.js';
+import { s3client } from './s3.js';
 
 /**
  * This example shows how a bucket can use the clamav transformer

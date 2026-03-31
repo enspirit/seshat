@@ -1,7 +1,7 @@
 import { createGzip } from 'node:zlib';
 
 import { Readable } from 'stream';
-import { ObjectMeta, ObjectTransformer, ObjectTransformerMode, ObjectTransformerOutput, ObjectTransformerType } from '../types';
+import type { ObjectMeta, ObjectTransformer, ObjectTransformerMode, ObjectTransformerOutput, ObjectTransformerType } from '../types.js';
 
 export class ObjectCompressor implements ObjectTransformer {
 

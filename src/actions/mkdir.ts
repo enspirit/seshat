@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { Action } from '../types';
+import type { Action } from '../types.js';
 
 export const MkdirActionFactory = (): Action => {
   return {

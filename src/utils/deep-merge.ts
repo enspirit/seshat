@@ -3,7 +3,7 @@ export type DeepPartial<T> = {
 };
 
 export const deepMerge = <T>(defaultConfig: T, userConfig?: DeepPartial<T>): T => {
-  if (!userConfig) return defaultConfig;
+  if (!userConfig) { return defaultConfig; }
   const result: any = { ...defaultConfig };
 
   for (const key in userConfig) {

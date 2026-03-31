@@ -1,17 +1,11 @@
-import { S3Client, ListObjectsV2Command, HeadObjectCommand, DeleteObjectCommand, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, ListObjectsV2Command, HeadObjectCommand, DeleteObjectCommand, GetObjectCommand, PutObjectCommand, CreateMultipartUploadCommand, UploadPartCommand } from '@aws-sdk/client-s3';
 
-import { Object, ObjectMeta, S3Bucket } from '../../src/';
-import { ObjectNotFoundError, PrefixNotFoundError } from '../../src/errors';
+import { type Object, type ObjectMeta, S3Bucket } from '../../src/index.js';
+import { ObjectNotFoundError, PrefixNotFoundError } from '../../src/errors.js';
 
-import { expect, default as chai } from 'chai';
-import sinon from 'sinon';
-import sinonChai from 'sinon-chai';
-import chaiAsPromised from 'chai-as-promised';
-chai.use(chaiAsPromised);
-chai.use(sinonChai);
+import { expect } from 'chai';
 import { mockClient } from 'aws-sdk-client-mock';
-import { mockLibStorageUpload } from 'aws-sdk-client-mock/libStorage';
-import { getMockFileObject } from '../mocks/object';
+import { getMockFileObject } from '../mocks/object.js';
 
 describe('S3Bucket', () => {
 
@@ -38,7 +32,9 @@ describe('S3Bucket', () => {
     mockFileObject = getMockFileObject();
     s3mock = mockClient(S3Client);
     s3client = new S3Client({ region: 'eu-west1' });
-    mockLibStorageUpload(s3mock);
+    s3mock.on(PutObjectCommand).resolves({});
+    s3mock.on(CreateMultipartUploadCommand).resolves({ UploadId: '1' });
+    s3mock.on(UploadPartCommand).resolves({ ETag: '1' });
 
     s3mock.on(HeadObjectCommand).resolves(mockObjectA);
     s3mock.on(GetObjectCommand).resolves(mockObjectA);
@@ -47,6 +43,10 @@ describe('S3Bucket', () => {
       bucket: bucketName,
       s3client: s3client,
     });
+  });
+
+  afterEach(() => {
+    s3mock.restore();
   });
 
   describe('list()', () => {
@@ -58,40 +58,32 @@ describe('S3Bucket', () => {
     it('uses the s3client properly (list object and head for each object)', async () => {
       await bucket.list();
 
-      await expect(s3client.send).to.have.been.calledThrice;
-      await expect(s3client.send).to.have.been.calledWith(sinon.match.instanceOf(ListObjectsV2Command));
-      await expect(s3client.send).to.be.calledWith(sinon.match({
-        input: {
-          Bucket: 'seshat-bucket',
-          Prefix: '',
-          Delimiter: '/',
-        },
-      }));
-      await expect(s3client.send).to.have.been.calledWith(sinon.match.instanceOf(HeadObjectCommand));
-      await expect(s3client.send).to.have.been.calledWith(sinon.match({
-        input: {
-          Bucket: 'seshat-bucket',
-          Key: 'package.json',
-        },
-      }));
-      await expect(s3client.send).to.have.been.calledWith(sinon.match({
-        input: {
-          Bucket: 'seshat-bucket',
-          Key: 'README.txt',
-        },
-      }));
+      expect(s3mock.calls()).to.have.length(3);
+      expect(s3mock.commandCalls(ListObjectsV2Command)).to.have.length(1);
+      expect(s3mock.commandCalls(ListObjectsV2Command, {
+        Bucket: 'seshat-bucket',
+        Prefix: '',
+        Delimiter: '/',
+      })).to.have.length(1);
+      expect(s3mock.commandCalls(HeadObjectCommand)).to.have.length(2);
+      expect(s3mock.commandCalls(HeadObjectCommand, {
+        Bucket: 'seshat-bucket',
+        Key: 'package.json',
+      })).to.have.length(1);
+      expect(s3mock.commandCalls(HeadObjectCommand, {
+        Bucket: 'seshat-bucket',
+        Key: 'README.txt',
+      })).to.have.length(1);
     });
 
     it('uses the s3client properly (prefix arg provided)', async () => {
       await bucket.list('src/');
-      await expect(s3client.send).to.have.been.calledWith(sinon.match.instanceOf(ListObjectsV2Command));
-      await expect(s3client.send).to.be.calledWith(sinon.match({
-        input: {
-          Bucket: 'seshat-bucket',
-          Prefix: 'src/',
-          Delimiter: '/',
-        },
-      }));
+      expect(s3mock.commandCalls(ListObjectsV2Command)).to.have.length(1);
+      expect(s3mock.commandCalls(ListObjectsV2Command, {
+        Bucket: 'seshat-bucket',
+        Prefix: 'src/',
+        Delimiter: '/',
+      })).to.have.length(1);
     });
 
     it('returns the list of objects', async () => {
@@ -111,13 +103,11 @@ describe('S3Bucket', () => {
 
     it('uses the s3client properly', async () => {
       await bucket.get('package.json');
-      await expect(s3client.send).to.have.been.calledOnceWith(sinon.match.instanceOf(GetObjectCommand));
-      await expect(s3client.send).to.have.been.calledOnceWith(sinon.match({
-        input: {
-          Bucket: 'seshat-bucket',
-          Key: 'package.json',
-        },
-      }));
+      expect(s3mock.commandCalls(GetObjectCommand)).to.have.length(1);
+      expect(s3mock.commandCalls(GetObjectCommand, {
+        Bucket: 'seshat-bucket',
+        Key: 'package.json',
+      })).to.have.length(1);
     });
 
     it('returns a valid S3Object', async () => {
@@ -147,56 +137,48 @@ describe('S3Bucket', () => {
 
     let metadata: ObjectMeta;
     beforeEach(async () => {
-      // s3mock.on(CreateMultipartUploadCommand).resolves({ UploadId: '1' });
-      // s3mock.on(UploadPartCommand).resolves({ ETag: '1' });
       metadata = { name: 'test.json', contentType: 'application/json' };
     });
 
     it('uses the s3client properly (simple upload)', async () => {
       await bucket.put(mockFileObject.body, metadata);
-      await expect(s3client.send).to.be.calledWith(sinon.match.instanceOf(PutObjectCommand));
-      await expect(s3client.send).to.be.calledWith(sinon.match({
-        input: {
-          Bucket: 'seshat-bucket',
-          Key: 'test.json',
-          ContentType: 'application/json',
-          Metadata: {
-          },
-        },
-      }));
+      expect(s3mock.commandCalls(PutObjectCommand)).to.have.length(1);
+      const call = s3mock.commandCalls(PutObjectCommand)[0];
+      expect(call.args[0].input).to.deep.include({
+        Bucket: 'seshat-bucket',
+        Key: 'test.json',
+        ContentType: 'application/json',
+      });
+      expect(call.args[0].input.Metadata).to.deep.equal({});
     });
 
     it('stores additional metadata props accordingly', async () => {
       metadata.foo = 'bar';
       await bucket.put(mockFileObject.body, metadata);
-      await expect(s3client.send).to.be.calledWith(sinon.match.instanceOf(PutObjectCommand));
-      await expect(s3client.send).to.be.calledWith(sinon.match({
-        input: {
-          Bucket: 'seshat-bucket',
-          Key: 'test.json',
-          ContentType: 'application/json',
-          Metadata: {
-            foo: 'bar',
-          },
-        },
-      }));
+      expect(s3mock.commandCalls(PutObjectCommand)).to.have.length(1);
+      const call = s3mock.commandCalls(PutObjectCommand)[0];
+      expect(call.args[0].input).to.deep.include({
+        Bucket: 'seshat-bucket',
+        Key: 'test.json',
+        ContentType: 'application/json',
+      });
+      expect(call.args[0].input.Metadata).to.deep.equal({ foo: 'bar' });
     });
 
     // Some S3 servers don't handle non-ascii chars very well
     it('ensures metadata props are url safe', async () => {
-      metadata.originalname = 'é ç à Z.png';
+      metadata.originalname = 'é ç à Z.png';
       await bucket.put(mockFileObject.body, metadata);
-      await expect(s3client.send).to.be.calledWith(sinon.match.instanceOf(PutObjectCommand));
-      await expect(s3client.send).to.be.calledWith(sinon.match({
-        input: {
-          Bucket: 'seshat-bucket',
-          Key: 'test.json',
-          ContentType: 'application/json',
-          Metadata: {
-            originalname: 'e%CC%81%20c%CC%A7%20a%CC%80%20Z.png',
-          },
-        },
-      }));
+      expect(s3mock.commandCalls(PutObjectCommand)).to.have.length(1);
+      const call = s3mock.commandCalls(PutObjectCommand)[0];
+      expect(call.args[0].input).to.deep.include({
+        Bucket: 'seshat-bucket',
+        Key: 'test.json',
+        ContentType: 'application/json',
+      });
+      expect(call.args[0].input.Metadata).to.deep.equal({
+        originalname: '%C3%A9%20%C3%A7%20%C3%A0%20Z.png',
+      });
     });
 
     it('returns a valid S3Object', async () => {
@@ -210,20 +192,14 @@ describe('S3Bucket', () => {
 
     it('uses the s3client properly', async () => {
       await bucket.delete('package.json');
-      await expect(s3client.send).to.be.calledWith(sinon.match.instanceOf(HeadObjectCommand));
-      await expect(s3client.send).to.be.calledWith(sinon.match({
-        input: {
-          Bucket: 'seshat-bucket',
-          Key: 'package.json',
-        },
-      }));
-      await expect(s3client.send).to.be.calledWith(sinon.match.instanceOf(DeleteObjectCommand));
-      await expect(s3client.send).to.be.calledWith(sinon.match({
-        input: {
-          Bucket: 'seshat-bucket',
-          Key: 'package.json',
-        },
-      }));
+      expect(s3mock.commandCalls(HeadObjectCommand, {
+        Bucket: 'seshat-bucket',
+        Key: 'package.json',
+      })).to.have.length(1);
+      expect(s3mock.commandCalls(DeleteObjectCommand, {
+        Bucket: 'seshat-bucket',
+        Key: 'package.json',
+      })).to.have.length(1);
     });
 
     it('rejects properly when object does not exist', async () => {
@@ -258,28 +234,23 @@ describe('S3Bucket', () => {
 
       it('uses the s3client properly (no arg provided)', async () => {
         await bucket.list();
-        // eslint-disable-next-line no-unused-expressions
-        expect(s3client.send).to.be.calledThrice;
-        expect(s3client.send).to.be.calledWith(sinon.match.instanceOf(ListObjectsV2Command));
-        expect(s3client.send).to.be.calledWith(sinon.match.instanceOf(HeadObjectCommand));
-        expect(s3client.send).to.be.calledWith(sinon.match({
-          input: {
-            Bucket: 'seshat-bucket',
-            Prefix: 'src/',
-            Delimiter: '/',
-          },
-        }));
+        expect(s3mock.calls()).to.have.length(3);
+        expect(s3mock.commandCalls(ListObjectsV2Command)).to.have.length(1);
+        expect(s3mock.commandCalls(HeadObjectCommand)).to.have.length(2);
+        expect(s3mock.commandCalls(ListObjectsV2Command, {
+          Bucket: 'seshat-bucket',
+          Prefix: 'src/',
+          Delimiter: '/',
+        })).to.have.length(1);
       });
 
       it('uses the s3client properly', async () => {
         await bucket.list('s3/');
-        await expect(s3client.send).to.be.calledWith(sinon.match({
-          input: {
-            Bucket: 'seshat-bucket',
-            Prefix: 'src/s3/',
-            Delimiter: '/',
-          },
-        }));
+        expect(s3mock.commandCalls(ListObjectsV2Command, {
+          Bucket: 'seshat-bucket',
+          Prefix: 'src/s3/',
+          Delimiter: '/',
+        })).to.have.length(1);
       });
 
       it('returns s3object meta, sorted, and with proper names (prefix is removed)', async () => {

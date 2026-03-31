@@ -1,2 +1,2 @@
-export * from './bucket';
-export * from './object';
+export * from './bucket.js';
+export * from './object.js';

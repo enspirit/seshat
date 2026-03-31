@@ -1,9 +1,9 @@
 import * as path from 'path';
-import { LocalObject } from './object';
+import { LocalObject } from './object.js';
 import { Readable } from 'stream';
-import AbstractBucket from '../abstract-bucket';
-import { BucketConfig, ListOptions, ObjectMeta } from '../types';
-import { NotImplementedError } from '../errors';
+import AbstractBucket from '../abstract-bucket.js';
+import type { BucketConfig, ListOptions, ObjectMeta } from '../types.js';
+import { NotImplementedError } from '../errors.js';
 
 export interface LocalBucketConfig extends BucketConfig {
   path: string

@@ -1,7 +1,7 @@
 import { Express } from 'express';
-import { createApp, S3Bucket } from '../src';
-import { SecureRename } from '../src/transformers';
-import { s3client } from './s3';
+import { createApp, S3Bucket } from '../src/index.js';
+import { SecureRename } from '../src/transformers/index.js';
+import { s3client } from './s3.js';
 
 /**
  * This simple example shows how a bucket can use policies to allow/disallow actions.

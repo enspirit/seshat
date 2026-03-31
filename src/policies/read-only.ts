@@ -1,5 +1,5 @@
-import { AccessDeniedError } from '../errors';
-import { BucketPolicy } from '../types';
+import { AccessDeniedError } from '../errors.js';
+import type { BucketPolicy } from '../types.js';
 
 export const ReadOnlyPolicy: BucketPolicy = {
 

@@ -1,14 +1,17 @@
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 import request from 'supertest';
-import chai, { expect } from 'chai';
+import { expect } from 'chai';
 import sinon from 'sinon';
-import sinonChai from 'sinon-chai';
-import { MultipartUpload } from '../../../src/express/routers';
-import { getMockBucket } from '../../mocks/bucket';
-import { Bucket } from '../../../src/types';
-chai.use(sinonChai);
+import { MultipartUpload } from '../../../src/express/routers/index.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+import { getMockBucket } from '../../mocks/bucket.js';
+import type { Bucket } from '../../../src/types.js';
 
 import express, { Application } from 'express';
-import { getMockFileObject } from '../../mocks/object';
+import { getMockFileObject } from '../../mocks/object.js';
 import { Readable } from 'stream';
 
 describe('the multipart-uploads express router', () => {

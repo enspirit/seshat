@@ -1,5 +1,5 @@
 import express, { Router } from 'express';
-import { Bucket } from '../../types';
+import type { Bucket } from '../../types.js';
 
 export const DeleteObjects = () => (bucket: Bucket): Router => {
   const router = express();
@@ -7,7 +7,7 @@ export const DeleteObjects = () => (bucket: Bucket): Router => {
   /**
    * Delete object
    */
-  router.delete('/*', async (req, res, next) => {
+  router.delete('/{*splat}', async (req, res, next) => {
     const fpath = decodeURIComponent(req.path.substring(1));
     try {
       await bucket.delete(fpath);

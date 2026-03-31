@@ -1,17 +1,18 @@
+import { fileURLToPath } from 'url';
 import { Application } from 'express';
-import { createApp } from '../src/express';
+import { createApp } from '../src/express/index.js';
 import request from 'supertest';
-import chai from 'chai';
-import path from 'path';
-import { getMockBucket } from './mocks/bucket';
-import { getMockFileObject } from './mocks/object';
+import path, { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+import { getMockBucket } from './mocks/bucket.js';
+import { getMockFileObject } from './mocks/object.js';
 import { expect } from 'chai';
-import sinonChai from 'sinon-chai';
-import { BucketPolicyError, ObjectNotFoundError } from '../src/errors';
+import { BucketPolicyError, ObjectNotFoundError } from '../src/errors.js';
 import sinon from 'sinon';
 import { Readable } from 'stream';
-import { Bucket, Object } from '../src';
-chai.use(sinonChai);
+import type { Bucket, Object } from '../src/index.js';
 
 describe('the express app', () => {
 
@@ -168,7 +169,6 @@ describe('the express app', () => {
         .attach('tsconfig.json', path.join(__dirname, '../tsconfig.json'))
         .expect(200);
 
-      // eslint-disable-next-line no-unused-expressions
       expect(mockBucket.put).to.be.calledTwice;
       await expect(mockBucket.put).to.be.calledWith(
         sinon.match.instanceOf(Readable),

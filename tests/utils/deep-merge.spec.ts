@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { deepMerge } from '../../src/utils';
+import { deepMerge } from '../../src/utils/index.js';
 
 describe('deepMerge', () => {
 
@@ -13,7 +13,7 @@ describe('deepMerge', () => {
       etag: true,
       cacheControl: 'private, max-age=86400, must-revalidate',
     },
-  }
+  };
 
   it('should return default config if no user config is provided', () => {
     const result = deepMerge(DefaultConfig, undefined);

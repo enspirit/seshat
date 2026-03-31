@@ -1,5 +1,5 @@
 import { Express } from 'express';
-import { createApp, LocalBucket } from '../src';
+import { createApp, LocalBucket } from '../src/index.js';
 
 /**
  * This simple example shows how to add a seshat endpoint

@@ -1,5 +1,5 @@
 import { Express } from 'express';
-import { createApp, DeleteObjects, LocalBucket, MultipartUpload, RetrieveObjects } from '../src';
+import { createApp, DeleteObjects, LocalBucket, MultipartUpload, RetrieveObjects } from '../src/index.js';
 
 /**
  * This simple example shows how to override the default

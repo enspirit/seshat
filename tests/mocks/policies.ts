@@ -1,4 +1,4 @@
-import { BucketPolicy, ObjectMeta } from '../../src/types';
+import type { BucketPolicy, ObjectMeta } from '../../src/types.js';
 
 export const readOnlyPolicy: BucketPolicy = {
 
