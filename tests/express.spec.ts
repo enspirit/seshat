@@ -1,4 +1,4 @@
-import { Application } from 'express';
+import express, { Application } from 'express';
 import { createApp } from '../src/express';
 import request from 'supertest';
 import chai from 'chai';
@@ -251,6 +251,59 @@ describe('the express app', () => {
         });
 
       stub.reset();
+    });
+  });
+
+  describe('when mounted under a prefix', () => {
+
+    let host: Application;
+    beforeEach(() => {
+      host = express();
+      host.use('/s3', app);
+    });
+
+    // Express 4 collapsed the remainder left after stripping a mount path, so
+    // '/s3//' arrived as '/'. Express 5 preserves it as '//', which used to
+    // address a '/' prefix inside the bucket instead of its root.
+    it('lists the bucket root when the mount path is followed by a bare slash', async () => {
+      const stub = mockBucket.list as sinon.SinonStub;
+
+      await request(host)
+        .get('/s3//')
+        .expect(200);
+
+      expect(stub).to.have.been.calledOnceWith('');
+    });
+
+    it('lists the bucket root for the plain mount path too', async () => {
+      const stub = mockBucket.list as sinon.SinonStub;
+
+      await request(host)
+        .get('/s3/')
+        .expect(200);
+
+      expect(stub).to.have.been.calledOnceWith('');
+    });
+
+    it('does not confuse a real prefix with the root', async () => {
+      const stub = mockBucket.list as sinon.SinonStub;
+
+      await request(host)
+        .get('/s3/subfolder/')
+        .expect(200);
+
+      expect(stub).to.have.been.calledOnceWith('subfolder/');
+    });
+
+    it('resolves object names relative to the bucket root', async () => {
+      const stub = mockBucket.get as sinon.SinonStub;
+      stub.resolves(getMockFileObject());
+
+      await request(host)
+        .get('/s3//file.txt')
+        .expect(200);
+
+      expect(stub).to.have.been.calledOnceWith('file.txt');
     });
   });
 
