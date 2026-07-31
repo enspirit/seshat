@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response, Router } from 'express';
 import { PrefixNotFoundError } from '../../errors';
 import { Bucket, ListOptions } from '../../types';
+import { requestPath } from '../../utils';
 
 export const ListObjects = () => (bucket: Bucket): Router => {
   const router = express();
@@ -9,7 +10,7 @@ export const ListObjects = () => (bucket: Bucket): Router => {
    * Retrieve files
    */
   router.get('/{*splat}', async (req: Request, res: Response, next: NextFunction) => {
-    const prefix = decodeURIComponent(req.path);
+    const prefix = decodeURIComponent(requestPath(req));
     if (prefix[prefix.length - 1] !== '/') {
       return next('route');
     }

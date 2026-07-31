@@ -2,6 +2,7 @@ import path from 'path';
 import express, { Router, Request, Response, NextFunction } from 'express';
 import Busboy from 'busboy';
 import { Bucket, ObjectMeta } from '../../types';
+import { requestPath } from '../../utils';
 
 export interface MultipartUploadConfig {
   defParamCharset?: string
@@ -32,7 +33,7 @@ export const MultipartUpload = (config: MultipartUploadConfig = DefaultOptions) 
    */
   router.post('/{*splat}', isMultiPartFormDataRequest, async (req, res, next) => {
 
-    const basePath = decodeURIComponent(req.path.substring(1));
+    const basePath = decodeURIComponent(requestPath(req).substring(1));
     const busboy = Busboy({
       headers: req.headers,
       defParamCharset: config.defParamCharset || 'utf-8',

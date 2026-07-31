@@ -2,7 +2,7 @@ import express, { NextFunction, Request, Response, Router, RequestHandler } from
 import { Bucket } from '../../types';
 import { ObjectNotFoundError } from '../../errors';
 import { DeepPartial } from '../../utils';
-import { deepMerge } from '../../utils';
+import { deepMerge, requestPath } from '../../utils';
 
 export interface RetrieveObjectConfig {
   downloadAs: {
@@ -36,7 +36,7 @@ export const RetrieveObjects = (partialConfig: DeepPartial<RetrieveObjectConfig>
    * Expose the object on the request
    */
   const exposeObject: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
-    const isPrefix = req.path[req.path.length - 1] === '/';
+    const isPrefix = requestPath(req).endsWith('/');
     if (isPrefix) {
       return next('route');
     }
@@ -46,7 +46,7 @@ export const RetrieveObjects = (partialConfig: DeepPartial<RetrieveObjectConfig>
     }
     req.seshat.bucket ||= bucket;
     try {
-      const path = decodeURIComponent(req.path.substring(1));
+      const path = decodeURIComponent(requestPath(req).substring(1));
       req.seshat.object = await bucket.get(path);
     } catch (err) {
       if (!(err instanceof ObjectNotFoundError)) {
