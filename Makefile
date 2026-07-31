@@ -4,7 +4,7 @@ npm.install:
 	@npm install
 
 npm.lint:
-	@npm install
+	@npm run lint
 
 bundler.install:
 	@bundle install

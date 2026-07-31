@@ -2,7 +2,7 @@ import { getMockFileObject } from './object';
 import { Readable } from 'stream';
 import * as fs from 'fs';
 import { SinonStub, SinonSpy, default as sinon } from 'sinon';
-import { Object, ObjectMeta } from '../../src/types';
+import { ObjectMeta } from '../../src/types';
 
 interface MockBucket {
   exists: SinonStub,
