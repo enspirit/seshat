@@ -1,12 +1,21 @@
-## 3.0.0 - 2026-07-31
+## 3.0.0-rc.1 - 2026-07-31
 
-**Seshat is now an ESM-only package.** It no longer ships a CommonJS build, so
-`require('@enspirit/seshat')` throws `ERR_REQUIRE_ESM`. See the
-[Breaking Changes](README.md#300--esm-only) section of the README for how to
-migrate.
+Release candidate. Published under the `rc` dist-tag, so `npm install
+@enspirit/seshat` still resolves to 2.9.0. To try it:
 
-* The package is ESM-only (`"type": "module"`). CommonJS consumers must either
-  become ESM themselves or load Seshat through a dynamic `import()`.
+```
+npm install @enspirit/seshat@rc
+```
+
+**Seshat is now an ESM-only package.** See the
+[Breaking Changes](README.md#300--esm-only) section of the README for what that
+means in practice.
+
+* The package is ESM-only (`"type": "module"`) and no longer ships a CommonJS
+  build. CommonJS consumers are not locked out: Node 22.12+ supports
+  `require()` of an ESM package, and Seshat's module graph contains no
+  top-level `await`, which is the only thing that would prevent it. A dynamic
+  `import()` works too.
 
 * The exported `Object` and `ObjectMeta` types are renamed to `SeshatObject`
   and `SeshatObjectMeta`. `Object` shadowed the JavaScript global, which could
@@ -15,7 +24,9 @@ migrate.
   classes (`S3ObjectMeta`, `GCSObjectMeta`, `LocalObject`) and the
   `ObjectTransformer*` types are unchanged.
 
-* Minimum Node version is now 22. Node 20 reached end of life in April 2026.
+* Minimum Node version is now 22.12 — the release where `require()` of an ESM
+  package became available unflagged, which is what keeps CommonJS consumers
+  working. Node 20 reached end of life in April 2026.
 
 * Express 5. The routing layer moved from Express 4, which changes how a bare
   slash after a mount path is resolved — `GET /s3//` now addresses the bucket

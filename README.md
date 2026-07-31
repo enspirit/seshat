@@ -46,12 +46,28 @@ Please have a look at the [examples/](examples/) folder, you'll find simple exam
 * [encrypt files using SSE-C](examples/sse-c.ts)
 * [execute actions such as creating empty prefixes and extract objects as zip files](examples/actions.ts)
 
+# Installing
+
+```
+npm install @enspirit/seshat
+```
+
+Seshat 3 is currently a **release candidate**, published under the `rc`
+dist-tag. The command above therefore still installs the latest 2.x. To try
+the candidate:
+
+```
+npm install @enspirit/seshat@rc
+```
+
+Read the Breaking Changes below before you do — 3.0.0 is ESM-only, requires
+Node 22.12+, and moves to Express 5.
+
 # Breaking Changes
 
 ## 3.0.0 — ESM only
 
-Seshat 3 is published as an ESM-only package. There is no CommonJS build, so
-`require('@enspirit/seshat')` now fails with `ERR_REQUIRE_ESM`.
+Seshat 3 ships as an ESM-only package: there is no CommonJS build any more.
 
 If your project is already ESM — `"type": "module"` in your package.json —
 nothing changes:
@@ -60,19 +76,27 @@ nothing changes:
 import { createApp, S3Bucket } from '@enspirit/seshat';
 ```
 
-If your project is CommonJS, either convert it to ESM, or reach Seshat through
-a dynamic import, which is available inside CommonJS:
+**CommonJS projects still work.** Seshat 3 requires Node 22.12 or later, and
+from that version Node supports `require()` of an ESM package directly:
+
+```js
+const { createApp, S3Bucket } = require('@enspirit/seshat');
+```
+
+This works because Seshat's module graph contains no top-level `await`, which
+is the one thing that makes `require()` of an ESM module fail. If you would
+rather be explicit, a dynamic import does the same job:
 
 ```js
 const { createApp, S3Bucket } = await import('@enspirit/seshat');
 ```
 
-Note that a dynamic `import()` returns a promise, so it has to be awaited
-somewhere — at the top level of an async bootstrap function, typically.
+The practical consequence of the ESM switch, then, is the **Node 22.12 floor**
+rather than a rewrite of your application.
 
-Seshat 3 also requires **Node 22 or later**, and upgrades to **Express 5**. If
-you mount Seshat's routers into your own Express app, that app has to be on
-Express 5 too.
+Seshat 3 also upgrades to **Express 5**. If you mount Seshat's routers into
+your own Express app, that app has to be on Express 5 too — that is likely to
+be the more disruptive change of the two.
 
 ## 3.0.0 — `Object` and `ObjectMeta` are now `SeshatObject` and `SeshatObjectMeta`
 
