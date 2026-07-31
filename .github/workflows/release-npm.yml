@@ -20,6 +20,51 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y imagemagick
       - run: make ci
       - run: npm ci
-      - run: npm publish
+
+      # `npm publish` writes the `latest` dist-tag unless told otherwise, and
+      # `latest` is what a bare `npm install @enspirit/seshat` resolves to. A
+      # prerelease published without --tag would therefore become the default
+      # for every consumer, which is exactly what a release candidate must not
+      # do. Deriving the tag from the version keeps that correct in both
+      # directions with nothing to remember at GA.
+      - name: Determine npm dist-tag
+        id: disttag
+        run: |
+          set -euo pipefail
+          VERSION="$(node -p 'require("./package.json").version')"
+          RELEASE_TAG='${{ github.event.release.tag_name }}'
+
+          # .npmrc sets tag-version-prefix="", so the git tag is the bare version.
+          if [ "$VERSION" != "$RELEASE_TAG" ]; then
+            echo "::error::package.json is $VERSION but the release is tagged $RELEASE_TAG"
+            exit 1
+          fi
+
+          case "$VERSION" in
+            *-*)
+              # 3.0.0-rc.1 -> rc, 3.0.0-beta.2 -> beta
+              PRERELEASE="${VERSION#*-}"
+              NPM_TAG="${PRERELEASE%%.*}"
+              if [ "${{ github.event.release.prerelease }}" != "true" ]; then
+                echo "::error::$VERSION is a prerelease but the GitHub release is not marked as one"
+                exit 1
+              fi
+              ;;
+            *)
+              NPM_TAG=latest
+              if [ "${{ github.event.release.prerelease }}" = "true" ]; then
+                echo "::error::the GitHub release is marked prerelease but $VERSION is not"
+                exit 1
+              fi
+              ;;
+          esac
+
+          echo "tag=$NPM_TAG" >> "$GITHUB_OUTPUT"
+          echo "Publishing $VERSION under dist-tag '$NPM_TAG'"
+
+      - run: npm publish --tag ${{ steps.disttag.outputs.tag }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Report resulting dist-tags
+        run: npm dist-tag ls @enspirit/seshat
