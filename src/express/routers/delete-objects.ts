@@ -7,7 +7,7 @@ export const DeleteObjects = () => (bucket: Bucket): Router => {
   /**
    * Delete object
    */
-  router.delete('/*', async (req, res, next) => {
+  router.delete('/{*splat}', async (req, res, next) => {
     const fpath = decodeURIComponent(req.path.substring(1));
     try {
       await bucket.delete(fpath);

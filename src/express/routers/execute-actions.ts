@@ -23,7 +23,7 @@ export const ExecuteActions = (actions: Action[] = []) => (bucket: Bucket): Rout
   /**
    * Execute actions
    */
-  router.post('*', isSeshatActionRequest, async (req, res, next) => {
+  router.post('/{*splat}', isSeshatActionRequest, async (req, res, next) => {
     const actionName = req.headers['seshat-action'] as String;
     // At least the action name must be defined
     if (!actionName) {
