@@ -48,6 +48,32 @@ Please have a look at the [examples/](examples/) folder, you'll find simple exam
 
 # Breaking Changes
 
+## 3.0.0 — ESM only
+
+Seshat 3 is published as an ESM-only package. There is no CommonJS build, so
+`require('@enspirit/seshat')` now fails with `ERR_REQUIRE_ESM`.
+
+If your project is already ESM — `"type": "module"` in your package.json —
+nothing changes:
+
+```js
+import { createApp, S3Bucket } from '@enspirit/seshat';
+```
+
+If your project is CommonJS, either convert it to ESM, or reach Seshat through
+a dynamic import, which is available inside CommonJS:
+
+```js
+const { createApp, S3Bucket } = await import('@enspirit/seshat');
+```
+
+Note that a dynamic `import()` returns a promise, so it has to be awaited
+somewhere — at the top level of an async bootstrap function, typically.
+
+Seshat 3 also requires **Node 22 or later**, and upgrades to **Express 5**. If
+you mount Seshat's routers into your own Express app, that app has to be on
+Express 5 too.
+
 ## http protocol
 
 Seshat v2's HTTP layer has some breaking changes compared to v1:
