@@ -1,6 +1,9 @@
-import * as path from 'path';
-import * as fs from 'fs';
+import { Readable } from 'stream';
 import { Object } from '../../src/types';
+
+// The body must stay exactly as long as the contentLength advertised below:
+// node's http parser rejects responses whose body overruns Content-Length.
+const BODY = 'seshat mock file body\n';
 
 export const getMockFileObject = (): Object => {
   return {
@@ -8,10 +11,9 @@ export const getMockFileObject = (): Object => {
       name: 'tmp/file.txt',
       ctime: new Date(),
       mtime: new Date(),
-      contentLength: 22,
+      contentLength: Buffer.byteLength(BODY),
       contentType: 'plain/text',
     },
-    body: fs.createReadStream(path.join(__dirname, '../../package.json')),
+    body: Readable.from([BODY]),
   } as Object;
 };
-
