@@ -142,8 +142,8 @@ export class LocalObject implements Object {
 
     const writeFile = async () => {
       const fileStream = fs.createWriteStream(fullpath);
-      await new Promise((resolve, reject) => {
-        fileStream.on('finish', resolve);
+      await new Promise<void>((resolve, reject) => {
+        fileStream.on('finish', () => resolve());
         fileStream.on('error', reject);
         stream.on('error', reject);
         stream.pipe(fileStream);

@@ -10,8 +10,18 @@ import chaiAsPromised from 'chai-as-promised';
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
 import { mockClient } from 'aws-sdk-client-mock';
-import { mockLibStorageUpload } from 'aws-sdk-client-mock/libStorage';
 import { getMockFileObject } from '../mocks/object';
+
+// aws-sdk-client-mock dropped its `libStorage` entrypoint in v2. For bodies
+// below the multipart threshold, @aws-sdk/lib-storage's Upload issues a plain
+// PutObjectCommand, and this is the stub the upstream README prescribes in
+// place of the old mockLibStorageUpload() helper.
+const mockLibStorageUpload = (mock: any) => {
+  mock.on(PutObjectCommand).callsFake(async (_input: unknown, getClient: () => S3Client) => {
+    getClient().config.endpoint = (() => ({ hostname: '' })) as any;
+    return {};
+  });
+};
 
 describe('S3Bucket', () => {
 
