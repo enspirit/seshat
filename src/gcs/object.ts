@@ -27,10 +27,13 @@ export class GCSObjectMeta implements ObjectMeta {
       file.bucket.name,
       prefix ? file.name.substring(prefix.length) : file.name,
       file.metadata.contentType || 'application/octet-stream',
-      new Date(file.metadata.timeCreated),
-      new Date(file.metadata.updated),
+      // These are all optional in @google-cloud/storage 7's FileMetadata, and
+      // size widened to string | number. Absent timestamps now yield undefined
+      // rather than the Invalid Date that new Date(undefined) used to produce.
+      file.metadata.timeCreated ? new Date(file.metadata.timeCreated) : undefined,
+      file.metadata.updated ? new Date(file.metadata.updated) : undefined,
       file.metadata.etag,
-      file.metadata.size ? parseInt(file.metadata.size) : undefined,
+      file.metadata.size === undefined ? undefined : Number(file.metadata.size),
     );
 
     if (!file.metadata?.metadata) {
