@@ -131,6 +131,17 @@ describe('LocalObject', () => {
       expect(content).to.equal('hello world');
     });
 
+    // write() used to derive its result through fromPath(), which also opens a
+    // read stream for the body. Nothing consumed that stream and nothing
+    // listened for its errors, so removing the file before the queued open
+    // completed raised an unhandled 'error' event - fatal in node, and in CI it
+    // surfaced as an uncaught ENOENT attributed to whichever hook was running.
+    it('does not leave a dangling read stream behind', async () => {
+      await LocalObject.write(metadata, readStream);
+      fs.unlinkSync(testFile);
+      await new Promise(resolve => setTimeout(resolve, 100));
+    });
+
     describe('when provided with a basePath', () => {
 
       it('returns valid objects with only relative object names', async () => {

@@ -32,6 +32,17 @@ means in practice.
   slash after a mount path is resolved — `GET /s3//` now addresses the bucket
   root, as it did before, but only because Seshat normalises it explicitly.
 
+* Fix: writing to a local bucket no longer opens a read stream it never uses.
+  Every `LocalObject.write()` leaked a file descriptor, and because that stream
+  carried no error handler, deleting the file while the open was still in
+  flight raised an unhandled `'error'` event — which terminates the process.
+  A client that removed an object immediately after uploading it could
+  therefore crash a Seshat server backed by local storage.
+
+* Fix: `LocalObject.mkdir()` did not await the underlying `fs.mkdir`, so it
+  resolved before the directory existed and turned any failure into an
+  unhandled rejection instead of an error the caller could catch.
+
 * Dependencies upgraded across the board, including @google-cloud/storage 7,
   sharp 0.35, mime-types 3 and body-parser 2. `npm audit` goes from 46
   findings (3 critical) to 3, all of them dev-only.

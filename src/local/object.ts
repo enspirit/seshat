@@ -128,7 +128,9 @@ export class LocalObject implements SeshatObject {
 
   static async mkdir(prefix: string, basePath?: string): Promise<void> {
     const fullpath = basePath ? path.join(basePath, prefix) : prefix;
-    fs.promises.mkdir(fullpath, { recursive: true });
+    // Awaited: unreturned, this resolved before the directory existed and any
+    // failure became an unhandled rejection rather than a caller's error.
+    await fs.promises.mkdir(fullpath, { recursive: true });
   }
 
   static async write(meta: SeshatObjectMeta, stream: Readable, basePath?: string): Promise<SeshatObjectMeta> {
@@ -159,7 +161,11 @@ export class LocalObject implements SeshatObject {
     await ensureFolder();
     await Promise.all([writeFile(), writeMeta()]);
 
-    const object = await this.fromPath(fpath, basePath);
-    return object.meta;
+    // Deliberately metaFromPath and not fromPath: the latter also opens a read
+    // stream for the body, which nobody here consumes. That stream carried no
+    // error handler, so if the file was removed between the open being queued
+    // and it completing, the resulting ENOENT surfaced as an unhandled 'error'
+    // event - fatal in node - and leaked a descriptor on every write besides.
+    return await this.metaFromPath(fpath, basePath);
   }
 }
