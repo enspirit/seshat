@@ -19,7 +19,7 @@ export default (expressApp: Express, _seshatRootDir: string) => {
 
   const imageResizer = new SharpTransformer({
     output: {
-      format: 'jpg',
+      format: 'jpeg',
     },
     resize: {
       width: 400,

@@ -111,7 +111,10 @@ export class GCSBucket extends AbstractBucket {
     // Remove folder/prefix from its own list
     objects = objects.filter(o => o.name !== prefix && o.contentLength !== 0);
 
-    const prefixes = (apiResponse.prefixes || []).map((p: string) => {
+    // getFiles() types its third tuple element as unknown since v7.
+    const { prefixes: rawPrefixes } = (apiResponse ?? {}) as { prefixes?: string[] };
+
+    const prefixes = (rawPrefixes || []).map((p: string) => {
       return {
         name: this.seshatKey(p),
         contentType: 'seshat/prefix',

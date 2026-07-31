@@ -2,7 +2,11 @@
   "compilerOptions": {
     "incremental": true,
     "target": "es2022",
-    "module": "commonjs",
+    // Emit stays CommonJS - package.json declares no "type": "module", so
+    // node16 classifies every .ts here as CJS. What it buys us is resolution:
+    // the legacy "node" algorithm ignores package.json "exports", and packages
+    // like sharp 0.35 now declare their typings there and nowhere else.
+    "module": "node16",
     "declaration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
