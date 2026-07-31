@@ -1,7 +1,7 @@
 import EventEmitter from 'events';
 import { Readable } from 'stream';
 import { ObjectTransformerError, SeshatError } from './errors.js';
-import type { Bucket, BucketPolicy, Object, ObjectMeta, ObjectTransformer, ObjectTransformerOutput, BucketConfig, ObjectTransformerMode, BucketEmitter, BucketEvent, ListOptions } from './types.js';
+import type { Bucket, BucketPolicy, SeshatObject, ObjectMeta, ObjectTransformer, ObjectTransformerOutput, BucketConfig, ObjectTransformerMode, BucketEmitter, BucketEvent, ListOptions } from './types.js';
 import logger from './logger.js';
 
 export default abstract class AbstractBucket implements Bucket, BucketEmitter {
@@ -29,14 +29,14 @@ export default abstract class AbstractBucket implements Bucket, BucketEmitter {
 
   abstract _head(path: string): Promise<ObjectMeta>;
 
-  async get(path: string): Promise<Object> {
+  async get(path: string): Promise<SeshatObject> {
     await this.ensurePolicies((policy: BucketPolicy) => policy.get(path));
     const { body: stream, meta } = await this._get(path);
     const output: ObjectTransformerOutput = await this.transform(stream, meta, 'Egress');
     return { body: output.stream, meta: output.meta };
   }
 
-  abstract _get(path: string): Promise<Object>;
+  abstract _get(path: string): Promise<SeshatObject>;
 
   async put(stream: Readable, meta: ObjectMeta): Promise<ObjectMeta> {
     await this.ensurePolicies((policy: BucketPolicy) => policy.put(meta));
@@ -74,7 +74,7 @@ export default abstract class AbstractBucket implements Bucket, BucketEmitter {
     try {
       await this.head(path);
       return true;
-    } catch (err) {
+    } catch {
       return false;
     }
   }

@@ -1,5 +1,5 @@
 import { Readable } from 'stream';
-import type { Object, ObjectMeta } from '../types.js';
+import type { SeshatObject, ObjectMeta } from '../types.js';
 import { File } from '@google-cloud/storage';
 import { ObjectNotFoundError } from '../errors.js';
 
@@ -49,7 +49,7 @@ export class GCSObjectMeta implements ObjectMeta {
 
 }
 
-export class GCSObject implements Object {
+export class GCSObject implements SeshatObject {
 
   meta: GCSObjectMeta;
   body: Readable;

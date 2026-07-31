@@ -1,11 +1,11 @@
 import { Readable } from 'stream';
-import type { Object } from '../../src/types.js';
+import type { SeshatObject } from '../../src/types.js';
 
 // The body must stay exactly as long as the contentLength advertised below:
 // node's http parser rejects responses whose body overruns Content-Length.
 const BODY = 'seshat mock file body\n';
 
-export const getMockFileObject = (): Object => {
+export const getMockFileObject = (): SeshatObject => {
   return {
     meta: {
       name: 'tmp/file.txt',
@@ -15,5 +15,5 @@ export const getMockFileObject = (): Object => {
       contentType: 'plain/text',
     },
     body: Readable.from([BODY]),
-  } as Object;
+  } as SeshatObject;
 };

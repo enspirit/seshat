@@ -8,12 +8,12 @@ chai.use(chaiAsPromised);
 import { expect } from 'chai';
 import { ObjectNotFoundError, PrefixNotFoundError } from '../../src/errors.js';
 import { getMockFileObject } from '../mocks/object.js';
-import type { Bucket, Object } from '../../src/types.js';
+import type { Bucket, SeshatObject } from '../../src/types.js';
 
 describe('LocalBucket', () => {
 
   let bucket: Bucket;
-  let mockFileObject: Object;
+  let mockFileObject: SeshatObject;
   beforeEach(() => {
     mockFileObject = getMockFileObject();
     bucket = new LocalBucket({ path: path.join(import.meta.dirname, '../../') });

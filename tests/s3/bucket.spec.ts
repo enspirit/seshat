@@ -1,6 +1,6 @@
 import { S3Client, ListObjectsV2Command, HeadObjectCommand, DeleteObjectCommand, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
 
-import { type Object, type ObjectMeta, S3Bucket } from '../../src//index.js';
+import { type SeshatObject, type ObjectMeta, S3Bucket } from '../../src//index.js';
 import { ObjectNotFoundError, PrefixNotFoundError } from '../../src/errors.js';
 
 import * as chai from 'chai';
@@ -42,7 +42,7 @@ describe('S3Bucket', () => {
   let s3mock: any;
   let s3client: S3Client;
   let bucket: S3Bucket;
-  let mockFileObject: Object;
+  let mockFileObject: SeshatObject;
   const bucketName = 'seshat-bucket';
 
   beforeEach(async () => {

@@ -1,6 +1,6 @@
 import { Readable } from 'stream';
 import AbstractBucket from '../abstract-bucket.js';
-import type { BucketConfig, ListOptions, Object, ObjectMeta } from '../types.js';
+import type { BucketConfig, ListOptions, SeshatObject, ObjectMeta } from '../types.js';
 import { S3Object } from './object.js';
 
 import { S3Client, HeadObjectCommand, ListObjectsV2Command, DeleteObjectCommand, GetObjectCommand, type ListObjectsV2CommandInput, type GetObjectCommandInput, type PutObjectCommandInput, type HeadObjectCommandInput } from '@aws-sdk/client-s3';
@@ -51,7 +51,7 @@ export class S3Bucket extends AbstractBucket {
     }
   }
 
-  async _get(path: string): Promise<Object> {
+  async _get(path: string): Promise<SeshatObject> {
     const params: GetObjectCommandInput = {
       Bucket: this.bucket,
       Key: this.objectKey(path),

@@ -1,5 +1,5 @@
 import { Readable } from 'stream';
-import type { Object, ObjectMeta } from '../types.js';
+import type { SeshatObject, ObjectMeta } from '../types.js';
 import { type HeadObjectCommandOutput, type GetObjectCommandOutput } from '@aws-sdk/client-s3';
 
 export class S3ObjectMeta implements ObjectMeta {
@@ -18,7 +18,7 @@ export class S3ObjectMeta implements ObjectMeta {
   }
 }
 
-export class S3Object implements Object {
+export class S3Object implements SeshatObject {
 
   meta: S3ObjectMeta;
   body: Readable;

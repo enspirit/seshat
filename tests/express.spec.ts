@@ -10,13 +10,13 @@ import sinonChai from 'sinon-chai';
 import { BucketPolicyError, ObjectNotFoundError } from '../src/errors.js';
 import sinon from 'sinon';
 import { Readable } from 'stream';
-import { type Bucket, type Object } from '../src/index.js';
+import { type Bucket, type SeshatObject } from '../src/index.js';
 chai.use(sinonChai);
 
 describe('the express app', () => {
 
   let app: Application, config;
-  let mockFileObject: Object;
+  let mockFileObject: SeshatObject;
   let mockBucket: Bucket;
   beforeEach(() => {
     mockFileObject = getMockFileObject();

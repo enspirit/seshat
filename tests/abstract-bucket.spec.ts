@@ -6,7 +6,7 @@ chai.use(sinonChai);
 
 import AbstractBucket from '../src/abstract-bucket.js';
 import { Readable } from 'stream';
-import type { BucketPolicy, Object, ObjectMeta, ObjectTransformer, ObjectTransformerType } from '../src/types.js';
+import type { BucketPolicy, SeshatObject, ObjectMeta, ObjectTransformer, ObjectTransformerType } from '../src/types.js';
 import { getMockFileObject } from './mocks/object.js';
 import { readOnlyPolicy, uploadOnlyPolicy } from './mocks/policies.js';
 import { ObjectTransformerError, SeshatError } from '../src/errors.js';
@@ -14,7 +14,7 @@ import { ObjectTransformerError, SeshatError } from '../src/errors.js';
 describe('the AbstractBucket class', () => {
 
   class ConcreteBucket extends AbstractBucket {
-    async _get(_path: string): Promise<Object> {
+    async _get(_path: string): Promise<SeshatObject> {
       return mockFileObject;
     }
     async _head(_path: string): Promise<ObjectMeta> {
@@ -76,7 +76,7 @@ describe('the AbstractBucket class', () => {
   let bucket: ConcreteBucket;
   let policies: Array<BucketPolicy>;
   let transformers: Array<ObjectTransformer>;
-  let mockFileObject: Object;
+  let mockFileObject: SeshatObject;
   let meta: ObjectMeta;
   beforeEach(() => {
     mockFileObject = getMockFileObject();
@@ -136,7 +136,7 @@ describe('the AbstractBucket class', () => {
         bucket.on('stored', listener);
         try {
           await bucket.put(mockFileObject.body, meta);
-        } catch (err) {
+        } catch {
           //
         }
         await expectListenerToNotBeCalled(listener);
@@ -162,7 +162,7 @@ describe('the AbstractBucket class', () => {
         bucket.on('stored', listener);
         try {
           await bucket.put(mockFileObject.body, meta);
-        } catch (err) {
+        } catch {
           //
         }
         await expectListenerToNotBeCalled(listener);
@@ -264,7 +264,7 @@ describe('the AbstractBucket class', () => {
         bucket.on('deleted', listener);
         try {
           await bucket.delete('/tmp/test.pdf');
-        } catch (err) {
+        } catch {
           //
         }
         await expectListenerToNotBeCalled(listener);
@@ -295,7 +295,7 @@ describe('the AbstractBucket class', () => {
         bucket.on('deleted', listener);
         try {
           await bucket.delete('/tmp/test.pdf');
-        } catch (err) {
+        } catch {
           //
         }
         await expectListenerToNotBeCalled(listener);
