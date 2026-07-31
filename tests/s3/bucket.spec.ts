@@ -3,7 +3,8 @@ import { S3Client, ListObjectsV2Command, HeadObjectCommand, DeleteObjectCommand,
 import { type Object, type ObjectMeta, S3Bucket } from '../../src//index.js';
 import { ObjectNotFoundError, PrefixNotFoundError } from '../../src/errors.js';
 
-import { expect, default as chai } from 'chai';
+import * as chai from 'chai';
+import { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import chaiAsPromised from 'chai-as-promised';

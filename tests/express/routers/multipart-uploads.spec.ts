@@ -1,5 +1,6 @@
 import request from 'supertest';
-import chai, { expect } from 'chai';
+import * as chai from 'chai';
+import { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import { MultipartUpload } from '../../../src/express/routers/index.js';

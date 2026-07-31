@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import chai from 'chai';
+import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import { writeFileSync } from 'fs';
 chai.use(chaiAsPromised);

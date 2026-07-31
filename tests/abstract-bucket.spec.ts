@@ -1,4 +1,4 @@
-import chai from 'chai';
+import * as chai from 'chai';
 import { expect } from 'chai';
 import sinonChai from 'sinon-chai';
 import { default as sinon, SinonStub } from 'sinon';

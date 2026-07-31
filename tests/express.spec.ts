@@ -1,7 +1,7 @@
 import express, { Application } from 'express';
 import { createApp } from '../src/express/index.js';
 import request from 'supertest';
-import chai from 'chai';
+import * as chai from 'chai';
 import path from 'path';
 import { getMockBucket } from './mocks/bucket.js';
 import { getMockFileObject } from './mocks/object.js';
