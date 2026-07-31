@@ -1,5 +1,5 @@
 import { Readable } from 'stream';
-import type { ListOptions, Object, ObjectMeta } from '../types.js';
+import type { ListOptions, SeshatObject, ObjectMeta } from '../types.js';
 
 import * as path from 'path';
 import * as fs from 'fs';
@@ -8,7 +8,7 @@ import * as mime from 'mime-types';
 import { SeshatError, ObjectNotFoundError, PrefixNotFoundError } from '../errors.js';
 import { readdir } from './utils.js';
 
-export class LocalObject implements Object {
+export class LocalObject implements SeshatObject {
 
   meta: ObjectMeta;
   body: Readable;
@@ -54,7 +54,7 @@ export class LocalObject implements Object {
           ctime: meta.ctime ? new Date(meta.ctime) : undefined,
           mtime: meta.mtime ? new Date(meta.mtime) : undefined,
         };
-      } catch (err) {
+      } catch {
         return {};
       }
     };

@@ -60,7 +60,7 @@ export interface Bucket extends BucketEmitter {
   exists(path: string): Promise<boolean>;
 
   head(path: string): Promise<ObjectMeta>;
-  get(path: string): Promise<Object>;
+  get(path: string): Promise<SeshatObject>;
   put(stream: Readable, meta: ObjectMeta): Promise<ObjectMeta>;
   delete(path: string): Promise<void>;
   list(prefix?: string, options?: ListOptions): Promise<ObjectMeta[]>;
@@ -76,7 +76,7 @@ export interface BucketPolicy {
   mkdir(prefix: string): Promise<void>
 }
 
-export interface Object {
+export interface SeshatObject {
   meta: ObjectMeta
   body: Readable;
 }
@@ -111,7 +111,7 @@ declare global {
       seshat: {
         logger: Logger
         bucket: Bucket
-        object?: Object
+        object?: SeshatObject
       }
     }
   }
