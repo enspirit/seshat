@@ -2,7 +2,7 @@ import { getMockFileObject } from './object.js';
 import { Readable } from 'stream';
 import * as fs from 'fs';
 import { SinonStub, SinonSpy, default as sinon } from 'sinon';
-import { ObjectMeta } from '../../src/types.js';
+import { SeshatObjectMeta } from '../../src/types.js';
 
 interface MockBucket {
   exists: SinonStub,
@@ -22,7 +22,7 @@ interface MockBucket {
 export const getMockBucket = (): MockBucket => {
 
   const fakeBucket = {
-    put: async (readable: Readable, _meta: ObjectMeta): Promise<ObjectMeta> => {
+    put: async (readable: Readable, _meta: SeshatObjectMeta): Promise<SeshatObjectMeta> => {
       const devNull = fs.createWriteStream('/dev/null');
       readable.pipe(devNull);
       return getMockFileObject().meta;

@@ -8,10 +8,12 @@ migrate.
 * The package is ESM-only (`"type": "module"`). CommonJS consumers must either
   become ESM themselves or load Seshat through a dynamic `import()`.
 
-* The exported `Object` type is renamed to `SeshatObject`. The old name
-  shadowed the JavaScript global, which could break `Object.keys`/`Object.entries`
-  in any module that imported it. No alias is kept. Other `Object*` type names
-  are unchanged.
+* The exported `Object` and `ObjectMeta` types are renamed to `SeshatObject`
+  and `SeshatObjectMeta`. `Object` shadowed the JavaScript global, which could
+  break `Object.keys`/`Object.entries` in any module that imported it, and
+  `ObjectMeta` follows for consistency. No aliases are kept. The backend
+  classes (`S3ObjectMeta`, `GCSObjectMeta`, `LocalObject`) and the
+  `ObjectTransformer*` types are unchanged.
 
 * Minimum Node version is now 22. Node 20 reached end of life in April 2026.
 

@@ -10,7 +10,7 @@ export interface Config {
   logger?: Logger
 }
 
-export interface ObjectMeta {
+export interface SeshatObjectMeta {
   name: string
   contentType: string
 
@@ -34,7 +34,7 @@ export interface BucketConfig {
 }
 
 export type BucketEvent = {
-  stored: (meta: ObjectMeta) => void,
+  stored: (meta: SeshatObjectMeta) => void,
   deleted: (path: string) => void,
 };
 
@@ -59,31 +59,31 @@ export type ListOptions = {
 export interface Bucket extends BucketEmitter {
   exists(path: string): Promise<boolean>;
 
-  head(path: string): Promise<ObjectMeta>;
+  head(path: string): Promise<SeshatObjectMeta>;
   get(path: string): Promise<SeshatObject>;
-  put(stream: Readable, meta: ObjectMeta): Promise<ObjectMeta>;
+  put(stream: Readable, meta: SeshatObjectMeta): Promise<SeshatObjectMeta>;
   delete(path: string): Promise<void>;
-  list(prefix?: string, options?: ListOptions): Promise<ObjectMeta[]>;
+  list(prefix?: string, options?: ListOptions): Promise<SeshatObjectMeta[]>;
   mkdir(prefix: string): Promise<void>;
 }
 
 export interface BucketPolicy {
   head(path: string): Promise<void>
   get(path: string): Promise<void>
-  put(meta: ObjectMeta): Promise<void>
+  put(meta: SeshatObjectMeta): Promise<void>
   delete(path: string): Promise<void>
   list(prefix?: string): Promise<void>
   mkdir(prefix: string): Promise<void>
 }
 
 export interface SeshatObject {
-  meta: ObjectMeta
+  meta: SeshatObjectMeta
   body: Readable;
 }
 
 export interface ObjectTransformerOutput {
   stream: Readable
-  meta: ObjectMeta
+  meta: SeshatObjectMeta
 }
 
 export type ObjectTransformerType = 'Ingress' | 'Egress' | 'Duplex';
@@ -93,7 +93,7 @@ export interface ObjectTransformer {
 
   type: ObjectTransformerType;
 
-  transform(stream: Readable, meta: ObjectMeta, mode: ObjectTransformerMode): Promise<ObjectTransformerOutput>;
+  transform(stream: Readable, meta: SeshatObjectMeta, mode: ObjectTransformerMode): Promise<ObjectTransformerOutput>;
 
 }
 

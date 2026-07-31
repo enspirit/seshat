@@ -1,4 +1,4 @@
-import { BucketPolicy, ObjectMeta } from '../../src/types.js';
+import { BucketPolicy, SeshatObjectMeta } from '../../src/types.js';
 
 export const readOnlyPolicy: BucketPolicy = {
 
@@ -8,7 +8,7 @@ export const readOnlyPolicy: BucketPolicy = {
   async get(_path: string): Promise<void> {
   },
 
-  async put(_meta: ObjectMeta): Promise<void> {
+  async put(_meta: SeshatObjectMeta): Promise<void> {
     throw new Error('read only bucket');
   },
 
@@ -34,7 +34,7 @@ export const uploadOnlyPolicy: BucketPolicy = {
     throw new Error('upload only bucket');
   },
 
-  async put(_meta: ObjectMeta): Promise<void> {
+  async put(_meta: SeshatObjectMeta): Promise<void> {
   },
 
   async delete(_path: string): Promise<void> {

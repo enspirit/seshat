@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import { type SeshatObject, type ObjectMeta, type ObjectTransformer, type ObjectTransformerOutput, SecureRename } from '../../src/index.js';
+import { type SeshatObject, type SeshatObjectMeta, type ObjectTransformer, type ObjectTransformerOutput, SecureRename } from '../../src/index.js';
 chai.use(chaiAsPromised);
 
 import { getMockFileObject } from '../mocks/object.js';
@@ -17,7 +17,7 @@ describe('SecureRename', () => {
 
   describe('when used in Ingress mode', () => {
 
-    let metadata: ObjectMeta;
+    let metadata: SeshatObjectMeta;
     beforeEach(() => {
       metadata = {
         name: 'test.json',
@@ -78,7 +78,7 @@ describe('SecureRename', () => {
 
     describe('.transform', () => {
 
-      const metadata: ObjectMeta = {
+      const metadata: SeshatObjectMeta = {
         name: 'c4ExbEoiPKTlsU-k4wlupg==',
         originalname: 'test.json',
         contentType: 'application/json',

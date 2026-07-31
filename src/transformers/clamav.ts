@@ -1,7 +1,7 @@
 import temp from 'temp';
 import NodeClam, { type Options as ClamScanInitOptions } from 'clamscan';
 import { PassThrough, Readable } from 'stream';
-import { type ObjectMeta, type ObjectTransformer, type ObjectTransformerMode, type ObjectTransformerOutput, type ObjectTransformerType } from '../types.js';
+import { type SeshatObjectMeta, type ObjectTransformer, type ObjectTransformerMode, type ObjectTransformerOutput, type ObjectTransformerType } from '../types.js';
 import { unlink } from 'fs/promises';
 import { createReadStream } from 'fs';
 import { VirusDetectedError } from '../errors.js';
@@ -30,7 +30,7 @@ export class ClamavScanner implements ObjectTransformer {
     });
   }
 
-  async transform(stream: Readable, meta: ObjectMeta, _mode: ObjectTransformerMode): Promise<ObjectTransformerOutput> {
+  async transform(stream: Readable, meta: SeshatObjectMeta, _mode: ObjectTransformerMode): Promise<ObjectTransformerOutput> {
     await this.ensureInitialized();
 
     const futureStream = new PassThrough();

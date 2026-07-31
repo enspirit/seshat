@@ -6,7 +6,7 @@ chai.use(sinonChai);
 
 import AbstractBucket from '../src/abstract-bucket.js';
 import { Readable } from 'stream';
-import type { BucketPolicy, SeshatObject, ObjectMeta, ObjectTransformer, ObjectTransformerType } from '../src/types.js';
+import type { BucketPolicy, SeshatObject, SeshatObjectMeta, ObjectTransformer, ObjectTransformerType } from '../src/types.js';
 import { getMockFileObject } from './mocks/object.js';
 import { readOnlyPolicy, uploadOnlyPolicy } from './mocks/policies.js';
 import { ObjectTransformerError, SeshatError } from '../src/errors.js';
@@ -17,16 +17,16 @@ describe('the AbstractBucket class', () => {
     async _get(_path: string): Promise<SeshatObject> {
       return mockFileObject;
     }
-    async _head(_path: string): Promise<ObjectMeta> {
+    async _head(_path: string): Promise<SeshatObjectMeta> {
       return mockFileObject.meta;
     }
-    async _put(_stream: Readable, _meta: ObjectMeta): Promise<ObjectMeta> {
+    async _put(_stream: Readable, _meta: SeshatObjectMeta): Promise<SeshatObjectMeta> {
       return mockFileObject.meta;
     }
     async _delete(_path: string): Promise<void> {
       return;
     }
-    async _list(_prefix?: string): Promise<ObjectMeta[]> {
+    async _list(_prefix?: string): Promise<SeshatObjectMeta[]> {
       return [mockFileObject.meta];
     }
     async _mkdir(_prefix?: string): Promise<void> {
@@ -77,7 +77,7 @@ describe('the AbstractBucket class', () => {
   let policies: Array<BucketPolicy>;
   let transformers: Array<ObjectTransformer>;
   let mockFileObject: SeshatObject;
-  let meta: ObjectMeta;
+  let meta: SeshatObjectMeta;
   beforeEach(() => {
     mockFileObject = getMockFileObject();
     meta = { name: 'test.pdf', contentType: mockFileObject.meta.contentType };
@@ -308,7 +308,7 @@ describe('the AbstractBucket class', () => {
 
     class DummyIngressTransformer implements ObjectTransformer {
       type: ObjectTransformerType = 'Ingress';
-      async transform(stream: Readable, meta: ObjectMeta) {
+      async transform(stream: Readable, meta: SeshatObjectMeta) {
         return { stream, meta };
       }
     }

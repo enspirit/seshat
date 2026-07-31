@@ -1,6 +1,6 @@
 import { Readable } from 'stream';
 import AbstractBucket from '../abstract-bucket.js';
-import type { BucketConfig, ListOptions, SeshatObject, ObjectMeta } from '../types.js';
+import type { BucketConfig, ListOptions, SeshatObject, SeshatObjectMeta } from '../types.js';
 import { GCSObject, GCSObjectMeta } from './object.js';
 import { type GetFilesOptions, Storage } from '@google-cloud/storage';
 
@@ -31,7 +31,7 @@ export class GCSBucket extends AbstractBucket {
     }
   }
 
-  async _head(path: string): Promise<ObjectMeta> {
+  async _head(path: string): Promise<SeshatObjectMeta> {
     const file = this.client
       .bucket(this.bucket)
       .file(this.objectKey(path));
@@ -47,7 +47,7 @@ export class GCSBucket extends AbstractBucket {
     return GCSObject.fromFile(file, this.prefix);
   }
 
-  async _put(stream: Readable, meta: ObjectMeta): Promise<ObjectMeta> {
+  async _put(stream: Readable, meta: SeshatObjectMeta): Promise<SeshatObjectMeta> {
     const { name } = meta;
     const file = this.client
       .bucket(this.bucket)
@@ -91,7 +91,7 @@ export class GCSBucket extends AbstractBucket {
     await file.delete();
   }
 
-  async _list(prefix?: string | undefined, options?: ListOptions): Promise<ObjectMeta[]> {
+  async _list(prefix?: string | undefined, options?: ListOptions): Promise<SeshatObjectMeta[]> {
 
     const params: GetFilesOptions = {
       prefix: this.objectKey(prefix),

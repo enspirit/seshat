@@ -1,7 +1,7 @@
 import path from 'path';
 import express, { Router, type Request, type Response, type NextFunction } from 'express';
 import Busboy from 'busboy';
-import { type Bucket, type ObjectMeta } from '../../types.js';
+import { type Bucket, type SeshatObjectMeta } from '../../types.js';
 import { requestPath } from '../../utils/index.js';
 
 export interface MultipartUploadConfig {
@@ -53,7 +53,7 @@ export const MultipartUpload = (config: MultipartUploadConfig = DefaultOptions) 
         }, metaHeaders);
     }
 
-    const promises: Array<Promise<ObjectMeta>> = [];
+    const promises: Array<Promise<SeshatObjectMeta>> = [];
 
     busboy.on('error', (error: Error) => {
       return next(error);
@@ -61,7 +61,7 @@ export const MultipartUpload = (config: MultipartUploadConfig = DefaultOptions) 
 
     busboy.on('file', (name, file, info) => {
       const filepath = path.join(basePath, name);
-      const metadata: ObjectMeta = {
+      const metadata: SeshatObjectMeta = {
         ...metaHeaders,
         name: filepath,
         contentType: info.mimeType,

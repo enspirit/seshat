@@ -8,7 +8,7 @@ import type {
 import mime from 'mime-types';
 import path from 'path';
 import { Readable } from 'stream';
-import { type ObjectMeta, type ObjectTransformer, type ObjectTransformerMode, type ObjectTransformerOutput, type ObjectTransformerType } from '../types.js';
+import { type SeshatObjectMeta, type ObjectTransformer, type ObjectTransformerMode, type ObjectTransformerOutput, type ObjectTransformerType } from '../types.js';
 
 export interface SharpOptions {
   output: {
@@ -29,7 +29,7 @@ export class SharpTransformer implements ObjectTransformer {
   constructor(private options: SharpOptions, public type: ObjectTransformerType = 'Ingress') {
   }
 
-  async transform(stream: Readable, meta: ObjectMeta, _mode: ObjectTransformerMode): Promise<ObjectTransformerOutput> {
+  async transform(stream: Readable, meta: SeshatObjectMeta, _mode: ObjectTransformerMode): Promise<ObjectTransformerOutput> {
     const { output, resize, extract, withMetadata } = this.options;
     const fileinfo = path.parse(meta.name);
 
