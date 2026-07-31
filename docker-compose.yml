@@ -36,5 +36,8 @@ services:
       - ./volumes/gcs:/data
 
   clamav:
+    # clamav only publishes amd64 images; pinning the platform lets the
+    # integration tests run under emulation on arm64 hosts (Apple Silicon).
+    platform: linux/amd64
     image: clamav/clamav:1.5.1
 
