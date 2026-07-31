@@ -1,6 +1,6 @@
 import { S3Client, ListObjectsV2Command, HeadObjectCommand, DeleteObjectCommand, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
 
-import { type SeshatObject, type ObjectMeta, S3Bucket } from '../../src//index.js';
+import { type SeshatObject, type SeshatObjectMeta, S3Bucket } from '../../src//index.js';
 import { ObjectNotFoundError, PrefixNotFoundError } from '../../src/errors.js';
 
 import * as chai from 'chai';
@@ -156,7 +156,7 @@ describe('S3Bucket', () => {
 
   describe('put()', () => {
 
-    let metadata: ObjectMeta;
+    let metadata: SeshatObjectMeta;
     beforeEach(async () => {
       // s3mock.on(CreateMultipartUploadCommand).resolves({ UploadId: '1' });
       // s3mock.on(UploadPartCommand).resolves({ ETag: '1' });

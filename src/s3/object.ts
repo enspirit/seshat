@@ -1,8 +1,8 @@
 import { Readable } from 'stream';
-import type { SeshatObject, ObjectMeta } from '../types.js';
+import type { SeshatObject, SeshatObjectMeta } from '../types.js';
 import { type HeadObjectCommandOutput, type GetObjectCommandOutput } from '@aws-sdk/client-s3';
 
-export class S3ObjectMeta implements ObjectMeta {
+export class S3ObjectMeta implements SeshatObjectMeta {
   #bucket;
 
   constructor(
@@ -46,7 +46,7 @@ export class S3Object implements SeshatObject {
       return meta;
     }
     return Object.entries(output.Metadata)
-      .reduce((meta: ObjectMeta, [key, value]: [string, string]): ObjectMeta => {
+      .reduce((meta: SeshatObjectMeta, [key, value]: [string, string]): SeshatObjectMeta => {
         meta[key] = decodeURIComponent(value);
         return meta;
       }, meta) as S3ObjectMeta;

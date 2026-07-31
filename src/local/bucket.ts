@@ -2,7 +2,7 @@ import * as path from 'path';
 import { LocalObject } from './object.js';
 import { Readable } from 'stream';
 import AbstractBucket from '../abstract-bucket.js';
-import { type BucketConfig, type ListOptions, type ObjectMeta } from '../types.js';
+import { type BucketConfig, type ListOptions, type SeshatObjectMeta } from '../types.js';
 import { NotImplementedError } from '../errors.js';
 
 export interface LocalBucketConfig extends BucketConfig {
@@ -36,7 +36,7 @@ export class LocalBucket extends AbstractBucket {
     return LocalObject.fromPath(path, this.path);
   }
 
-  async _put(stream: Readable, meta: ObjectMeta): Promise<ObjectMeta> {
+  async _put(stream: Readable, meta: SeshatObjectMeta): Promise<SeshatObjectMeta> {
     this.ensureSecure(meta.name);
     return await LocalObject.write(meta, stream, this.path);
   }

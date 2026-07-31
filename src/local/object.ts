@@ -1,5 +1,5 @@
 import { Readable } from 'stream';
-import type { ListOptions, SeshatObject, ObjectMeta } from '../types.js';
+import type { ListOptions, SeshatObject, SeshatObjectMeta } from '../types.js';
 
 import * as path from 'path';
 import * as fs from 'fs';
@@ -10,15 +10,15 @@ import { readdir } from './utils.js';
 
 export class LocalObject implements SeshatObject {
 
-  meta: ObjectMeta;
+  meta: SeshatObjectMeta;
   body: Readable;
 
-  constructor(meta: ObjectMeta, body: Readable) {
+  constructor(meta: SeshatObjectMeta, body: Readable) {
     this.meta = meta;
     this.body = body;
   }
 
-  static async metaFromPath(fpath: string, basePath?: string): Promise<ObjectMeta> {
+  static async metaFromPath(fpath: string, basePath?: string): Promise<SeshatObjectMeta> {
     try {
       const fullpath = basePath ? path.join(basePath, fpath) : fpath;
       const stats = await fsPromises.stat(fullpath);
@@ -37,14 +37,14 @@ export class LocalObject implements SeshatObject {
     }
   }
 
-  static async metaFromDir(fpath: string, _basePath?: string): Promise<ObjectMeta> {
+  static async metaFromDir(fpath: string, _basePath?: string): Promise<SeshatObjectMeta> {
     return {
       name: `${path.normalize(fpath)}/`,
       contentType: 'seshat/prefix',
     };
   }
 
-  static async metaFromStats(name: string, fpath: string, stats: fs.Stats): Promise<ObjectMeta> {
+  static async metaFromStats(name: string, fpath: string, stats: fs.Stats): Promise<SeshatObjectMeta> {
     const loadMeta = async () => {
       try {
         const json = (await fs.promises.readFile(`${fpath}.seshat`)).toString();
@@ -79,7 +79,7 @@ export class LocalObject implements SeshatObject {
     return new LocalObject(meta, fs.createReadStream(fullpath));
   }
 
-  static async readdir(dirpath: string, basePath?: string, options?: ListOptions): Promise<ObjectMeta[]> {
+  static async readdir(dirpath: string, basePath?: string, options?: ListOptions): Promise<SeshatObjectMeta[]> {
     try {
       const fullpath = basePath ? path.join(basePath, dirpath) : dirpath;
       const objectPaths = await readdir(fullpath, options?.recursive);
@@ -131,7 +131,7 @@ export class LocalObject implements SeshatObject {
     fs.promises.mkdir(fullpath, { recursive: true });
   }
 
-  static async write(meta: ObjectMeta, stream: Readable, basePath?: string): Promise<ObjectMeta> {
+  static async write(meta: SeshatObjectMeta, stream: Readable, basePath?: string): Promise<SeshatObjectMeta> {
     const fpath = meta.name;
     const fullpath = basePath ? path.join(basePath, fpath) : fpath;
     const metadataPath = `${fullpath}.seshat`;

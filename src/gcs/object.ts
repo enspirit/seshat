@@ -1,9 +1,9 @@
 import { Readable } from 'stream';
-import type { SeshatObject, ObjectMeta } from '../types.js';
+import type { SeshatObject, SeshatObjectMeta } from '../types.js';
 import { File } from '@google-cloud/storage';
 import { ObjectNotFoundError } from '../errors.js';
 
-export class GCSObjectMeta implements ObjectMeta {
+export class GCSObjectMeta implements SeshatObjectMeta {
   #bucket;
 
   constructor(
@@ -41,7 +41,7 @@ export class GCSObjectMeta implements ObjectMeta {
     }
 
     return Object.entries(file.metadata.metadata)
-      .reduce((meta: ObjectMeta, [key, value]: [string, any]): ObjectMeta => {
+      .reduce((meta: SeshatObjectMeta, [key, value]: [string, any]): SeshatObjectMeta => {
         meta[key] = value;
         return meta;
       }, meta) as GCSObjectMeta;

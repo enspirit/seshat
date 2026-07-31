@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import path from 'path';
 import { Readable } from 'stream';
-import { type ObjectMeta, type ObjectTransformer, type ObjectTransformerMode, type ObjectTransformerOutput, type ObjectTransformerType } from '../types.js';
+import { type SeshatObjectMeta, type ObjectTransformer, type ObjectTransformerMode, type ObjectTransformerOutput, type ObjectTransformerType } from '../types.js';
 
 const uniqueName = (length = 16): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -42,13 +42,13 @@ export class SecureRename implements ObjectTransformer {
 
   type: ObjectTransformerType = 'Duplex';
 
-  async transform(stream: Readable, meta: ObjectMeta, mode: ObjectTransformerMode): Promise<ObjectTransformerOutput> {
+  async transform(stream: Readable, meta: SeshatObjectMeta, mode: ObjectTransformerMode): Promise<ObjectTransformerOutput> {
     if (mode === 'Ingress') {
       const generated = await this.nameGenerator();
       const info = path.parse(meta.name);
       let name = this.options.keepPrefix ? path.join(info.dir, generated) : generated;
       name = this.options.keepExtension ? `${name}${info.ext}` : name;
-      const metadata: ObjectMeta = {
+      const metadata: SeshatObjectMeta = {
         ...meta,
         originalname: meta.name,
         name,
@@ -56,7 +56,7 @@ export class SecureRename implements ObjectTransformer {
 
       return { meta: metadata, stream };
     } else {
-      const metadata: ObjectMeta = {
+      const metadata: SeshatObjectMeta = {
         ...meta,
         name: meta.originalname,
       };

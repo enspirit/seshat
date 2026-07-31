@@ -1,7 +1,7 @@
 import EventEmitter from 'events';
 import { Readable } from 'stream';
 import { ObjectTransformerError, SeshatError } from './errors.js';
-import type { Bucket, BucketPolicy, SeshatObject, ObjectMeta, ObjectTransformer, ObjectTransformerOutput, BucketConfig, ObjectTransformerMode, BucketEmitter, BucketEvent, ListOptions } from './types.js';
+import type { Bucket, BucketPolicy, SeshatObject, SeshatObjectMeta, ObjectTransformer, ObjectTransformerOutput, BucketConfig, ObjectTransformerMode, BucketEmitter, BucketEvent, ListOptions } from './types.js';
 import logger from './logger.js';
 
 export default abstract class AbstractBucket implements Bucket, BucketEmitter {
@@ -22,12 +22,12 @@ export default abstract class AbstractBucket implements Bucket, BucketEmitter {
     return this.config.transformers || [];
   }
 
-  async head(path: string): Promise<ObjectMeta> {
+  async head(path: string): Promise<SeshatObjectMeta> {
     await this.ensurePolicies((policy: BucketPolicy) => policy.head(path));
     return this._head(path);
   }
 
-  abstract _head(path: string): Promise<ObjectMeta>;
+  abstract _head(path: string): Promise<SeshatObjectMeta>;
 
   async get(path: string): Promise<SeshatObject> {
     await this.ensurePolicies((policy: BucketPolicy) => policy.get(path));
@@ -38,7 +38,7 @@ export default abstract class AbstractBucket implements Bucket, BucketEmitter {
 
   abstract _get(path: string): Promise<SeshatObject>;
 
-  async put(stream: Readable, meta: ObjectMeta): Promise<ObjectMeta> {
+  async put(stream: Readable, meta: SeshatObjectMeta): Promise<SeshatObjectMeta> {
     await this.ensurePolicies((policy: BucketPolicy) => policy.put(meta));
     const output: ObjectTransformerOutput = await this.transform(stream, meta, 'Ingress');
     const object = await this._put(output.stream, output.meta);
@@ -46,7 +46,7 @@ export default abstract class AbstractBucket implements Bucket, BucketEmitter {
     return object;
   }
 
-  abstract _put(stream: Readable, meta: ObjectMeta): Promise<ObjectMeta>;
+  abstract _put(stream: Readable, meta: SeshatObjectMeta): Promise<SeshatObjectMeta>;
 
   async delete(path: string): Promise<void> {
     await this.ensurePolicies((policy: BucketPolicy) => policy.delete(path));
@@ -56,12 +56,12 @@ export default abstract class AbstractBucket implements Bucket, BucketEmitter {
 
   abstract _delete(path: string): Promise<void>;
 
-  async list(prefix?: string, options?: ListOptions): Promise<ObjectMeta[]> {
+  async list(prefix?: string, options?: ListOptions): Promise<SeshatObjectMeta[]> {
     await this.ensurePolicies((policy: BucketPolicy) => policy.list(prefix));
     return this._list(prefix, options);
   }
 
-  abstract _list(prefix?: string, options?: ListOptions): Promise<ObjectMeta[]>;
+  abstract _list(prefix?: string, options?: ListOptions): Promise<SeshatObjectMeta[]>;
 
   async mkdir(prefix: string): Promise<void> {
     await this.ensurePolicies((policy: BucketPolicy) => policy.mkdir(prefix));
@@ -85,7 +85,7 @@ export default abstract class AbstractBucket implements Bucket, BucketEmitter {
     }
   }
 
-  private async transform(stream: Readable, meta: ObjectMeta, mode: ObjectTransformerMode): Promise<ObjectTransformerOutput> {
+  private async transform(stream: Readable, meta: SeshatObjectMeta, mode: ObjectTransformerMode): Promise<ObjectTransformerOutput> {
     return this.transformers
       .filter(t => [mode, 'Duplex'].includes(t.type))
       .reduce(async (p: Promise<ObjectTransformerOutput>, t: ObjectTransformer) => {

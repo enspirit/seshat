@@ -1,5 +1,5 @@
 import { type Express } from 'express';
-import { type BucketPolicy, BucketPolicyError, createApp, type ObjectMeta, S3Bucket } from '../src/index.js';
+import { type BucketPolicy, BucketPolicyError, createApp, type SeshatObjectMeta, S3Bucket } from '../src/index.js';
 import { SharpTransformer } from '../src/transformers/sharp.js';
 import { s3client } from './s3.js';
 
@@ -8,7 +8,7 @@ export const imagesOnlyPolicy: BucketPolicy = {
   },
   async get(_path: string) {
   },
-  async put(meta: ObjectMeta) {
+  async put(meta: SeshatObjectMeta) {
     if (!meta.contentType.startsWith('image/')) {
       throw new BucketPolicyError('Only images are allowed in this bucket.');
     }

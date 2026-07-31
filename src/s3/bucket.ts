@@ -1,6 +1,6 @@
 import { Readable } from 'stream';
 import AbstractBucket from '../abstract-bucket.js';
-import type { BucketConfig, ListOptions, SeshatObject, ObjectMeta } from '../types.js';
+import type { BucketConfig, ListOptions, SeshatObject, SeshatObjectMeta } from '../types.js';
 import { S3Object } from './object.js';
 
 import { S3Client, HeadObjectCommand, ListObjectsV2Command, DeleteObjectCommand, GetObjectCommand, type ListObjectsV2CommandInput, type GetObjectCommandInput, type PutObjectCommandInput, type HeadObjectCommandInput } from '@aws-sdk/client-s3';
@@ -29,7 +29,7 @@ export class S3Bucket extends AbstractBucket {
     this.prefix = config.prefix;
   }
 
-  async _head(path: string): Promise<ObjectMeta> {
+  async _head(path: string): Promise<SeshatObjectMeta> {
     const params: HeadObjectCommandInput = {
       Bucket: this.bucket,
       Key: this.objectKey(path),
@@ -73,7 +73,7 @@ export class S3Bucket extends AbstractBucket {
     }
   }
 
-  async _put(stream: Readable, meta: ObjectMeta): Promise<ObjectMeta> {
+  async _put(stream: Readable, meta: SeshatObjectMeta): Promise<SeshatObjectMeta> {
     // Some of the metadata can be stored in standard s3 properties
     const { contentType, name, ...rest } = meta;
     const metadata = Object.entries(rest)
@@ -118,7 +118,7 @@ export class S3Bucket extends AbstractBucket {
     }));
   }
 
-  async _list(prefix?: string | undefined, options?: ListOptions): Promise<ObjectMeta[]> {
+  async _list(prefix?: string | undefined, options?: ListOptions): Promise<SeshatObjectMeta[]> {
     const params: ListObjectsV2CommandInput = {
       Bucket: this.bucket,
       Prefix: this.objectKey(prefix),
