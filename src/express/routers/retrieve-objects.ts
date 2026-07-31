@@ -80,7 +80,7 @@ export const RetrieveObjects = (partialConfig: DeepPartial<RetrieveObjectConfig>
   /**
    * Retrieve files
    */
-  router.get('/*', middlewares, async (req: Request, res: Response, next: NextFunction) => {
+  router.get('/{*splat}', middlewares, async (req: Request, res: Response, next: NextFunction) => {
     const { object } = req.seshat;
 
     if (!object) {
