@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import chai from 'chai';
+import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import { LocalBucket } from '../../src//index.js';
 chai.use(chaiAsPromised);
