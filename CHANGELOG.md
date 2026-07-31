@@ -8,6 +8,11 @@ migrate.
 * The package is ESM-only (`"type": "module"`). CommonJS consumers must either
   become ESM themselves or load Seshat through a dynamic `import()`.
 
+* The exported `Object` type is renamed to `SeshatObject`. The old name
+  shadowed the JavaScript global, which could break `Object.keys`/`Object.entries`
+  in any module that imported it. No alias is kept. Other `Object*` type names
+  are unchanged.
+
 * Minimum Node version is now 22. Node 20 reached end of life in April 2026.
 
 * Express 5. The routing layer moved from Express 4, which changes how a bare

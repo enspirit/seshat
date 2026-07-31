@@ -74,6 +74,26 @@ Seshat 3 also requires **Node 22 or later**, and upgrades to **Express 5**. If
 you mount Seshat's routers into your own Express app, that app has to be on
 Express 5 too.
 
+## 3.0.0 — the `Object` type is now `SeshatObject`
+
+The exported `Object` interface has been renamed:
+
+```js
+// before
+import { Object, ObjectMeta } from '@enspirit/seshat';
+
+// after
+import { SeshatObject, ObjectMeta } from '@enspirit/seshat';
+```
+
+`Object` shadowed the JavaScript global of the same name, which made it a
+genuine hazard — importing it into a module could break ordinary `Object.keys`
+and `Object.entries` calls in that file. No deprecated alias is kept, since
+exporting the old name would reintroduce exactly that problem.
+
+Only the type is renamed. `ObjectMeta`, `ObjectTransformer` and every other
+`Object*` name is unchanged.
+
 ## http protocol
 
 Seshat v2's HTTP layer has some breaking changes compared to v1:
