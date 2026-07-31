@@ -1,3 +1,26 @@
+## 3.0.0 - 2026-07-31
+
+**Seshat is now an ESM-only package.** It no longer ships a CommonJS build, so
+`require('@enspirit/seshat')` throws `ERR_REQUIRE_ESM`. See the
+[Breaking Changes](README.md#300--esm-only) section of the README for how to
+migrate.
+
+* The package is ESM-only (`"type": "module"`). CommonJS consumers must either
+  become ESM themselves or load Seshat through a dynamic `import()`.
+
+* Minimum Node version is now 22. Node 20 reached end of life in April 2026.
+
+* Express 5. The routing layer moved from Express 4, which changes how a bare
+  slash after a mount path is resolved — `GET /s3//` now addresses the bucket
+  root, as it did before, but only because Seshat normalises it explicitly.
+
+* Dependencies upgraded across the board, including @google-cloud/storage 7,
+  sharp 0.35, mime-types 3 and body-parser 2. `npm audit` goes from 46
+  findings (3 critical) to 3, all of them dev-only.
+
+* Toolchain: TypeScript 5.9, mocha 11, and tsx in place of the unmaintained
+  ts-node.
+
 ## 2.9.0 - 2025-11-13
 
 * Add support for Cache-Control header in RetrieveObject. Default value
