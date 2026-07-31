@@ -1,16 +1,16 @@
 import express, { Application } from 'express';
-import { createApp } from '../src/express';
+import { createApp } from '../src/express/index.js';
 import request from 'supertest';
 import chai from 'chai';
 import path from 'path';
-import { getMockBucket } from './mocks/bucket';
-import { getMockFileObject } from './mocks/object';
+import { getMockBucket } from './mocks/bucket.js';
+import { getMockFileObject } from './mocks/object.js';
 import { expect } from 'chai';
 import sinonChai from 'sinon-chai';
-import { BucketPolicyError, ObjectNotFoundError } from '../src/errors';
+import { BucketPolicyError, ObjectNotFoundError } from '../src/errors.js';
 import sinon from 'sinon';
 import { Readable } from 'stream';
-import { Bucket, Object } from '../src';
+import { type Bucket, type Object } from '../src/index.js';
 chai.use(sinonChai);
 
 describe('the express app', () => {
@@ -139,7 +139,7 @@ describe('the express app', () => {
     it('properly writes the object on bucket (one file)', async () => {
       await request(app)
         .post('/')
-        .attach('package.json', path.join(__dirname, '../package.json'))
+        .attach('package.json', path.join(import.meta.dirname, '../package.json'))
         .expect(200);
 
       await expect(mockBucket.put).to.be.calledOnceWith(
@@ -151,7 +151,7 @@ describe('the express app', () => {
     it('properly returns the object list (one file)', async () => {
       const res = await request(app)
         .post('/')
-        .attach('package.json', path.join(__dirname, '../package.json'))
+        .attach('package.json', path.join(import.meta.dirname, '../package.json'))
         .expect(200);
 
       expect(res.body).to.be.an('array');
@@ -164,8 +164,8 @@ describe('the express app', () => {
     it('properly writes the objects on bucket (multiple files)', async () => {
       await request(app)
         .post('/')
-        .attach('package.json', path.join(__dirname, '../package.json'))
-        .attach('tsconfig.json', path.join(__dirname, '../tsconfig.json'))
+        .attach('package.json', path.join(import.meta.dirname, '../package.json'))
+        .attach('tsconfig.json', path.join(import.meta.dirname, '../tsconfig.json'))
         .expect(200);
 
       // eslint-disable-next-line no-unused-expressions
@@ -186,7 +186,7 @@ describe('the express app', () => {
 
       await request(app)
         .post('/')
-        .attach('package.json', path.join(__dirname, '../package.json'))
+        .attach('package.json', path.join(import.meta.dirname, '../package.json'))
         .expect(400);
 
       stub.reset();

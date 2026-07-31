@@ -1,8 +1,8 @@
-import { Express } from 'express';
-import { createApp, LocalBucket, S3Bucket } from '../src';
-import { MkdirAction, DownloadArchiveAction, CleanupTTL } from '../src/actions';
-import { ExecuteActions, MultipartUpload, RetrieveObjects } from '../src/';
-import { s3client } from './s3';
+import { type Express } from 'express';
+import { createApp, LocalBucket, S3Bucket } from '../src/index.js';
+import { MkdirAction, DownloadArchiveAction, CleanupTTL } from '../src/actions/index.js';
+import { ExecuteActions, MultipartUpload, RetrieveObjects } from '../src//index.js';
+import { s3client } from './s3.js';
 
 /**
  * This example shows how actions can be executed on a bucket.

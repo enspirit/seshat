@@ -1,10 +1,10 @@
-import { Express } from 'express';
-import { createApp, S3Bucket } from '../src';
-import { SharpTransformer } from '../src/transformers/sharp';
-import { s3client } from './s3';
+import { type Express } from 'express';
+import { createApp, S3Bucket } from '../src/index.js';
+import { SharpTransformer } from '../src/transformers/sharp.js';
+import { s3client } from './s3.js';
 
 // Reuse the policy from the other example
-import { imagesOnlyPolicy } from './thumbnails';
+import { imagesOnlyPolicy } from './thumbnails.js';
 
 /**
  * This example is similar to the 'thumbnails' example as it combines a custom policy

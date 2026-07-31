@@ -1,7 +1,7 @@
-import express, { NextFunction, Request, Response, Router } from 'express';
+import express, { type NextFunction, type Request, type Response, Router } from 'express';
 import { json } from 'body-parser';
-import { Bucket, Action } from '../../types';
-import { UnknownActionError } from '../../errors';
+import { type Bucket, type Action } from '../../types.js';
+import { UnknownActionError } from '../../errors.js';
 
 export const SESHAT_ACTION_HEADER = 'application/vnd.seshat-action+json';
 

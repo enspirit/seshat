@@ -2,13 +2,13 @@ import request from 'supertest';
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
-import { MultipartUpload } from '../../../src/express/routers';
-import { getMockBucket } from '../../mocks/bucket';
-import { Bucket } from '../../../src/types';
+import { MultipartUpload } from '../../../src/express/routers/index.js';
+import { getMockBucket } from '../../mocks/bucket.js';
+import { Bucket } from '../../../src/types.js';
 chai.use(sinonChai);
 
 import express, { Application } from 'express';
-import { getMockFileObject } from '../../mocks/object';
+import { getMockFileObject } from '../../mocks/object.js';
 import { Readable } from 'stream';
 
 describe('the multipart-uploads express router', () => {
@@ -49,7 +49,7 @@ describe('the multipart-uploads express router', () => {
         it('returns an http status 200', () => {
           return request(app)
             .post('/')
-            .attach('test.ts', __filename)
+            .attach('test.ts', import.meta.filename)
             .expect(200);
         });
 
@@ -57,7 +57,7 @@ describe('the multipart-uploads express router', () => {
           const spy = sinon.spy(mockBucket, 'put');
           await request(app)
             .post('/')
-            .attach('test.ts', __filename);
+            .attach('test.ts', import.meta.filename);
           return expect(spy).to.be.calledOnceWith(
             sinon.match.instanceOf(Readable),
             sinon.match({ name: 'test.ts' }),
@@ -70,7 +70,7 @@ describe('the multipart-uploads express router', () => {
         it('returns an http status 200', () => {
           return request(app)
             .post('/subfolder')
-            .attach('test.ts', __filename)
+            .attach('test.ts', import.meta.filename)
             .expect(200);
         });
 
@@ -78,7 +78,7 @@ describe('the multipart-uploads express router', () => {
           const spy = sinon.spy(mockBucket, 'put');
           await request(app)
             .post('/subfolder')
-            .attach('test.ts', __filename);
+            .attach('test.ts', import.meta.filename);
           await expect(spy).to.be.calledOnceWith(
             sinon.match.instanceOf(Readable),
             sinon.match({ name: 'subfolder/test.ts' }),
@@ -92,8 +92,8 @@ describe('the multipart-uploads express router', () => {
         it('returns an http status 200', () => {
           return request(app)
             .post('/')
-            .attach('test.ts', __filename)
-            .attach('another.ts', __filename)
+            .attach('test.ts', import.meta.filename)
+            .attach('another.ts', import.meta.filename)
             .expect(200);
         });
 
@@ -102,8 +102,8 @@ describe('the multipart-uploads express router', () => {
 
           await request(app)
             .post('/')
-            .attach('test.ts', __filename)
-            .attach('another.ts', __filename);
+            .attach('test.ts', import.meta.filename)
+            .attach('another.ts', import.meta.filename);
 
           await expect(spy).to.be.calledTwice;
           await expect(spy).to.be.calledWith(
@@ -123,8 +123,8 @@ describe('the multipart-uploads express router', () => {
         it('returns an http status 200', () => {
           return request(app)
             .post('/subfolder')
-            .attach('test.ts', __filename)
-            .attach('another.ts', __filename)
+            .attach('test.ts', import.meta.filename)
+            .attach('another.ts', import.meta.filename)
             .expect(200);
         });
 
@@ -133,8 +133,8 @@ describe('the multipart-uploads express router', () => {
 
           await request(app)
             .post('/subfolder')
-            .attach('test.ts', __filename)
-            .attach('another.ts', __filename);
+            .attach('test.ts', import.meta.filename)
+            .attach('another.ts', import.meta.filename);
 
           await expect(spy).to.be.calledTwice;
 

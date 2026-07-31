@@ -1,7 +1,8 @@
 {
   "name": "@enspirit/seshat",
-  "version": "2.9.0",
+  "version": "3.0.0",
   "description": "Seshat v2",
+  "type": "module",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "scripts": {
@@ -9,8 +10,8 @@
     "build:watch": "tsc -w",
     "dev": "ROOT_DIR=$PWD tsc-watch --onSuccess 'node ./dist/examples/index.js'",
     "example": "ROOT_DIR=$PWD node ./dist/examples/index.js",
-    "test": "mocha -r ts-node/register tests/helpers.ts 'tests/**/*.spec.ts'",
-    "test:watch": "mocha -r ts-node/register tests/helpers.ts 'tests/**/*.spec.ts' --watch --watch-files src/**/*.ts,tests/**/*.ts",
+    "test": "mocha tests/helpers.ts 'tests/**/*.spec.ts'",
+    "test:watch": "mocha tests/helpers.ts 'tests/**/*.spec.ts' --watch --watch-files src/**/*.ts,tests/**/*.ts",
     "lint": "eslint src tests --ext ts",
     "preversion": "npm run build",
     "prepublishOnly": "npm run build"
@@ -67,8 +68,8 @@
     "sinon": "^22.1.0",
     "sinon-chai": "^3.7.0",
     "supertest": "^7.2.2",
-    "ts-node": "^10.9.2",
     "tsc-watch": "^7.2.1",
+    "tsx": "^4.23.1",
     "typescript": "^5.9.3"
   },
   "overrides": {
@@ -80,6 +81,6 @@
   },
   "engines": {
     "npm": ">=8.0.0",
-    "node": ">=20.0.0"
+    "node": ">=22.0.0"
   }
 }

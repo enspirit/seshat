@@ -1,7 +1,7 @@
 import { Readable } from 'stream';
-import { Object, ObjectMeta } from '../types';
+import type { Object, ObjectMeta } from '../types.js';
 import { File } from '@google-cloud/storage';
-import { ObjectNotFoundError } from '../errors';
+import { ObjectNotFoundError } from '../errors.js';
 
 export class GCSObjectMeta implements ObjectMeta {
   #bucket;

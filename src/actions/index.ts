@@ -1,3 +1,3 @@
-export * from './mkdir';
-export * from './download-archive';
-export * from './cleanup-ttl';
+export * from './mkdir.js';
+export * from './download-archive.js';
+export * from './cleanup-ttl.js';

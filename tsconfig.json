@@ -2,11 +2,17 @@
   "compilerOptions": {
     "incremental": true,
     "target": "es2022",
-    // Emit stays CommonJS - package.json declares no "type": "module", so
-    // node16 classifies every .ts here as CJS. What it buys us is resolution:
-    // the legacy "node" algorithm ignores package.json "exports", and packages
-    // like sharp 0.35 now declare their typings there and nowhere else.
-    "module": "node16",
+    // package.json declares "type": "module", so this emits ESM. nodenext also
+    // reads package.json "exports" (which the legacy "node" algorithm ignores,
+    // and which is the only place sharp 0.35 declares its typings) and is the
+    // lowest setting that accepts the import attribute in src/index.ts.
+    "module": "nodenext",
+    // The test suite is transpiled per-file by tsx/esbuild, which cannot tell a
+    // type import from a value import. Requiring the `type` modifier makes that
+    // distinction explicit, so tsc rejects at build time what would otherwise
+    // only misbehave at runtime - as `import { Object }` did, shadowing the
+    // global Object and breaking Object.entries.
+    "verbatimModuleSyntax": true,
     "declaration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,

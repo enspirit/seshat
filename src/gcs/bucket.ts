@@ -1,10 +1,10 @@
 import { Readable } from 'stream';
-import AbstractBucket from '../abstract-bucket';
-import { BucketConfig, ListOptions, Object, ObjectMeta } from '../types';
-import { GCSObject, GCSObjectMeta } from './object';
-import { GetFilesOptions, Storage } from '@google-cloud/storage';
+import AbstractBucket from '../abstract-bucket.js';
+import type { BucketConfig, ListOptions, Object, ObjectMeta } from '../types.js';
+import { GCSObject, GCSObjectMeta } from './object.js';
+import { type GetFilesOptions, Storage } from '@google-cloud/storage';
 
-import { NotImplementedError, ObjectNotFoundError } from '../errors';
+import { NotImplementedError, ObjectNotFoundError } from '../errors.js';
 
 export interface GCSBucketConfig extends BucketConfig {
   bucket: string,

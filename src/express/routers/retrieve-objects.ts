@@ -1,8 +1,8 @@
-import express, { NextFunction, Request, Response, Router, RequestHandler } from 'express';
-import { Bucket } from '../../types';
-import { ObjectNotFoundError } from '../../errors';
-import { DeepPartial } from '../../utils';
-import { deepMerge, requestPath } from '../../utils';
+import express, { type NextFunction, type Request, type Response, Router, type RequestHandler } from 'express';
+import { type Bucket } from '../../types.js';
+import { ObjectNotFoundError } from '../../errors.js';
+import { type DeepPartial } from '../../utils/index.js';
+import { deepMerge, requestPath } from '../../utils/index.js';
 
 export interface RetrieveObjectConfig {
   downloadAs: {

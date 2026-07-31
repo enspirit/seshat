@@ -1,7 +1,7 @@
 import { S3Client, ListObjectsV2Command, HeadObjectCommand, DeleteObjectCommand, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
 
-import { Object, ObjectMeta, S3Bucket } from '../../src/';
-import { ObjectNotFoundError, PrefixNotFoundError } from '../../src/errors';
+import { type Object, type ObjectMeta, S3Bucket } from '../../src//index.js';
+import { ObjectNotFoundError, PrefixNotFoundError } from '../../src/errors.js';
 
 import { expect, default as chai } from 'chai';
 import sinon from 'sinon';
@@ -10,7 +10,7 @@ import chaiAsPromised from 'chai-as-promised';
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
 import { mockClient } from 'aws-sdk-client-mock';
-import { getMockFileObject } from '../mocks/object';
+import { getMockFileObject } from '../mocks/object.js';
 
 // aws-sdk-client-mock dropped its `libStorage` entrypoint in v2. For bodies
 // below the multipart threshold, @aws-sdk/lib-storage's Upload issues a plain

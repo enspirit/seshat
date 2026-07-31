@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response, Router } from 'express';
+import { type NextFunction, type Request, type Response, Router } from 'express';
 import { Readable } from 'stream';
 import { Logger } from 'winston';
 

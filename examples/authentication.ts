@@ -1,6 +1,6 @@
-import { Express, NextFunction, Request, Response } from 'express';
-import { createApp, S3Bucket } from '../src';
-import { s3client } from './s3';
+import { type Express, type NextFunction, type Request, type Response } from 'express';
+import { createApp, S3Bucket } from '../src/index.js';
+import { s3client } from './s3.js';
 
 /**
  * This simple example shows how you can setup a middleware to

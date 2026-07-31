@@ -2,13 +2,13 @@ import fs from 'fs';
 import path from 'path';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import { LocalBucket } from '../../src/';
+import { LocalBucket } from '../../src//index.js';
 chai.use(chaiAsPromised);
 
 import { expect } from 'chai';
-import { ObjectNotFoundError, PrefixNotFoundError } from '../../src/errors';
-import { getMockFileObject } from '../mocks/object';
-import { Bucket, Object } from '../../src/types';
+import { ObjectNotFoundError, PrefixNotFoundError } from '../../src/errors.js';
+import { getMockFileObject } from '../mocks/object.js';
+import type { Bucket, Object } from '../../src/types.js';
 
 describe('LocalBucket', () => {
 
@@ -16,7 +16,7 @@ describe('LocalBucket', () => {
   let mockFileObject: Object;
   beforeEach(() => {
     mockFileObject = getMockFileObject();
-    bucket = new LocalBucket({ path: path.join(__dirname, '../../') });
+    bucket = new LocalBucket({ path: path.join(import.meta.dirname, '../../') });
   });
 
   describe('its constructor', () => {
@@ -59,7 +59,7 @@ describe('LocalBucket', () => {
     });
 
     it('does not return the seshat metadata files (tmp/)', async () => {
-      fs.writeFileSync(path.join(__dirname, '../../tmp/test.json.seshat'), 'hello world');
+      fs.writeFileSync(path.join(import.meta.dirname, '../../tmp/test.json.seshat'), 'hello world');
       const metas = await bucket.list('tmp/');
       const aMetaDataFile = metas.find(m => m.name.includes('.seshat'));
       // eslint-disable-next-line no-unused-expressions
@@ -181,7 +181,7 @@ describe('LocalBucket', () => {
 
     it('stores the file on disk', async () => {
       // ensure the file does not exist already
-      const fpath = path.join(__dirname, '../../tmp/test.json');
+      const fpath = path.join(import.meta.dirname, '../../tmp/test.json');
       ensureFileUnlink(fpath);
       const meta = { name: 'tmp/test.json', contentType: mockFileObject.meta.contentType };
       await bucket.put(mockFileObject.body, meta);
@@ -190,7 +190,7 @@ describe('LocalBucket', () => {
 
     it('stores meta information next to the original file', async () => {
       // ensure the metadata file does not exist already
-      const fpath = path.join(__dirname, '../../tmp/test.json.seshat');
+      const fpath = path.join(import.meta.dirname, '../../tmp/test.json.seshat');
       ensureFileUnlink(fpath);
       const meta = { name: 'tmp/test.json', contentType: mockFileObject.meta.contentType };
       await bucket.put(mockFileObject.body, meta);
@@ -198,8 +198,8 @@ describe('LocalBucket', () => {
     });
 
     it('dynamically creates folder hierarchy when parent folders missing', async () => {
-      ensureFolderUnlink(path.join(__dirname, '../../tmp/foo'));
-      const fpath = path.join(__dirname, '../../tmp/foo/bar/baz/test.json');
+      ensureFolderUnlink(path.join(import.meta.dirname, '../../tmp/foo'));
+      const fpath = path.join(import.meta.dirname, '../../tmp/foo/bar/baz/test.json');
       const meta = { name: 'tmp/foo/bar/baz/test.json', contentType: mockFileObject.meta.contentType };
       await bucket.put(mockFileObject.body, meta);
       expect(fs.existsSync(fpath)).to.equal(true);
@@ -211,7 +211,7 @@ describe('LocalBucket', () => {
 
     // For some reason this test if flakey. Skipping it for now
     it.skip('deletes the file', async () => {
-      fs.writeFileSync(path.join(__dirname, '../../tmp/test.json'), 'hello world');
+      fs.writeFileSync(path.join(import.meta.dirname, '../../tmp/test.json'), 'hello world');
       // it exists (does not raise)
       await bucket.get('tmp/test.json');
       // we delete it
@@ -222,8 +222,8 @@ describe('LocalBucket', () => {
     });
 
     it('also deletes the metadata file', async () => {
-      fs.writeFileSync(path.join(__dirname, '../../tmp/test.json'), 'hello world');
-      fs.writeFileSync(path.join(__dirname, '../../tmp/test.json.seshat'), '{}');
+      fs.writeFileSync(path.join(import.meta.dirname, '../../tmp/test.json'), 'hello world');
+      fs.writeFileSync(path.join(import.meta.dirname, '../../tmp/test.json.seshat'), '{}');
 
       // its metadata file exists (does not raise)
       await bucket.get('tmp/test.json.seshat');

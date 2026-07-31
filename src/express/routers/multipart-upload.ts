@@ -1,8 +1,8 @@
 import path from 'path';
-import express, { Router, Request, Response, NextFunction } from 'express';
+import express, { Router, type Request, type Response, type NextFunction } from 'express';
 import Busboy from 'busboy';
-import { Bucket, ObjectMeta } from '../../types';
-import { requestPath } from '../../utils';
+import { type Bucket, type ObjectMeta } from '../../types.js';
+import { requestPath } from '../../utils/index.js';
 
 export interface MultipartUploadConfig {
   defParamCharset?: string
