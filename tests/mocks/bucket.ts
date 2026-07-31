@@ -1,8 +1,8 @@
-import { getMockFileObject } from './object';
+import { getMockFileObject } from './object.js';
 import { Readable } from 'stream';
 import * as fs from 'fs';
 import { SinonStub, SinonSpy, default as sinon } from 'sinon';
-import { ObjectMeta } from '../../src/types';
+import { ObjectMeta } from '../../src/types.js';
 
 interface MockBucket {
   exists: SinonStub,

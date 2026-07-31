@@ -8,8 +8,8 @@ import { Readable } from 'stream';
 import path from 'path';
 import fs from 'fs';
 
-import { LocalObject } from '../../src/';
-import { ObjectNotFoundError, PrefixNotFoundError } from '../../src/errors';
+import { LocalObject } from '../../src//index.js';
+import { ObjectNotFoundError, PrefixNotFoundError } from '../../src/errors.js';
 
 describe('LocalObject', () => {
 
@@ -19,7 +19,7 @@ describe('LocalObject', () => {
   describe('.fromPath', () => {
 
     it('returns a valid object for existing files', async () => {
-      const fpath = path.join(__dirname, '/object.spec.ts');
+      const fpath = path.join(import.meta.dirname, '/object.spec.ts');
       const promise = LocalObject.fromPath(fpath);
       expect(promise).to.eventually.be.an.instanceof(LocalObject);
       const object = await promise;
@@ -29,14 +29,14 @@ describe('LocalObject', () => {
     });
 
     it('rejects for invalid path', async () => {
-      const promise = LocalObject.fromPath(path.join(__dirname, '/unknown.ts'));
+      const promise = LocalObject.fromPath(path.join(import.meta.dirname, '/unknown.ts'));
       expect(promise).to.be.rejectedWith(ObjectNotFoundError);
     });
 
     describe('when provided with a basePath', () => {
 
       it('returns a valid object with only relative object name', async () => {
-        const promise = LocalObject.fromPath('object.spec.ts', __dirname);
+        const promise = LocalObject.fromPath('object.spec.ts', import.meta.dirname);
         expect(promise).to.eventually.be.an.instanceof(LocalObject);
         const object = await promise;
         expect(object.meta.name).to.equal('object.spec.ts');
@@ -49,7 +49,7 @@ describe('LocalObject', () => {
   describe('.readdir', () => {
 
     it('returns a valid list of objects metas for folder', async () => {
-      const promise = LocalObject.readdir(path.join(__dirname));
+      const promise = LocalObject.readdir(path.join(import.meta.dirname));
       expect(promise).to.eventually.be.an('array');
       const metas = await promise;
       const thisTestFile = metas.find(m => m.name.indexOf('local/object.spec.ts') >= 0);
@@ -58,14 +58,14 @@ describe('LocalObject', () => {
     });
 
     it('rejects for unknown folders', async () => {
-      const promise = LocalObject.readdir(path.join(__dirname, 'unknown'));
+      const promise = LocalObject.readdir(path.join(import.meta.dirname, 'unknown'));
       return expect(promise).to.be.rejectedWith(PrefixNotFoundError, /Unable to find objects/);
     });
 
     describe('when provided with a basePath', () => {
 
       it('returns valid objects metas with only relative object names', async () => {
-        const promise = LocalObject.readdir('./', __dirname);
+        const promise = LocalObject.readdir('./', import.meta.dirname);
         expect(promise).to.eventually.be.an('array');
         const metas = await promise;
         const thisTestFile = metas.find(m => m.name === 'object.spec.ts');
@@ -90,7 +90,7 @@ describe('LocalObject', () => {
     });
 
     it('rejects for directories', async () => {
-      const p = LocalObject.delete(__dirname);
+      const p = LocalObject.delete(import.meta.dirname);
       return expect(p).to.be.rejectedWith(ObjectNotFoundError);
     });
 

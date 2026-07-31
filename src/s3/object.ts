@@ -1,6 +1,6 @@
 import { Readable } from 'stream';
-import { Object, ObjectMeta } from '../types';
-import { HeadObjectCommandOutput, GetObjectCommandOutput } from '@aws-sdk/client-s3';
+import type { Object, ObjectMeta } from '../types.js';
+import { type HeadObjectCommandOutput, type GetObjectCommandOutput } from '@aws-sdk/client-s3';
 
 export class S3ObjectMeta implements ObjectMeta {
   #bucket;

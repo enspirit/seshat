@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import path from 'path';
 import { Readable } from 'stream';
-import { ObjectMeta, ObjectTransformer, ObjectTransformerMode, ObjectTransformerOutput, ObjectTransformerType } from '../types';
+import { type ObjectMeta, type ObjectTransformer, type ObjectTransformerMode, type ObjectTransformerOutput, type ObjectTransformerType } from '../types.js';
 
 const uniqueName = (length = 16): Promise<string> => {
   return new Promise((resolve, reject) => {

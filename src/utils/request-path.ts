@@ -1,4 +1,4 @@
-import { Request } from 'express';
+import { type Request } from 'express';
 
 /**
  * The request path a router should resolve against its bucket, with any

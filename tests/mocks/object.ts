@@ -1,5 +1,5 @@
 import { Readable } from 'stream';
-import { Object } from '../../src/types';
+import type { Object } from '../../src/types.js';
 
 // The body must stay exactly as long as the contentLength advertised below:
 // node's http parser rejects responses whose body overruns Content-Length.

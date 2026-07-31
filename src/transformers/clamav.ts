@@ -1,10 +1,10 @@
 import temp from 'temp';
-import NodeClam, { Options as ClamScanInitOptions } from 'clamscan';
+import NodeClam, { type Options as ClamScanInitOptions } from 'clamscan';
 import { PassThrough, Readable } from 'stream';
-import { ObjectMeta, ObjectTransformer, ObjectTransformerMode, ObjectTransformerOutput, ObjectTransformerType } from '../types';
+import { type ObjectMeta, type ObjectTransformer, type ObjectTransformerMode, type ObjectTransformerOutput, type ObjectTransformerType } from '../types.js';
 import { unlink } from 'fs/promises';
 import { createReadStream } from 'fs';
-import { VirusDetectedError } from '../errors';
+import { VirusDetectedError } from '../errors.js';
 
 export class ClamavScanner implements ObjectTransformer {
 

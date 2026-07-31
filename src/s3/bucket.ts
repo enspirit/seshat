@@ -1,12 +1,12 @@
 import { Readable } from 'stream';
-import AbstractBucket from '../abstract-bucket';
-import { BucketConfig, ListOptions, Object, ObjectMeta } from '../types';
-import { S3Object } from './object';
+import AbstractBucket from '../abstract-bucket.js';
+import type { BucketConfig, ListOptions, Object, ObjectMeta } from '../types.js';
+import { S3Object } from './object.js';
 
-import { S3Client, HeadObjectCommand, ListObjectsV2Command, DeleteObjectCommand, GetObjectCommand, ListObjectsV2CommandInput, GetObjectCommandInput, PutObjectCommandInput, HeadObjectCommandInput } from '@aws-sdk/client-s3';
+import { S3Client, HeadObjectCommand, ListObjectsV2Command, DeleteObjectCommand, GetObjectCommand, type ListObjectsV2CommandInput, type GetObjectCommandInput, type PutObjectCommandInput, type HeadObjectCommandInput } from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage';
 
-import { ObjectNotFoundError, PrefixNotFoundError } from '../errors';
+import { ObjectNotFoundError, PrefixNotFoundError } from '../errors.js';
 
 export interface S3BucketConfig extends BucketConfig {
   bucket: string,

@@ -1,7 +1,7 @@
-import express, { NextFunction, Request, Response, Router } from 'express';
-import { PrefixNotFoundError } from '../../errors';
-import { Bucket, ListOptions } from '../../types';
-import { requestPath } from '../../utils';
+import express, { type NextFunction, type Request, type Response, Router } from 'express';
+import { PrefixNotFoundError } from '../../errors.js';
+import { type Bucket, type ListOptions } from '../../types.js';
+import { requestPath } from '../../utils/index.js';
 
 export const ListObjects = () => (bucket: Bucket): Router => {
   const router = express();

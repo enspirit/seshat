@@ -3,7 +3,7 @@ import path from 'path';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 chai.use(chaiAsPromised);
-import { readdir } from '../../src/local/utils';
+import { readdir } from '../../src/local/utils.js';
 import { expect } from 'chai';
 
 describe('fs utils', () => {

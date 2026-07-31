@@ -1,6 +1,6 @@
 import express, { Router } from 'express';
-import { Bucket } from '../../types';
-import { requestPath } from '../../utils';
+import { type Bucket } from '../../types.js';
+import { requestPath } from '../../utils/index.js';
 
 export const DeleteObjects = () => (bucket: Bucket): Router => {
   const router = express();

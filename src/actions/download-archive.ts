@@ -1,7 +1,7 @@
-import { Request, Response } from 'express';
-import { Action } from '../types';
+import { type Request, type Response } from 'express';
+import { type Action } from '../types.js';
 import JSZip from 'jszip';
-import { SeshatError } from '../errors';
+import { SeshatError } from '../errors.js';
 
 export type ObjectSelection = {
   [key: string]: Array<string>

@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { deepMerge } from '../../src/utils';
+import { deepMerge } from '../../src/utils/index.js';
 
 describe('deepMerge', () => {
 

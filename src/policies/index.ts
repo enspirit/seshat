@@ -1,1 +1,1 @@
-export * from './read-only';
+export * from './read-only.js';

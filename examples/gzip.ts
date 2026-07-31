@@ -1,7 +1,7 @@
-import { Express } from 'express';
-import { createApp, S3Bucket } from '../src';
-import { ObjectCompressor } from '../src/transformers';
-import { s3client } from './s3';
+import { type Express } from 'express';
+import { createApp, S3Bucket } from '../src/index.js';
+import { ObjectCompressor } from '../src/transformers/index.js';
+import { s3client } from './s3.js';
 
 /**
  * This simple example shows how a bucket can use object transformers.

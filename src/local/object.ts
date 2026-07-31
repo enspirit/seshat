@@ -1,12 +1,12 @@
 import { Readable } from 'stream';
-import { ListOptions, Object, ObjectMeta } from '../types';
+import type { ListOptions, Object, ObjectMeta } from '../types.js';
 
 import * as path from 'path';
 import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
 import * as mime from 'mime-types';
-import { SeshatError, ObjectNotFoundError, PrefixNotFoundError } from '../errors';
-import { readdir } from './utils';
+import { SeshatError, ObjectNotFoundError, PrefixNotFoundError } from '../errors.js';
+import { readdir } from './utils.js';
 
 export class LocalObject implements Object {
 

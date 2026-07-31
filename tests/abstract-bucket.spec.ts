@@ -4,12 +4,12 @@ import sinonChai from 'sinon-chai';
 import { default as sinon, SinonStub } from 'sinon';
 chai.use(sinonChai);
 
-import AbstractBucket from '../src/abstract-bucket';
+import AbstractBucket from '../src/abstract-bucket.js';
 import { Readable } from 'stream';
-import { BucketPolicy, Object, ObjectMeta, ObjectTransformer, ObjectTransformerType } from '../src/types';
-import { getMockFileObject } from './mocks/object';
-import { readOnlyPolicy, uploadOnlyPolicy } from './mocks/policies';
-import { ObjectTransformerError, SeshatError } from '../src/errors';
+import type { BucketPolicy, Object, ObjectMeta, ObjectTransformer, ObjectTransformerType } from '../src/types.js';
+import { getMockFileObject } from './mocks/object.js';
+import { readOnlyPolicy, uploadOnlyPolicy } from './mocks/policies.js';
+import { ObjectTransformerError, SeshatError } from '../src/errors.js';
 
 describe('the AbstractBucket class', () => {
 

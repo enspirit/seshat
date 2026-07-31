@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
-import { SeshatError } from '../../errors';
+import { type Request, type Response, type NextFunction } from 'express';
+import { SeshatError } from '../../errors.js';
 
 // Log requests once they finish (or fail)
 export const RequestLogger = (req: Request, res: Response, next: NextFunction) => {

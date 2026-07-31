@@ -1,2 +1,2 @@
-export * from './deep-merge';
-export * from './request-path';
+export * from './deep-merge.js';
+export * from './request-path.js';

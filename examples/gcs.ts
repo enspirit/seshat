@@ -1,5 +1,5 @@
-import { Express } from 'express';
-import { createApp, GCSBucket } from '../src';
+import { type Express } from 'express';
+import { createApp, GCSBucket } from '../src/index.js';
 import { Storage } from '@google-cloud/storage';
 
 /**
