@@ -14,6 +14,7 @@ Webspicy::Configuration.new(Path.dir) do |c|
   c.postcondition ExifMetadataIsPreserved
   c.postcondition IsValidZipFile
   c.postcondition NoCacheControlHeader
+  c.postcondition PresignedUploadRoundTrips
   c.postcondition Webspicy::Web::Specification::Post::LastModifiedCachingProtocol
   c.postcondition Webspicy::Web::Specification::Post::ETagCachingProtocol
 

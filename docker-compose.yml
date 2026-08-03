@@ -5,6 +5,10 @@ services:
     command: npm run dev
     environment:
       S3_ENDPOINT: https://minio
+      # Presigned URLs are consumed by the client, not by this process, so they
+      # must be signed against an address the client can actually reach - the
+      # signature covers the Host header, so the two cannot differ.
+      S3_PUBLIC_ENDPOINT: https://127.0.0.1:9000
       # we are using self signed certs in development/test
       NODE_TLS_REJECT_UNAUTHORIZED: "0"
     ports:
@@ -17,7 +21,11 @@ services:
   minio:
     image: minio/minio
     ports:
-      - 9000:9000
+      # minio listens on 443 (see --address below), so the old 9000:9000
+      # mapping pointed at a port nothing was bound to and minio was simply
+      # unreachable from the host. The presigned-upload round trip needs to
+      # reach it from outside the network, since that is where the client is.
+      - 9000:443
       - 9001:9001
     environment:
       MINIO_ACCESS_KEY: access-key

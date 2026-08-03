@@ -14,6 +14,7 @@
     "test:watch": "mocha tests/helpers.ts 'tests/**/*.spec.ts' --watch --watch-files src/**/*.ts,tests/**/*.ts",
     "lint": "eslint src tests --ext ts",
     "preversion": "npm run build",
+    "prepare": "npm run build",
     "prepublishOnly": "npm run build"
   },
   "keywords": [],
@@ -33,6 +34,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1100.0",
     "@aws-sdk/lib-storage": "^3.1100.0",
+    "@aws-sdk/s3-request-presigner": "^3.1100.0",
     "@google-cloud/storage": "^7.21.0",
     "@types/clamscan": "^2.4.1",
     "body-parser": "^2.3.0",

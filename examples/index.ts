@@ -13,6 +13,7 @@ import actionsExample from './actions.js';
 import sseExample from './sse-c.js';
 import clamavExample from './clamav.js';
 import cacheControlExample from './cacheControl.js';
+import presignedUploadExample from './presigned-upload.js';
 
 import { version } from '../src/index.js';
 import logger from '../src/logger.js';
@@ -35,6 +36,7 @@ app.set('etag', 'strong');
   sseExample,
   clamavExample,
   cacheControlExample,
+  presignedUploadExample,
 ].forEach((example) => example(app, process.env.ROOT_DIR || '../'));
 
 app.listen(3000, () => {

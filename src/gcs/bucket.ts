@@ -1,6 +1,6 @@
 import { Readable } from 'stream';
 import AbstractBucket from '../abstract-bucket.js';
-import type { BucketConfig, ListOptions, SeshatObject, SeshatObjectMeta } from '../types.js';
+import type { BucketConfig, ListOptions, PresignedUpload, SeshatObject, SeshatObjectMeta } from '../types.js';
 import { GCSObject, GCSObjectMeta } from './object.js';
 import { type GetFilesOptions, Storage } from '@google-cloud/storage';
 
@@ -138,6 +138,47 @@ export class GCSBucket extends AbstractBucket {
    *
    * We therefore need helpers to include/remove this prefix from object Keys
    */
+
+  protected async _presignUpload(meta: SeshatObjectMeta, expiresIn: number): Promise<PresignedUpload> {
+    // No SSE-C guard needed here: the constructor already refuses a bucket
+    // configured with encryption.
+    const { contentType, contentLength, name, ...rest } = meta;
+
+    const extensionHeaders: Record<string, string> = {
+      'content-length': String(contentLength),
+      ...Object.entries(rest).reduce((headers, [key, value]) => {
+        headers[`x-goog-meta-${key.toLowerCase()}`] = encodeURIComponent(
+          value?.toString ? value.toString() : value);
+        return headers;
+      }, {} as Record<string, string>),
+    };
+
+    const expiresAt = new Date(Date.now() + expiresIn * 1000);
+
+    const [url] = await this.client
+      .bucket(this.bucket)
+      .file(this.objectKey(name))
+      .getSignedUrl({
+        version: 'v4',
+        action: 'write',
+        expires: expiresAt.getTime(),
+        contentType,
+        extensionHeaders,
+      });
+
+    return {
+      url,
+      method: 'PUT',
+      // Unlike S3's signer, GCS keeps every signed header a header: the client
+      // has to replay all of them, metadata included.
+      headers: {
+        'content-type': contentType,
+        ...extensionHeaders,
+      },
+      name,
+      expiresAt,
+    };
+  }
 
   private objectKey(path?: string): string {
     return (this.prefix || '') + (path || '');

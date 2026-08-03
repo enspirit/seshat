@@ -45,6 +45,56 @@ Please have a look at the [examples/](examples/) folder, you'll find simple exam
 * [scan files for viruses using clamav](examples/clamav.ts)
 * [encrypt files using SSE-C](examples/sse-c.ts)
 * [execute actions such as creating empty prefixes and extract objects as zip files](examples/actions.ts)
+* [hand out presigned URLs so clients upload straight to storage](examples/presigned-upload.ts)
+
+# Presigned uploads
+
+A presigned upload hands the caller a short-lived URL it `PUT`s the bytes to
+directly. The bytes never pass through Seshat, which is worth doing for large
+files, or when whoever holds them — a browser, an agent on someone's laptop —
+can make an HTTP request but must not be given bucket credentials.
+
+Enable it by adding the action to a bucket's routers:
+
+```ts
+createApp({
+  bucket: new S3Bucket({ s3client, bucket: 'my-bucket', transformers: [new SecureRename()] }),
+  routers: [ExecuteActions([PresignUploadAction]), RetrieveObjects(), ListObjects()],
+});
+```
+
+No existing deployment gains presigning by upgrading: `ExecuteActions` takes an
+explicit list.
+
+**Two things it costs you.** Content transformers cannot run — Seshat never sees
+the bytes, so it cannot scan, resize or compress them. A bucket configured with
+one refuses to presign rather than quietly dropping the guarantee; name-only
+transformers such as `SecureRename` still apply. And the `stored` event does not
+fire, because this process never learns whether the upload happened; callers
+that need to know should `HEAD` the object afterwards using the returned `name`.
+
+**What the signature binds:** the object key, the exact content length, the
+content type, and any custom metadata. A holder of the URL can write that one
+object, at that size and type, until it expires — and nothing else.
+
+Custom metadata values must be strings, and are stored as backend custom
+metadata under whatever keys you give. They never override the object key,
+content type or content length — those come from the request path and the
+validated request body, so a `metadata` entry cannot move the object or widen
+the size the action approved.
+
+**Backends.** S3 and GCS only. `LocalBucket` refuses with `501`: a filesystem has
+no signing authority.
+
+**An S3 client used for presigning must be built with
+`requestChecksumCalculation: 'WHEN_REQUIRED'`.** Left at its default the SDK
+computes a checksum of the request body and the signer binds it into the URL —
+but the body is empty at signing time, so the upload is rejected on arrival.
+Seshat refuses to presign with such a client rather than handing out URLs that
+fail later. Pass `presignClient` when the signing client has to differ from the
+one doing ordinary reads and writes, which is also what you need when storage
+sits behind a private network: the signature covers the `Host` header, so the URL
+must name an address its holder can actually reach.
 
 # Installing
 

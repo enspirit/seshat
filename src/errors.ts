@@ -36,3 +36,13 @@ export class VirusDetectedError extends ObjectTransformerError {
 }
 
 export class UnknownActionError extends SeshatError {}
+
+/**
+ * 501 rather than 4xx on purpose: every case that raises this - a backend with
+ * no signing authority, a bucket carrying content transformers, an SSE-C
+ * bucket - is a fact about how the server is configured, not a mistake the
+ * client made or can correct by asking differently.
+ */
+export class PresignNotSupportedError extends SeshatError {
+  httpCode = 501;
+}

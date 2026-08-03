@@ -1,12 +1,13 @@
 import { type Request } from 'express';
 import { type Action } from '../types.js';
+import { requestPath } from '../utils/index.js';
 
 export const MkdirActionFactory = (): Action => {
   return {
     name: 'mkdir',
     run: async (req: Request): Promise<any> => {
 
-      const path = decodeURIComponent(req.path.substring(1));
+      const path = decodeURIComponent(requestPath(req).substring(1));
       const bucket = req.seshat.bucket;
 
       await bucket.mkdir(path);

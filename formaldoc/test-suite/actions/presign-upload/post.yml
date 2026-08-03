@@ -1,0 +1,66 @@
+---
+name: |-
+  POST /presigned/ - action "presign-upload"
+
+url: |-
+  /presigned/
+
+services:
+- method: |-
+    POST
+
+  description: |-
+    Hands back a short-lived signed URL that the caller PUTs the bytes to
+    directly, so they never pass through Seshat.
+
+  input_schema: |-
+    {
+      filename      :  String
+      contentType   :  String
+      contentLength :  Integer
+      expiresIn     :? Integer
+    }
+
+  output_schema: |-
+    PresignedUpload
+
+  error_schema: |-
+    Error
+
+  postconditions:
+    - The signed url accepts the bytes and the object is retrievable
+
+  examples:
+
+    - description: |-
+        when requested for an object
+      headers:
+        content-type: application/vnd.seshat-action+json
+        seshat-action: presign-upload
+      params:
+        filename: report.pdf
+        contentType: application/pdf
+        # must match the payload the postcondition uploads: the exact length is
+        # bound into the signature
+        contentLength: 31
+      expected:
+        status: 200
+
+  # Schema-violating input (a missing contentLength, say) is covered by unit
+  # tests rather than here: webspicy validates a counterexample's params against
+  # input_schema, so a case that omits a required attribute never reaches the
+  # server at all.
+  counterexamples:
+
+    - description: |-
+        when expiresIn exceeds the allowed maximum
+      headers:
+        content-type: application/vnd.seshat-action+json
+        seshat-action: presign-upload
+      params:
+        filename: report.pdf
+        contentType: application/pdf
+        contentLength: 31
+        expiresIn: 86400
+      expected:
+        status: 400

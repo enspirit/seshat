@@ -65,6 +65,7 @@ export interface Bucket extends BucketEmitter {
   delete(path: string): Promise<void>;
   list(prefix?: string, options?: ListOptions): Promise<SeshatObjectMeta[]>;
   mkdir(prefix: string): Promise<void>;
+  presignUpload(request: PresignedUploadRequest): Promise<PresignedUpload>;
 }
 
 export interface BucketPolicy {
@@ -95,6 +96,67 @@ export interface ObjectTransformer {
 
   transform(stream: Readable, meta: SeshatObjectMeta, mode: ObjectTransformerMode): Promise<ObjectTransformerOutput>;
 
+}
+
+/**
+ * Implemented by transformers that only rewrite metadata and never touch the
+ * bytes. Presence of `transformMeta` is itself the declaration - there is no
+ * companion boolean that could drift out of sync with the behaviour.
+ *
+ * This matters for presigned uploads, where the bytes never reach Seshat: a
+ * transformer that rewrites content cannot run, so presigning refuses rather
+ * than silently dropping it. A transformer that does not implement this is
+ * therefore assumed to touch content, which is the safe default for anything
+ * written before this interface existed.
+ */
+export interface ObjectMetaTransformer {
+  transformMeta(meta: SeshatObjectMeta, mode: ObjectTransformerMode): Promise<SeshatObjectMeta>;
+}
+
+export const isMetaTransformer = (
+  transformer: ObjectTransformer,
+): transformer is ObjectTransformer & ObjectMetaTransformer => {
+  return typeof (transformer as Partial<ObjectMetaTransformer>).transformMeta === 'function';
+};
+
+/**
+ * Applied when a caller reaches `Bucket.presignUpload` directly without naming
+ * a lifetime. Requests arriving through the presign-upload action carry one
+ * already, defaulted and bounded by that action's own options.
+ */
+export const DefaultPresignExpiresIn = 900;
+
+export type PresignedUploadRequest = {
+  /** Object name, relative to the bucket and to its static prefix, if any. */
+  name: string
+  contentType: string
+  /** Bound into the signature: the upload must match it exactly. */
+  contentLength: number
+  /**
+   * Seconds. Defaulted and bounded by the presign-upload action; omitted here,
+   * it falls back to `DefaultPresignExpiresIn`.
+   */
+  expiresIn?: number
+  /**
+   * Extra metadata entries, stored as backend custom metadata. Entries never
+   * override `name`, `contentType` or `contentLength`.
+   */
+  metadata?: Record<string, string>
+}
+
+export type PresignedUpload = {
+  /** Treat as a bearer credential: whoever holds it can write this one object. */
+  url: string
+  method: 'PUT'
+  /**
+   * Headers the client must send verbatim. These are part of the signature, so
+   * omitting or altering one makes the backend reject the upload. Anything the
+   * backend carries in the URL itself is deliberately not repeated here.
+   */
+  headers: Record<string, string>
+  /** Final object name, after name transformers such as SecureRename. */
+  name: string
+  expiresAt: Date
 }
 
 export interface Action {

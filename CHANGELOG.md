@@ -17,6 +17,32 @@ means in practice.
   top-level `await`, which is the only thing that would prevent it. A dynamic
   `import()` works too.
 
+* **Presigned uploads.** A new `presign-upload` action hands the caller a
+  short-lived signed URL it PUTs the bytes to directly, so they never pass
+  through Seshat. S3 and GCS only; `LocalBucket` refuses with 501. Opt-in:
+  `ExecuteActions` takes an explicit action list, so no existing deployment
+  gains it by upgrading. See the README for the two things it costs — content
+  transformers cannot run, and the `stored` event does not fire. Custom
+  metadata must be string-valued, and never overrides the object key, content
+  type or content length.
+
+* `Bucket` gains a required `presignUpload` member. This breaks anyone
+  implementing the interface directly rather than extending `AbstractBucket`,
+  which supplies a working implementation.
+
+* New `ObjectMetaTransformer` extension point. A transformer that implements
+  `transformMeta` declares itself metadata-only and may run at presign time;
+  one that does not is treated as content-touching and makes presigning refuse.
+  `SecureRename` now implements it. This is additive — existing third-party
+  transformers keep working, and default to the safe answer.
+
+* `S3BucketConfig` gains an optional `presignClient`, for when the client used
+  to sign URLs must differ from the one doing reads and writes.
+
+* Fix: `mkdir`, `cleanup-ttl` and `download-archive` derived their paths from
+  the raw `req.path` and so carried the Express 5 mount-path bug fixed in the
+  routers — `POST /bucket//` addressed a `/` prefix rather than the root.
+
 * The exported `Object` and `ObjectMeta` types are renamed to `SeshatObject`
   and `SeshatObjectMeta`. `Object` shadowed the JavaScript global, which could
   break `Object.keys`/`Object.entries` in any module that imported it, and
