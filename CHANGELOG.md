@@ -1,11 +1,8 @@
-## 3.0.0-rc.1 - 2026-07-31
+## 3.0.0 - 2026-08-03
 
-Release candidate. Published under the `rc` dist-tag, so `npm install
-@enspirit/seshat` still resolves to 2.9.0. To try it:
-
-```
-npm install @enspirit/seshat@rc
-```
+General availability, published under the `latest` dist-tag: `npm install
+@enspirit/seshat` now resolves here rather than to 2.9.0. Supersedes
+3.0.0-rc.1, and adds presigned uploads on top of it.
 
 **Seshat is now an ESM-only package.** See the
 [Breaking Changes](README.md#300--esm-only) section of the README for what that

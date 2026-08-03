@@ -102,16 +102,8 @@ must name an address its holder can actually reach.
 npm install @enspirit/seshat
 ```
 
-Seshat 3 is currently a **release candidate**, published under the `rc`
-dist-tag. The command above therefore still installs the latest 2.x. To try
-the candidate:
-
-```
-npm install @enspirit/seshat@rc
-```
-
-Read the Breaking Changes below before you do — 3.0.0 is ESM-only, requires
-Node 22.12+, and moves to Express 5.
+Read the Breaking Changes below before you upgrade — 3.0.0 is ESM-only,
+requires Node 22.12+, and moves to Express 5.
 
 # Breaking Changes
 
