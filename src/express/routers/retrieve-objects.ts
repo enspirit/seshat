@@ -24,7 +24,12 @@ export const DefaultConfig: RetrieveObjectConfig = {
   headers: {
     lastModified: true,
     etag: true,
-    cacheControl: 'private, max-age=86400, must-revalidate',
+    // No Cache-Control header is sent unless one is explicitly configured.
+    // Seshat serves objects that may be overwritten at the same URL, so it
+    // cannot assume any freshness lifetime on the client's behalf; it relies
+    // on Last-Modified/ETag revalidation instead. Set this to opt into
+    // caching, e.g. 'private, max-age=86400, must-revalidate'.
+    cacheControl: '',
   },
 };
 
