@@ -1,26 +1,28 @@
 ---
   name: |-
-    GET /default-cache/{object}
+    GET /{strategy}/{object}
 
   url: |-
-    /default-cache/{object}
+    /{strategy}/{object}
 
   services:
   - method: |-
       GET
 
     description: |-
-      Allows retrieving a file, without any caching directive of its own
+      Allows retrieving a file, with the Cache-Control header configured on
+      RetrieveObjects
 
     preconditions:
       - An object with that name exists on the bucket
 
     postconditions:
       - (x) It supports the Last-Modified/If-Modified-Since caching protocol
-      - (x) It does not set the Cache-Control header
+      - ( ) It sets the Cache-Control header as expected
 
     input_schema: |-
       {
+        strategy: String
         object: String
       }
 
@@ -35,19 +37,23 @@
     examples:
 
       - description: |-
-          FOR: the object exists
+          FOR: It sets the Cache-Control header as expected
         params:
+          strategy: cached
           object: test.json
         expected:
           content_type: application/json
           status: 200
-
-    counterexamples:
+          headers:
+            Cache-Control: private, max-age=86400, must-revalidate
 
       - description: |-
-          FOR: the object does not exist
+          FOR: It sets the Cache-Control header as expected
         params:
-          object: unknown.json
+          strategy: no-cache
+          object: test.json
         expected:
           content_type: application/json
-          status: 404
+          status: 200
+          headers:
+            Cache-Control: no-cache

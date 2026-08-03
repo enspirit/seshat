@@ -1,5 +1,5 @@
 class NoCacheControlHeader
-  include Webspicy::Specification::Err
+  include Webspicy::Specification::Post
 
   MATCH = /It does not set the Cache-Control header/
 

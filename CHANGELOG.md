@@ -43,6 +43,24 @@ means in practice.
   resolved before the directory existed and turned any failure into an
   unhandled rejection instead of an error the caller could catch.
 
+* `RetrieveObjects` no longer sends a `Cache-Control` header by default,
+  restoring the pre-2.9.0 behaviour. 2.9.0 introduced the header along with a
+  `private, max-age=86400, must-revalidate` default, which silently made every
+  object fresh for 24 hours on the client: an object overwritten at the same
+  URL could be served stale for a full day, with no request reaching Seshat.
+  Seshat cannot assume a freshness lifetime on the bucket's behalf, so it goes
+  back to relying on `Last-Modified`/`ETag` revalidation. The feature itself
+  stays — set `headers.cacheControl` to opt in:
+
+  ```ts
+  RetrieveObjects({
+    headers: { cacheControl: 'private, max-age=86400, must-revalidate' },
+  })
+  ```
+
+  Deployments that upgraded to 2.9.0 and want to keep the header must now
+  configure it explicitly. See `examples/cacheControl.ts`.
+
 * Dependencies upgraded across the board, including @google-cloud/storage 7,
   sharp 0.35, mime-types 3 and body-parser 2. `npm audit` goes from 46
   findings (3 critical) to 3, all of them dev-only.
