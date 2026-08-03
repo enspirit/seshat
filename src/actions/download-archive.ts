@@ -1,5 +1,6 @@
 import { type Request, type Response } from 'express';
 import { type Action } from '../types.js';
+import { requestPath } from '../utils/index.js';
 import JSZip from 'jszip';
 import { SeshatError } from '../errors.js';
 
@@ -57,7 +58,7 @@ export const DownloadArchiveActionFactory = (): Action => {
             return objects.concat(content);
           }, [] as Array<ObjectToExport>);
       } else {
-        const path = decodeURIComponent(req.path.substring(1));
+        const path = decodeURIComponent(requestPath(req).substring(1));
         const metas = await bucket.list(path, { recursive: true });
         objectsToExport = metas.map(m => ({ name: m.name }));
       }

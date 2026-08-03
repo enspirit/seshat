@@ -3,20 +3,37 @@ import AbstractBucket from '../abstract-bucket.js';
 import type { BucketConfig, ListOptions, SeshatObject, SeshatObjectMeta } from '../types.js';
 import { S3Object } from './object.js';
 
-import { S3Client, HeadObjectCommand, ListObjectsV2Command, DeleteObjectCommand, GetObjectCommand, type ListObjectsV2CommandInput, type GetObjectCommandInput, type PutObjectCommandInput, type HeadObjectCommandInput } from '@aws-sdk/client-s3';
+import { S3Client, HeadObjectCommand, ListObjectsV2Command, DeleteObjectCommand, GetObjectCommand, PutObjectCommand, type ListObjectsV2CommandInput, type GetObjectCommandInput, type PutObjectCommandInput, type HeadObjectCommandInput } from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
-import { ObjectNotFoundError, PrefixNotFoundError } from '../errors.js';
+import { ObjectNotFoundError, PresignNotSupportedError, PrefixNotFoundError } from '../errors.js';
+import type { PresignedUpload } from '../types.js';
 
 export interface S3BucketConfig extends BucketConfig {
   bucket: string,
   s3client: S3Client,
+  /**
+   * Client used to sign presigned upload URLs, when that has to differ from
+   * `s3client`.
+   *
+   * Two things can force them apart. A signature covers the Host header, so the
+   * URL must be signed against the address the *client* will reach - which is
+   * not the same as this process's address whenever storage sits behind a
+   * private network, as it does in most docker setups. And presigning requires
+   * a client built with `requestChecksumCalculation: 'WHEN_REQUIRED'`, which
+   * you may not want to impose on the client doing ordinary reads and writes.
+   *
+   * Against real S3 neither usually applies, and this can be left unset.
+   */
+  presignClient?: S3Client,
   prefix?: string
 }
 
 export class S3Bucket extends AbstractBucket {
 
   private s3client: S3Client;
+  private presignClient: S3Client;
   private bucket: string;
   private prefix?: string;
 
@@ -25,6 +42,7 @@ export class S3Bucket extends AbstractBucket {
   ) {
     super(config);
     this.s3client = config.s3client;
+    this.presignClient = config.presignClient || config.s3client;
     this.bucket = config.bucket;
     this.prefix = config.prefix;
   }
@@ -184,6 +202,83 @@ export class S3Bucket extends AbstractBucket {
    *
    * We therefore need helpers to include/remove this prefix from object Keys
    */
+
+  protected async _presignUpload(meta: SeshatObjectMeta, expiresIn: number): Promise<PresignedUpload> {
+    if (this.config.encryption) {
+      throw new PresignNotSupportedError(
+        'Cannot presign uploads on an SSE-C encrypted bucket: the client would have to be ' +
+        'given the encryption key.');
+    }
+
+    await this.ensurePresignableClient();
+
+    const { contentType, contentLength, name, ...rest } = meta;
+    // Encoded as _put() encodes it, so custom metadata reads back the same
+    // whichever way the object arrived. Unlike _put() this drops contentLength,
+    // which S3 carries as a standard field on a signed PUT.
+    const metadata = Object.entries(rest)
+      .reduce((obj, [key, value]) => {
+        obj[key] = encodeURIComponent(value?.toString ? value.toString() : value);
+        return obj;
+      }, {} as {[key: string]: string});
+
+    const command = new PutObjectCommand({
+      Bucket: this.bucket,
+      Key: this.objectKey(name),
+      ContentType: contentType,
+      ContentLength: contentLength,
+      Metadata: metadata,
+    });
+
+    const url = await getSignedUrl(this.presignClient, command, {
+      expiresIn,
+      // Without this the signature covers only content-length and host, leaving
+      // the client free to declare any content-type it likes - which would let
+      // it walk straight past a content-type policy that had already approved
+      // the request.
+      signableHeaders: new Set(['content-type']),
+    });
+
+    return {
+      url,
+      method: 'PUT',
+      // Only what the client has to replay. The x-amz-meta-* entries are hoisted
+      // into the URL's query string by the signer and are covered by the
+      // signature there, so repeating them as headers would be noise at best.
+      headers: {
+        'content-type': contentType,
+        'content-length': String(contentLength),
+      },
+      name,
+      expiresAt: new Date(Date.now() + expiresIn * 1000),
+    };
+  }
+
+  /**
+   * The SDK defaults `requestChecksumCalculation` to WHEN_SUPPORTED, which makes
+   * it compute a CRC32 over the request body and hoist it into the signed URL.
+   * At signing time that body is empty, so the URL ends up carrying the checksum
+   * of nothing and S3 rejects the real upload when it arrives.
+   *
+   * It is a client-construction setting and the client is handed to us already
+   * built, so the most we can do is refuse early. Failing here - with something
+   * that names the fix - beats handing back a URL that dies at the far end, in
+   * someone else's process, against a checksum they never asked for.
+   */
+  private async ensurePresignableClient(): Promise<void> {
+    const configured = (this.presignClient.config as { requestChecksumCalculation?: unknown }).requestChecksumCalculation;
+    const value = typeof configured === 'function'
+      ? await (configured as () => Promise<string>)()
+      : configured;
+
+    if (value !== 'WHEN_REQUIRED') {
+      throw new PresignNotSupportedError(
+        'Cannot presign uploads with this S3Client: it computes request checksums ' +
+        `(requestChecksumCalculation: '${value}'), which the signer binds into the URL as a ` +
+        'checksum of an empty body, so the upload would be rejected. Construct the client with ' +
+        'requestChecksumCalculation: \'WHEN_REQUIRED\' to presign.');
+    }
+  }
 
   private objectKey(path?: string): string {
     return (this.prefix || '') + (path || '');

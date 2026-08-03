@@ -43,6 +43,10 @@ export class SecureRename implements ObjectTransformer {
   type: ObjectTransformerType = 'Duplex';
 
   async transform(stream: Readable, meta: SeshatObjectMeta, mode: ObjectTransformerMode): Promise<ObjectTransformerOutput> {
+    return { stream, meta: await this.transformMeta(meta, mode) };
+  }
+
+  async transformMeta(meta: SeshatObjectMeta, mode: ObjectTransformerMode): Promise<SeshatObjectMeta> {
     if (mode === 'Ingress') {
       const generated = await this.nameGenerator();
       const info = path.parse(meta.name);
@@ -54,15 +58,18 @@ export class SecureRename implements ObjectTransformer {
         name,
       };
 
-      return { meta: metadata, stream };
+      return metadata;
     } else {
       const metadata: SeshatObjectMeta = {
         ...meta,
-        name: meta.originalname,
+        // Falls back to the stored name: an object written straight to the
+        // backend without an `originalname` (a presigned upload whose metadata
+        // was dropped, say) would otherwise come back with name undefined.
+        name: meta.originalname ?? meta.name,
       };
       delete metadata.originalname;
 
-      return { stream, meta: metadata };
+      return metadata;
     }
   }
 

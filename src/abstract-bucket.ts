@@ -1,7 +1,8 @@
 import EventEmitter from 'events';
 import { Readable } from 'stream';
-import { ObjectTransformerError, SeshatError } from './errors.js';
-import type { Bucket, BucketPolicy, SeshatObject, SeshatObjectMeta, ObjectTransformer, ObjectTransformerOutput, BucketConfig, ObjectTransformerMode, BucketEmitter, BucketEvent, ListOptions } from './types.js';
+import { ObjectTransformerError, PresignNotSupportedError, SeshatError } from './errors.js';
+import type { Bucket, BucketPolicy, SeshatObject, SeshatObjectMeta, ObjectTransformer, ObjectTransformerOutput, BucketConfig, ObjectTransformerMode, BucketEmitter, BucketEvent, ListOptions, PresignedUpload, PresignedUploadRequest } from './types.js';
+import { DefaultPresignExpiresIn, isMetaTransformer } from './types.js';
 import logger from './logger.js';
 
 export default abstract class AbstractBucket implements Bucket, BucketEmitter {
@@ -47,6 +48,66 @@ export default abstract class AbstractBucket implements Bucket, BucketEmitter {
   }
 
   abstract _put(stream: Readable, meta: SeshatObjectMeta): Promise<SeshatObjectMeta>;
+
+  /**
+   * Hands back a short-lived URL the caller PUTs the bytes to directly.
+   *
+   * The bytes never reach this process, which is the entire point and also the
+   * entire cost: nothing here can scan, resize or compress them. Policies still
+   * apply, and run against the pre-rename metadata exactly as put() does, so a
+   * policy sees the same input either way. Transformers are the part that
+   * cannot survive - see transformMetaOnly.
+   *
+   * Note that `stored` does not fire: this bucket never learns whether the
+   * upload happened.
+   */
+  async presignUpload(request: PresignedUploadRequest): Promise<PresignedUpload> {
+    const meta: SeshatObjectMeta = {
+      // Spread first, exactly as MultipartUpload does: custom metadata is
+      // caller-supplied, and letting it land on top would let a `name` entry
+      // move the object key out of the path the request addressed, or a
+      // `contentLength` entry replace the value the action just checked against
+      // its ceiling.
+      ...request.metadata,
+      name: request.name,
+      contentType: request.contentType,
+      contentLength: request.contentLength,
+    };
+
+    await this.ensurePolicies((policy: BucketPolicy) => policy.put(meta));
+    const transformed = await this.transformMetaOnly(meta, 'Ingress');
+
+    return this._presignUpload(transformed, request.expiresIn ?? DefaultPresignExpiresIn);
+  }
+
+  /**
+   * Runs the transformer chain in metadata-only mode, refusing outright on any
+   * transformer that rewrites content. Refusing is the point: silently skipping
+   * a Clamav or Sharp transformer would hand back a URL that bypasses a
+   * guarantee the bucket was configured to make.
+   */
+  private async transformMetaOnly(meta: SeshatObjectMeta, mode: ObjectTransformerMode): Promise<SeshatObjectMeta> {
+    return this.transformers
+      .filter(t => [mode, 'Duplex'].includes(t.type))
+      .reduce(async (previous: Promise<SeshatObjectMeta>, transformer: ObjectTransformer) => {
+        const current = await previous;
+        if (!isMetaTransformer(transformer)) {
+          throw new PresignNotSupportedError(
+            'Cannot presign uploads on a bucket configured with the content transformer ' +
+            `'${transformer.constructor.name}': the bytes never reach Seshat, so it cannot run.`);
+        }
+        return transformer.transformMeta(current, mode);
+      }, Promise.resolve(meta));
+  }
+
+  /**
+   * Concrete, not abstract, so a backend with no signing authority - LocalBucket
+   * - inherits the refusal without needing code of its own.
+   */
+  protected async _presignUpload(_meta: SeshatObjectMeta, _expiresIn: number): Promise<PresignedUpload> {
+    throw new PresignNotSupportedError(
+      `${this.constructor.name} does not support presigned uploads`);
+  }
 
   async delete(path: string): Promise<void> {
     await this.ensurePolicies((policy: BucketPolicy) => policy.delete(path));

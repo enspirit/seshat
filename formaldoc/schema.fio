@@ -9,6 +9,14 @@ SeshatObject = {
   ...           :  String | Integer | Date
 }
 
+PresignedUpload = {
+  url       : String
+  method    : String
+  headers   : {...: String}
+  name      : String
+  expiresAt : String
+}
+
 Error = {
   code: String
   message: String
