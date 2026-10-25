@@ -21,7 +21,7 @@ class SeshatClient
       'Authorization' => test_case.headers['Authorization']
     }.merge(extra_headers).compact
 
-    response = HTTP[headers].post(url, http_opts)
+    response = HTTP[headers].post(url, **http_opts)
     raise "Unable to upload file for precondition" unless response.status == 200
 
     response
