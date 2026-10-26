@@ -1,3 +1,24 @@
+## 3.1.0 - 2026-10-26
+
+A maintenance release: no API changes, and `engines` still accepts Node
+>= 22.12.
+
+* Dependencies upgraded, notably @google-cloud/storage 8, the AWS SDK v3
+  clients, express 5.3, body-parser 2.4 and sharp 0.35.5. `npm audit` reports
+  no findings, dev dependencies included.
+
+  `GCSBucket` takes a `Storage` client from the caller. Its behaviour is
+  unchanged, but a TypeScript project still building that client from
+  @google-cloud/storage 7 may see type mismatches against Seshat's v8 types;
+  upgrading the application's own dependency to 8 resolves them.
+
+* The Docker image is built on Node 24 LTS, and CI tests on both Node 22 and
+  24.
+
+* Development and test stack: MinIO, whose images are no longer published, is
+  replaced by Garage, and the integration suite moves to webspicy 1.x on Ruby
+  4.0.
+
 ## 3.0.0 - 2026-08-03
 
 General availability, published under the `latest` dist-tag: `npm install
