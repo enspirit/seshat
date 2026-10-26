@@ -27,11 +27,7 @@ class PresignedUploadRoundTrips
 
     uri = URI(presigned[:url])
     http = Net::HTTP.new(uri.host, uri.port)
-    if uri.scheme == 'https'
-      http.use_ssl = true
-      # minio runs with a self-signed cert in the compose stack
-      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    end
+    http.use_ssl = uri.scheme == 'https'
 
     put = Net::HTTP::Put.new(uri)
     presigned[:headers].each { |name, value| put[name.to_s] = value }

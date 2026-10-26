@@ -26,7 +26,7 @@ export const s3client = new S3Client({
   region: 'eu-west1',
   credentials: {
     accessKeyId: 'access-key',
-    secretAccessKey: 'secret-key',
+    secretAccessKey: 'garage-dev-secret-key',
   },
   endpoint: process.env.S3_ENDPOINT || 'http://127.0.0.1:9000',
   forcePathStyle: true,

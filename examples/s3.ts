@@ -7,7 +7,7 @@ import { S3Client } from '@aws-sdk/client-s3';
  * serving a s3 bucket to an existing express app.
  *
  * In this specific example, we are serving the "my-s3-bucket" bucket
- * present in the minio setup running in docker (see docker-compose.yaml)
+ * present in the garage setup running in docker (see docker-compose.yaml)
  */
 export default (expressApp: Express) => {
   expressApp.use('/s3', createApp({
@@ -21,7 +21,7 @@ export const s3client = new S3Client({
   region: 'eu-west1',
   credentials: {
     accessKeyId: 'access-key',
-    secretAccessKey: 'secret-key',
+    secretAccessKey: 'garage-dev-secret-key',
   },
   endpoint: process.env.S3_ENDPOINT || 'http://127.0.0.1:9000',
   forcePathStyle: true,

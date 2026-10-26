@@ -70,7 +70,7 @@ export const presignableClient = new S3Client({
   region: 'eu-west1',
   credentials: {
     accessKeyId: 'access-key',
-    secretAccessKey: 'secret-key',
+    secretAccessKey: 'garage-dev-secret-key',
   },
   // The endpoint here is the one the *client* will connect to, which is not
   // necessarily the one this process uses. A signature covers the Host header,
