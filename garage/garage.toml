@@ -1,0 +1,20 @@
+# Single-node Garage for development and tests only. The layout, the access
+# key and the bucket are set up at startup by `server --single-node
+# --default-bucket` (see docker-compose.yml), so there is no init step.
+
+replication_factor = 1
+db_engine = "sqlite"
+
+metadata_dir = "/var/lib/garage/meta"
+data_dir = "/var/lib/garage/data"
+
+# Not a secret: this node never joins a cluster.
+rpc_secret = "0000000000000000000000000000000000000000000000000000000000000000"
+rpc_bind_addr = "[::]:3901"
+rpc_public_addr = "127.0.0.1:3901"
+
+[s3_api]
+api_bind_addr = "[::]:3900"
+# Garage rejects signatures whose scope names another region, so this has to
+# match the region the examples' S3 clients are configured with.
+s3_region = "eu-west1"

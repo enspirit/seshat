@@ -4,13 +4,11 @@ services:
     build: .
     command: npm run dev
     environment:
-      S3_ENDPOINT: https://minio
+      S3_ENDPOINT: http://garage:3900
       # Presigned URLs are consumed by the client, not by this process, so they
       # must be signed against an address the client can actually reach - the
       # signature covers the Host header, so the two cannot differ.
-      S3_PUBLIC_ENDPOINT: https://127.0.0.1:9000
-      # we are using self signed certs in development/test
-      NODE_TLS_REJECT_UNAUTHORIZED: "0"
+      S3_PUBLIC_ENDPOINT: http://127.0.0.1:9000
     ports:
       - 3000:3000
     volumes:
@@ -18,22 +16,22 @@ services:
       - ./examples:/home/app/examples
       - ./tmp:/home/app/tmp
 
-  minio:
-    image: minio/minio
+  garage:
+    image: dxflrs/garage:v2.4.1
+    # Lays out the single node, imports the key below and creates the bucket
+    # with read/write access for it. All three are idempotent across restarts.
+    command: ["/garage", "server", "--single-node", "--default-bucket"]
     ports:
-      # minio listens on 443 (see --address below), so the old 9000:9000
-      # mapping pointed at a port nothing was bound to and minio was simply
-      # unreachable from the host. The presigned-upload round trip needs to
-      # reach it from outside the network, since that is where the client is.
-      - 9000:443
-      - 9001:9001
+      # The S3 API is published on 9000 so that the examples' default endpoint
+      # and the presigned URLs (see S3_PUBLIC_ENDPOINT) reach it from the host.
+      - 9000:3900
     environment:
-      MINIO_ACCESS_KEY: access-key
-      MINIO_SECRET_KEY: secret-key
-    command: minio server --console-address 0.0.0.0:9001 --address ":443" /data
+      GARAGE_DEFAULT_ACCESS_KEY: access-key
+      GARAGE_DEFAULT_SECRET_KEY: garage-dev-secret-key
+      GARAGE_DEFAULT_BUCKET: my-s3-bucket
     volumes:
-      - ./volumes/s3:/data
-      - ./minio/certs:/root/.minio/certs
+      - ./garage/garage.toml:/etc/garage.toml:ro
+      - ./volumes/garage:/var/lib/garage
 
   gcs:
     image: fsouza/fake-gcs-server
