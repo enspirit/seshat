@@ -75,7 +75,7 @@ GEM
       sexpr (~> 1.1)
     prism (1.9.0)
     public_suffix (7.0.5)
-    rack (3.2.7)
+    rack (3.2.8)
     rack-proxy (2.0.1)
       rack (>= 2.0, < 4)
     rack-robustness (2.0.0)
